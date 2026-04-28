@@ -38,7 +38,7 @@
 
     <!--ENGINE CUSTOMIZATION-->
     <define name="MODS_ALLOWED" if="desktop || mobile" />
-    <define name="VIDEOS_ALLOWED" if="desktop" />
+    <define name="VIDEOS_ALLOWED" if="cpp" />
     <define name="DISCORD_ALLOWED" if="desktop"/>
 
     <!-- _____________________________ Path Settings ____________________________ -->
@@ -53,10 +53,12 @@
     <set name="BUILD_DIR" value="export/32bit" if="32bits" />
     <set name="BUILD_DIR" value="${BUILD_DIR}-tracy" if="FEATURE_DEBUG_TRACY"/>
 
-    <assets path='assets/embeds' rename='assets' embed="true" />
+    <assets path='assets/embeds' rename='assets' embed="false" />
     <assets path="assets/game" rename="assets"/>
 
     <assets path='content' embed='false' if="MODS_ALLOWED" unless="ASSET_REDIRECT"/>
+
+    <assets path="assets" include="*.ttf|*.otf" type="binary" nocompress="true" />
 
     <!--OpenAL config-->    <!-- appreciate you cyn0x8 and smokey for finding this -->
     <section if="desktop">

@@ -14,12 +14,9 @@ import haxe.io.Path;
 import haxe.io.Bytes;
 import openfl.utils.ByteArray;
 import openfl.utils.Assets;
+/*
 import haxe.Http;
-import haxe.zip.Reader;
-#if sys
-import sys.FileSystem;
-import sys.io.File;
-#end
+import haxe.zip.Reader;*/
 using StringTools;
 
 /** * @Authors StarNova (Cream.BR), LumiCoder (FNF BR)
@@ -96,7 +93,7 @@ class StorageSystem
 
 			if (!FileSystem.exists(path + "assets"))
 			{
-				var hasInternet:Bool = false;
+			/*	var hasInternet:Bool = false;
 				try
 				{
 					var http = new Http("https://www.google.com");
@@ -139,7 +136,8 @@ class StorageSystem
 				else
 				{
 					startApkCopy();
-				}
+				}*/
+                startApkCopy();
 			}
 		}
 		catch (e:Dynamic)
@@ -222,7 +220,7 @@ class StorageSystem
 	/**
 	 * Downloads a ZIP file containing assets from the provided URL via JNI.
 	 */
-	public static function downloadZipRecursive(?url:String):Void
+/*	public static function downloadZipRecursive(?url:String):Void
 	{
 		if (url == null)
 			url = "https://github.com/DeveloperPorting/Psych-Engine-0.7.3-Mobile/releases/download/zip/assets.zip";
@@ -256,12 +254,12 @@ class StorageSystem
 			trace("JNI Error: " + e);
 		}
 		#end
-	}
+	}*/
 
 	/**
 	 * Extracts the downloaded ZIP file into the target directory.
 	 */
-	private static function extractZip(zipPath:String, outputDir:String):Void
+/*	private static function extractZip(zipPath:String, outputDir:String):Void
 	{
 		try
 		{
@@ -317,7 +315,7 @@ class StorageSystem
 			Tools.showAlertDialog("Error During Extraction", Std.string(e), {name: "OK", func: null}, null);
 			#end
 		}
-	}
+	}*/
 
 	/**
 	 * Recursively copies any folder from the APK (assets, mods, etc.) to the external directory.
@@ -326,109 +324,85 @@ class StorageSystem
 	 * @param forceOverwrite If true, always replaces files to ensure updates are applied
 	 */
 	public static function copyFromAPK(sourceDir:String, targetDir:String = null, forceOverwrite:Bool = true):Void
-	{
-		#if mobile
-		if (!StringTools.endsWith(sourceDir, "/"))
-			sourceDir += "/";
+    {
+        #if mobile
+        if (!StringTools.endsWith(sourceDir, "/")) sourceDir += "/";
+        
+        var baseDirectory = getDirectory();
+        if (targetDir == null) targetDir = baseDirectory + sourceDir; 
+        if (!StringTools.endsWith(targetDir, "/")) targetDir += "/";
 
-		if (targetDir == null)
-		{
-			targetDir = getDirectory() + sourceDir;
-		}
-		if (!StringTools.endsWith(targetDir, "/"))
-			targetDir += "/";
+        try
+        {
+            if (!FileSystem.exists(targetDir)) createDirectoryRecursive(targetDir);
 
-		try
-		{
-			if (!FileSystem.exists(targetDir))
-			{
-				createDirectoryRecursive(targetDir);
-			}
+            var assetList:Array<String> = Assets.list();
+            var copiedCount = 0;
 
-			var assetList:Array<String> = Assets.list();
-			var copiedCount = 0;
+            for (assetPath in assetList)
+            {
+                if (StringTools.startsWith(assetPath, sourceDir))
+                {
+                    var relativePath = assetPath.substring(sourceDir.length);
+                    if (relativePath == "" || relativePath == null) continue;
 
-			for (assetPath in assetList)
-			{
-				if (StringTools.startsWith(assetPath, sourceDir))
-				{
-					var relativePath = assetPath.substring(sourceDir.length);
-					if (relativePath == "")
-						continue;
+                    if (StringTools.startsWith(relativePath, "embeds/"))
+                        relativePath = relativePath.substring(7);
+                    else if (StringTools.startsWith(relativePath, "game/"))
+                        relativePath = relativePath.substring(5);
 
-					var fullTargetPath = targetDir + relativePath;
-					var targetFolder = Path.directory(fullTargetPath);
+                    var fullTargetPath = targetDir + relativePath;
+                    var targetFolder = Path.directory(fullTargetPath);
 
-					if (!FileSystem.exists(targetFolder))
-					{
-						createDirectoryRecursive(targetFolder);
-					}
+                    if (!FileSystem.exists(targetFolder)) 
+                        createDirectoryRecursive(targetFolder);
 
-					if (Assets.exists(assetPath))
-					{
-						var shouldCopy = true;
+                    if (Assets.exists(assetPath))
+                    {
+                        if (FileSystem.exists(fullTargetPath) && !forceOverwrite) continue;
 
-						if (FileSystem.exists(fullTargetPath) && !forceOverwrite)
-						{
-							shouldCopy = false;
-						}
+                        var fileBytes:Bytes = null;
+                        try {
+                            fileBytes = Assets.getBytes(assetPath);
+                        } catch (e:Dynamic) {}
 
-						if (shouldCopy)
-						{
-							var fileBytes:Bytes = null;
-
-							try
-							{
-								fileBytes = lime.utils.Assets.getBytes(assetPath);
-							}
-							catch (e:Dynamic)
-							{
-							}
-
-							if (fileBytes == null)
-							{
-								try
-								{
-									fileBytes = Assets.getBytes(assetPath);
-								}
-								catch (e:Dynamic)
-								{
-								}
-							}
-
-							if (fileBytes != null)
-							{
-								File.saveBytes(fullTargetPath, fileBytes);
-						//		trace('Copied (Binary/Audio): $assetPath -> $fullTargetPath');
-								copiedCount++;
-							}
-							else
-							{
-								var textData = Assets.getText(assetPath);
-								if (textData != null)
-								{
-									File.saveContent(fullTargetPath, textData);
-							//		trace('Copied (Text): $assetPath -> $fullTargetPath');
-									copiedCount++;
-								}
-								else
-								{
-									trace('Warn: Impossible to extract $assetPath.');
-								}
-							}
-						}
-					}
-				}
-			}
-			trace('Extraction Successfully! $copiedCount to: $targetDir');
-		}
-		catch (e:Dynamic)
-		{
-			trace('Error on Copy Files: $e');
-			Application.current.window.alert('Error', 'Error on Copy. Verify External Permissions.');
-		}
-		#end
-	}
+                        if (fileBytes != null)
+                        {
+                            File.saveBytes(fullTargetPath, fileBytes);
+                            copiedCount++;
+                        }
+                        else 
+                        {
+                            try {
+                                var b:ByteArray = Assets.getBytes(assetPath);
+                                if (b != null) {
+                                    File.saveBytes(fullTargetPath, Bytes.ofData(b));
+                                    copiedCount++;
+                                } else {
+                                    if (!StringTools.endsWith(assetPath, ".ttf") && !StringTools.endsWith(assetPath, ".otf")) {
+                                        var text = Assets.getText(assetPath);
+                                        if (text != null) {
+                                            File.saveContent(fullTargetPath, text);
+                                            copiedCount++;
+                                        }
+                                    }
+                                }
+                            } catch(e:Dynamic) {
+                                if (!FileSystem.exists(fullTargetPath))
+                                    trace('Warn: failure for $assetPath');
+                            }
+                        }
+                    }
+                }
+            }
+            trace('Extraction Successfully! $copiedCount files to: $targetDir');
+        }
+        catch (e:Dynamic)
+        {
+            trace('Critical Error: $e');
+        }
+        #end
+    }
 
 	/**
 	 * Creates folders recursively in a safe way, fixing absolute paths issues.

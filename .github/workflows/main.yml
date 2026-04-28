@@ -36,7 +36,7 @@ jobs: # FUCK MY LIFE BROOOOO
                 haxelib install hxcpp > nul --quiet
                 haxelib install hxpkg --quiet
                 haxelib run hxpkg install     
-                cd .haxelib/lime/git/ 2>nul || cd .haxelib/lime/7,9,0/ 2>nul || echo "Directory Not Found"
+                cd .haxelib/lime/git/ 2>nul || cd .haxelib/lime/git 2>nul || echo "Directory Not Found"
                 git submodule update --init --recursive
                 cd ../../../
                 haxelib run lime rebuild hxcpp windows -clean

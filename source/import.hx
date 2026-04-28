@@ -38,6 +38,11 @@ import funkin.states.*;
 import funkin.objects.BGSprite;
 import funkin.backend.MusicBeatState;
 
+#if mobile
+import mobile.backend.StorageSystem;
+import mobile.backend.TouchUtil;
+#end
+
 using flixel.util.FlxArrayUtil;
 
 using StringTools;

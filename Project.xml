@@ -37,9 +37,9 @@
     <!-- _____________________________ Engine Config Settings ____________________________ -->
 
     <!--ENGINE CUSTOMIZATION-->
-    <define name="MODS_ALLOWED" if="desktop" />
-    <define name="VIDEOS_ALLOWED" if="cpp" />
-    <define name="DISCORD_ALLOWED" if="cpp"/>
+    <define name="MODS_ALLOWED" if="desktop || mobile" />
+    <define name="VIDEOS_ALLOWED" if="desktop" />
+    <define name="DISCORD_ALLOWED" if="desktop"/>
 
     <!-- _____________________________ Path Settings ____________________________ -->
 
@@ -85,6 +85,7 @@
     <haxelib name="grig.audio"/>
     
     <haxelib name="json5hx"/>
+    <haxelib name="extension-androidtools" if="android"/>
 
     <haxelib name="hxdiscord_rpc" if="DISCORD_ALLOWED" version="1.2.4"/>
     <haxelib name="hxvlc" if="VIDEOS_ALLOWED"/>
@@ -165,6 +166,31 @@
 
     <!--Disable the Flixel sound management code-->
     <!--<haxedef name="FLX_NO_SOUND_SYSTEM" />-->
+
+    <!-- Mobile Shit -->
+    <section if="android">
+	    <config:android permission="android.permission.MANAGE_MEDIA"/> 
+		<config:android permission="android.permission.MANAGE_EXTERNAL_STORAGE"/>
+		<config:android permission="android.permission.WRITE_EXTERNAL_STORAGE" />
+		<config:android permission="android.permission.READ_EXTERNAL_STORAGE" />
+		<config:android permission="android.permission.READ_MEDIA_IMAGES"/>
+		<config:android permission="android.permission.READ_MEDIA_AUDIO"/>
+		<config:android permission="android.permission.READ_MEDIA_VIDEO"/>
+		<config:android permission="android.permission.READ_MEDIA_DOCUMENTS" />
+		<config:android permission="android.permission.VIBRATE" />
+		<config:android permission="android.permission.INTERNET" />
+		<config:android permission="android.permission.ACCESS_WIFI_STATE"/>
+		<config:android permission="android.permission.ACCESS_NETWORK_STATE" />
+		<config:android permission="android.permission.CAPTURE_AUDIO_OUTPUT" />
+	
+		<android extension="mobile.backend.java.FileUtils" />
+	
+		<android target-sdk-version="34" />
+		<android min-sdk-version="19" />
+		<certificate path="key.keystore" password="nvport" alias="nvport" alias-password="nvport" unless="test || ios" />
+    </section>
+
+     <java path="source" if="android"/>
 
     <!-- _________________________________ Custom _______________________________ -->
 

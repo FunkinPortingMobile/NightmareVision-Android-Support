@@ -453,7 +453,7 @@ class Paths
 	 */
 	public static inline function mods(key:String = ''):String
 	{
-		return StorageSystem.getDirectory() + '$MODS_DIRECTORY/' + key;
+		return #if mobile StorageSystem.getDirectory() + #end '$MODS_DIRECTORY/' + key;
 	}
 	
 	/**

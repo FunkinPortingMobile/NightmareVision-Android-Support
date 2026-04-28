@@ -31,14 +31,17 @@ jobs: # FUCK MY LIFE BROOOOO
                 haxe-version: 4.3.7
 
             - name: Install libs
-              run: |
+             run: |
                 haxelib setup C:/haxelib
                 haxelib install hxcpp > nul --quiet
                 haxelib install hxpkg --quiet
-                haxelib run hxpkg install
+                haxelib run hxpkg install     
+                cd .haxelib/lime/git/ 2>nul || cd .haxelib/lime/7,9,0/ 2>nul || echo "Directory Not Found"
+                git submodule update --init --recursive
+                cd ../../../
                 haxelib run lime rebuild hxcpp windows -clean
                 haxelib run lime rebuild lime windows -clean
-                haxelib run lime rebuild cpp
+                haxelib run lime rebuild cpp -clean
             - name: Compile build
               run: haxelib run lime build windows -D ${{inputs.buildFlags}}
             - name: Publish artifact
@@ -63,11 +66,16 @@ jobs: # FUCK MY LIFE BROOOOO
               run: |
                 sudo apt-get install vlc libvlc-dev libvlccore-dev vlc-bin
             - name: Install libs
-              run: |
+             run: |
                 haxelib setup ~/haxelib
                 haxelib install hxcpp > /dev/null --quiet
                 haxelib install hxpkg --quiet
                 haxelib run hxpkg install
+                if [ -d ".haxelib/lime/git" ]; then
+                  cd .haxelib/lime/git && git submodule update --init --recursive && cd ../../../
+                fi
+                haxelib run lime rebuild lime linux -clean
+                haxelib run lime rebuild cpp -clean
             - name: Compile build
               run: haxelib run lime build Project.xml linux -D ${{inputs.buildFlags}}
             - name: Publish artifact

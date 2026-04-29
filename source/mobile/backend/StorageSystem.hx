@@ -1,14 +1,5 @@
 package mobile.backend;
 
-#if android
-import extension.androidtools.os.Environment;
-import extension.androidtools.Settings;
-import extension.androidtools.Permissions;
-import extension.androidtools.os.Build.VERSION;
-import extension.androidtools.os.Build.VERSION_CODES;
-import extension.androidtools.Tools;
-import lime.system.JNI;
-#end
 import lime.app.Application;
 import haxe.io.Path;
 import haxe.io.Bytes;
@@ -153,7 +144,7 @@ class StorageSystem
 	private static function startApkCopy():Void
 	{
 		#if android
-		Tools.showAlertDialog("Extracting Files", "Extracting assets from APK. Please wait.", {
+		PopUp.showAlert("Extracting Files", "Extracting assets from APK. Please wait.", {
 			name: "OK",
 			func: function()
 			{
@@ -162,7 +153,7 @@ class StorageSystem
 					copyFromAPK("assets/");
 					copyFromAPK("content/");
 
-					Tools.showAlertDialog("Success!", "Files extracted. The game will now restart.", {
+					PopUp.showAlertDialog("Success!", "Files extracted. The game will now restart.", {
 						name: "Restart",
 						func: function()
 						{
@@ -197,22 +188,14 @@ class StorageSystem
 
 			File.saveContent(fullPath, data);
 
-			#if android
-			Tools.showAlertDialog("Success!", "File saved in:\n" + saveFolder + "/" + name + ext, {name: "OK", func: null}, null);
-			#elseif ios
-			Application.current.window.alert("File saved in:\n" + saveFolder + "/" + name + ext, "Success!");
-			#end
+			PopUp.showAlert("Success!", "File saved in:\n" + saveFolder + "/" + name + ext, {name: "OK", func: null}, null);
 		}
 		catch (e:haxe.Exception)
 		{
 			var errorMsg:String = "Error on Save!:\n" + e.message;
 			trace('Error ' + errorMsg);
 
-			#if android
-			Tools.showAlertDialog("Error saving file", errorMsg, {name: "Close", func: null}, null);
-			#elseif ios
-			Application.current.window.alert(errorMsg, "Error saving file");
-			#end
+			PopUp.showAlert("Error saving file", errorMsg, {name: "Close", func: null}, null);
 		}
 	}
 	#end

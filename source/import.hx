@@ -17,7 +17,6 @@ import flixel.sound.FlxSound;
 
 #if sys
 import sys.*;
-
 import sys.io.*;
 #end
 
@@ -40,7 +39,18 @@ import funkin.backend.MusicBeatState;
 
 #if mobile
 import mobile.backend.StorageSystem;
-import mobile.backend.TouchUtil;
+import mobile.backend.utils.TouchUtil;
+import mobile.backend.utils.Popup;
+#end
+
+#if android
+import extension.androidtools.os.Environment;
+import extension.androidtools.Settings;
+import extension.androidtools.Permissions;
+import extension.androidtools.os.Build.VERSION;
+import extension.androidtools.os.Build.VERSION_CODES;
+import extension.androidtools.Tools;
+import lime.system.JNI;
 #end
 
 using flixel.util.FlxArrayUtil;

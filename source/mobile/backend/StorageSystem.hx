@@ -1,13 +1,16 @@
 package mobile.backend;
 
 import lime.app.Application;
+
 import haxe.io.Path;
 import haxe.io.Bytes;
+
 import openfl.utils.ByteArray;
 import openfl.utils.Assets;
+
 /*
-import haxe.Http;
-import haxe.zip.Reader;*/
+	import haxe.Http;
+	import haxe.zip.Reader; */
 using StringTools;
 
 /** * @Authors StarNova (Cream.BR), LumiCoder (FNF BR)
@@ -16,12 +19,12 @@ using StringTools;
 class StorageSystem
 {
 	private static var folderName(get, never):String;
-
+	
 	private static function get_folderName():String
 	{
 		return Application.current.meta.get('file');
 	}
-
+	
 	/**
 	 * Returns the base storage directory path without forcing a trailing slash.
 	 */
@@ -35,7 +38,7 @@ class StorageSystem
 		return Sys.getCwd();
 		#end
 	}
-
+	
 	/**
 	 * Returns the base storage directory path.
 	 */
@@ -49,7 +52,7 @@ class StorageSystem
 		return Sys.getCwd();
 		#end
 	}
-
+	
 	/**
 	 * Requests Android storage permissions and verifies external assets.
 	 */
@@ -69,66 +72,64 @@ class StorageSystem
 		{
 			Permissions.requestPermissions(['READ_EXTERNAL_STORAGE', 'WRITE_EXTERNAL_STORAGE']);
 		}
-
+		
 		if (VERSION.SDK_INT >= VERSION_CODES.R)
 		{
-			if (!Environment.isExternalStorageManager())
-				Settings.requestSetting('MANAGE_APP_ALL_FILES_ACCESS_PERMISSION');
+			if (!Environment.isExternalStorageManager()) Settings.requestSetting('MANAGE_APP_ALL_FILES_ACCESS_PERMISSION');
 		}
-
+		
 		try
 		{
 			var path = getDirectory();
-			if (!FileSystem.exists(path))
-				FileSystem.createDirectory(path);
-
+			if (!FileSystem.exists(path)) FileSystem.createDirectory(path);
+			
 			if (!FileSystem.exists(path + "assets"))
 			{
-			/*	var hasInternet:Bool = false;
-				try
-				{
-					var http = new Http("https://www.google.com");
-					http.onStatus = function(status)
+				/*	var hasInternet:Bool = false;
+					try
 					{
-						if (status == 200)
-							hasInternet = true;
-					};
-					http.request(false);
-				}
-				catch (e:Dynamic)
-				{
-					hasInternet = false;
-				}
-
-				if (hasInternet)
-				{
-					Tools.showAlertDialog("Missing Assets", "Assets not found. Download via internet?", {
-						name: "Yes",
-						func: function()
+						var http = new Http("https://www.google.com");
+						http.onStatus = function(status)
 						{
-							copyFromAPK("content/");
+							if (status == 200)
+								hasInternet = true;
+						};
+						http.request(false);
+					}
+					catch (e:Dynamic)
+					{
+						hasInternet = false;
+					}
 
-							Tools.showAlertDialog("Downloading", "Starting download. Please wait...", {
-								name: "OK",
-								func: function()
-								{
-									downloadZipRecursive();
-								}
-							});
-						}
-					}, {
-						name: "No",
-						func: function()
-						{
-							startApkCopy();
-						}
-					});
-				}
-				else
-				{
-					startApkCopy();
+					if (hasInternet)
+					{
+						Tools.showAlertDialog("Missing Assets", "Assets not found. Download via internet?", {
+							name: "Yes",
+							func: function()
+							{
+								copyFromAPK("content/");
+
+								Tools.showAlertDialog("Downloading", "Starting download. Please wait...", {
+									name: "OK",
+									func: function()
+									{
+										downloadZipRecursive();
+									}
+								});
+							}
+						}, {
+							name: "No",
+							func: function()
+							{
+								startApkCopy();
+							}
+						});
+					}
+					else
+					{
+						startApkCopy();
 				}*/
-                startApkCopy();
+				startApkCopy();
 			}
 		}
 		catch (e:Dynamic)
@@ -137,39 +138,31 @@ class StorageSystem
 		}
 		#end
 	}
-
+	
 	/**
 	 * Initiates the internal APK asset extraction fallback.
 	 */
 	private static function startApkCopy():Void
 	{
 		#if android
-		PopUp.showAlert("Extracting Files", "Extracting assets from APK. Please wait.", {
-			name: "OK",
-			func: function()
-			{
-				try
-				{
-					copyFromAPK("assets/");
-					copyFromAPK("content/");
-
-					PopUp.showAlertDialog("Success!", "Files extracted. The game will now restart.", {
-						name: "Restart",
-						func: function()
-						{
-							lime.system.System.exit(0);
-						}
-					});
-				}
-				catch (e:Dynamic)
-				{
-					trace("Error: " + e);
-				}
-			}
-		});
+		PopUp.showAlert("Extracting Files", "Extracting assets from APK. Please wait.", "OK");
+		
+		try
+		{
+			copyFromAPK("assets/");
+			copyFromAPK("content/");
+			
+			PopUp.showConfirm("Success!", "Files extracted. The game will now restart.", "Restart", "Cancel", function() {
+				lime.system.System.exit(0);
+			});
+		}
+		catch (e:Dynamic)
+		{
+			trace("Error: " + e);
+		}
 		#end
 	}
-
+	
 	/**
 	 * Saves text content to the internal 'files' directory.
 	 */
@@ -178,128 +171,126 @@ class StorageSystem
 	{
 		var saveFolder:String = Path.join([getDirectory(), "files"]);
 		var fullPath:String = Path.join([saveFolder, name + ext]);
-
+		
 		try
 		{
 			if (!FileSystem.exists(saveFolder))
 			{
 				FileSystem.createDirectory(saveFolder);
 			}
-
+			
 			File.saveContent(fullPath, data);
-
-			PopUp.showAlert("Success!", "File saved in:\n" + saveFolder + "/" + name + ext, {name: "OK", func: null}, null);
+			
+			PopUp.showAlert("Success!", "File saved in:\n" + saveFolder + "/" + name + ext, "OK");
 		}
 		catch (e:haxe.Exception)
 		{
 			var errorMsg:String = "Error on Save!:\n" + e.message;
 			trace('Error ' + errorMsg);
-
-			PopUp.showAlert("Error saving file", errorMsg, {name: "Close", func: null}, null);
+			
+			PopUp.showAlert("Error saving file", errorMsg, "Close");
 		}
 	}
 	#end
-
+	
 	/**
 	 * Downloads a ZIP file containing assets from the provided URL via JNI.
 	 */
-/*	public static function downloadZipRecursive(?url:String):Void
-	{
-		if (url == null)
-			url = "https://github.com/DeveloperPorting/Psych-Engine-0.7.3-Mobile/releases/download/zip/assets.zip";
-
-		var savePath = getDirectory() + "temp.zip";
-
-		#if android
-		try
+	/*public static function downloadZipRecursive(?url:String):Void
 		{
-			var jniCall = JNI.createStaticMethod("mobile/backend/java/FileUtils", "downloadFile", "(Ljava/lang/String;Ljava/lang/String;)Z");
+			if (url == null)
+				url = "https://github.com/DeveloperPorting/Psych-Engine-0.7.3-Mobile/releases/download/zip/assets.zip";
 
-			trace("Starting ZIP Download...");
-			var success:Bool = jniCall(url, savePath);
+			var savePath = getDirectory() + "temp.zip";
 
-			if (success)
+			#if android
+			try
 			{
-				trace("Successfully Downloaded.");
-				extractZip(savePath, getDirectory());
-			}
-			else
-			{
-				trace("Error on Download, Please Check Your Connection.");
-				Tools.showAlertDialog("Error", "Server side error. Check your connection.", {name: "Retry", func: function()
+				var jniCall = JNI.createStaticMethod("mobile/backend/java/FileUtils", "downloadFile", "(Ljava/lang/String;Ljava/lang/String;)Z");
+
+				trace("Starting ZIP Download...");
+				var success:Bool = jniCall(url, savePath);
+
+				if (success)
 				{
-					downloadZipRecursive(url);
-				}}, null);
-			}
-		}
-		catch (e:Dynamic)
-		{
-			trace("JNI Error: " + e);
-		}
-		#end
-	}*/
-
-	/**
-	 * Extracts the downloaded ZIP file into the target directory.
-	 */
-/*	private static function extractZip(zipPath:String, outputDir:String):Void
-	{
-		try
-		{
-			trace("Starting ZIP Extraction...");
-			var bytes = File.getBytes(zipPath);
-			var input = new haxe.io.BytesInput(bytes);
-			var reader = new Reader(input);
-			var entries = reader.read();
-
-			var targetAssetsFolder = Path.addTrailingSlash(outputDir) + "assets/";
-
-			if (!FileSystem.exists(targetAssetsFolder))
-				FileSystem.createDirectory(targetAssetsFolder);
-
-			for (entry in entries)
-			{
-				var fileName = entry.fileName;
-				if (fileName == "" || fileName == null)
-					continue;
-
-				var finalPath = Path.join([targetAssetsFolder, fileName]);
-
-				if (entry.fileSize == 0)
-				{
-					if (!FileSystem.exists(finalPath))
-						FileSystem.createDirectory(finalPath);
+					trace("Successfully Downloaded.");
+					extractZip(savePath, getDirectory());
 				}
 				else
 				{
-					var dir = Path.directory(finalPath);
-					if (!FileSystem.exists(dir))
-						FileSystem.createDirectory(dir);
-
-					var unzippedData = Reader.unzip(entry);
-					File.saveBytes(finalPath, unzippedData);
+					trace("Error on Download, Please Check Your Connection.");
+					Tools.showAlertDialog("Error", "Server side error. Check your connection.", {name: "Retry", func: function()
+					{
+						downloadZipRecursive(url);
+					}}, null);
 				}
 			}
-
-			trace("Extraction Complete!");
-			FileSystem.deleteFile(zipPath);
-
-			#if android
-			Tools.showAlertDialog("Success", "Assets Extracted Successfully. Restart the Game.", {name: "OK", func: function()
+			catch (e:Dynamic)
 			{
-				lime.system.System.exit(0);
-			}}, null);
+				trace("JNI Error: " + e);
+			}
 			#end
-		}
-		catch (e:Dynamic)
-		{
-			trace("Error on Extraction: " + e);
-			#if android
-			Tools.showAlertDialog("Error During Extraction", Std.string(e), {name: "OK", func: null}, null);
-			#end
-		}
 	}*/
+	/**
+	 * Extracts the downloaded ZIP file into the target directory.
+	 */
+	/*private static function extractZip(zipPath:String, outputDir:String):Void
+		{
+			try
+			{
+				trace("Starting ZIP Extraction...");
+				var bytes = File.getBytes(zipPath);
+				var input = new haxe.io.BytesInput(bytes);
+				var reader = new Reader(input);
+				var entries = reader.read();
 
+				var targetAssetsFolder = Path.addTrailingSlash(outputDir) + "assets/";
+
+				if (!FileSystem.exists(targetAssetsFolder))
+					FileSystem.createDirectory(targetAssetsFolder);
+
+				for (entry in entries)
+				{
+					var fileName = entry.fileName;
+					if (fileName == "" || fileName == null)
+						continue;
+
+					var finalPath = Path.join([targetAssetsFolder, fileName]);
+
+					if (entry.fileSize == 0)
+					{
+						if (!FileSystem.exists(finalPath))
+							FileSystem.createDirectory(finalPath);
+					}
+					else
+					{
+						var dir = Path.directory(finalPath);
+						if (!FileSystem.exists(dir))
+							FileSystem.createDirectory(dir);
+
+						var unzippedData = Reader.unzip(entry);
+						File.saveBytes(finalPath, unzippedData);
+					}
+				}
+
+				trace("Extraction Complete!");
+				FileSystem.deleteFile(zipPath);
+
+				#if android
+				Tools.showAlertDialog("Success", "Assets Extracted Successfully. Restart the Game.", {name: "OK", func: function()
+				{
+					lime.system.System.exit(0);
+				}}, null);
+				#end
+			}
+			catch (e:Dynamic)
+			{
+				trace("Error on Extraction: " + e);
+				#if android
+				Tools.showAlertDialog("Error During Extraction", Std.string(e), {name: "OK", func: null}, null);
+				#end
+			}
+	}*/
 	/**
 	 * Recursively copies any folder from the APK (assets, mods, etc.) to the external directory.
 	 * @param sourceDir The source path within the APK (e.g., "assets/" or "mods/")
@@ -307,109 +298,113 @@ class StorageSystem
 	 * @param forceOverwrite If true, always replaces files to ensure updates are applied
 	 */
 	public static function copyFromAPK(sourceDir:String, targetDir:String = null, forceOverwrite:Bool = true):Void
-    {
-        #if mobile
-        if (!StringTools.endsWith(sourceDir, "/")) sourceDir += "/";
-        
-        var baseDirectory = getDirectory();
-        if (targetDir == null) targetDir = baseDirectory + sourceDir; 
-        if (!StringTools.endsWith(targetDir, "/")) targetDir += "/";
-
-        try
-        {
-            if (!FileSystem.exists(targetDir)) createDirectoryRecursive(targetDir);
-
-            var assetList:Array<String> = Assets.list();
-            var copiedCount = 0;
-
-            for (assetPath in assetList)
-            {
-                if (StringTools.startsWith(assetPath, sourceDir))
-                {
-                    var relativePath = assetPath.substring(sourceDir.length);
-                    if (relativePath == "" || relativePath == null) continue;
-
-                    if (StringTools.startsWith(relativePath, "embeds/"))
-                        relativePath = relativePath.substring(7);
-                    else if (StringTools.startsWith(relativePath, "game/"))
-                        relativePath = relativePath.substring(5);
-
-                    var fullTargetPath = targetDir + relativePath;
-                    var targetFolder = Path.directory(fullTargetPath);
-
-                    if (!FileSystem.exists(targetFolder)) 
-                        createDirectoryRecursive(targetFolder);
-
-                    if (Assets.exists(assetPath))
-                    {
-                        if (FileSystem.exists(fullTargetPath) && !forceOverwrite) continue;
-
-                        var fileBytes:Bytes = null;
-                        try {
-                            fileBytes = Assets.getBytes(assetPath);
-                        } catch (e:Dynamic) {}
-
-                        if (fileBytes != null)
-                        {
-                            File.saveBytes(fullTargetPath, fileBytes);
-                            copiedCount++;
-                        }
-                        else 
-                        {
-                            try {
-                                var b:ByteArray = Assets.getBytes(assetPath);
-                                if (b != null) {
-                                    File.saveBytes(fullTargetPath, Bytes.ofData(b));
-                                    copiedCount++;
-                                } else {
-                                    if (!StringTools.endsWith(assetPath, ".ttf") && !StringTools.endsWith(assetPath, ".otf")) {
-                                        var text = Assets.getText(assetPath);
-                                        if (text != null) {
-                                            File.saveContent(fullTargetPath, text);
-                                            copiedCount++;
-                                        }
-                                    }
-                                }
-                            } catch(e:Dynamic) {
-                                if (!FileSystem.exists(fullTargetPath))
-                                    trace('Warn: failure for $assetPath');
-                            }
-                        }
-                    }
-                }
-            }
-            trace('Extraction Successfully! $copiedCount files to: $targetDir');
-        }
-        catch (e:Dynamic)
-        {
-            trace('Critical Error: $e');
-        }
-        #end
-    }
-
+	{
+		#if mobile
+		if (!StringTools.endsWith(sourceDir, "/")) sourceDir += "/";
+		
+		var baseDirectory = getDirectory();
+		if (targetDir == null) targetDir = baseDirectory + sourceDir;
+		if (!StringTools.endsWith(targetDir, "/")) targetDir += "/";
+		
+		try
+		{
+			if (!FileSystem.exists(targetDir)) createDirectoryRecursive(targetDir);
+			
+			var assetList:Array<String> = Assets.list();
+			var copiedCount = 0;
+			
+			for (assetPath in assetList)
+			{
+				if (StringTools.startsWith(assetPath, sourceDir))
+				{
+					var relativePath = assetPath.substring(sourceDir.length);
+					if (relativePath == "" || relativePath == null) continue;
+					
+					if (StringTools.startsWith(relativePath, "embeds/")) relativePath = relativePath.substring(7);
+					else if (StringTools.startsWith(relativePath, "game/")) relativePath = relativePath.substring(5);
+					
+					var fullTargetPath = targetDir + relativePath;
+					var targetFolder = Path.directory(fullTargetPath);
+					
+					if (!FileSystem.exists(targetFolder)) createDirectoryRecursive(targetFolder);
+					
+					if (Assets.exists(assetPath))
+					{
+						if (FileSystem.exists(fullTargetPath) && !forceOverwrite) continue;
+						
+						var fileBytes:Bytes = null;
+						try
+						{
+							fileBytes = Assets.getBytes(assetPath);
+						}
+						catch (e:Dynamic) {}
+						
+						if (fileBytes != null)
+						{
+							File.saveBytes(fullTargetPath, fileBytes);
+							copiedCount++;
+						}
+						else
+						{
+							try
+							{
+								var b:ByteArray = Assets.getBytes(assetPath);
+								if (b != null)
+								{
+									File.saveBytes(fullTargetPath, Bytes.ofData(b));
+									copiedCount++;
+								}
+								else
+								{
+									if (!StringTools.endsWith(assetPath, ".ttf") && !StringTools.endsWith(assetPath, ".otf"))
+									{
+										var text = Assets.getText(assetPath);
+										if (text != null)
+										{
+											File.saveContent(fullTargetPath, text);
+											copiedCount++;
+										}
+									}
+								}
+							}
+							catch (e:Dynamic)
+							{
+								if (!FileSystem.exists(fullTargetPath)) trace('Warn: failure for $assetPath');
+							}
+						}
+					}
+				}
+			}
+			trace('Extraction Successfully! $copiedCount files to: $targetDir');
+		}
+		catch (e:Dynamic)
+		{
+			trace('Critical Error: $e');
+		}
+		#end
+	}
+	
 	/**
 	 * Creates folders recursively in a safe way, fixing absolute paths issues.
 	 */
 	private static function createDirectoryRecursive(path:String):Void
 	{
 		#if mobile
-		if (FileSystem.exists(path))
-			return;
-
+		if (FileSystem.exists(path)) return;
+		
 		var pathParts = path.split("/");
 		var currentPath = "";
-
+		
 		if (StringTools.startsWith(path, "/"))
 		{
 			currentPath = "/";
 			pathParts.shift();
 		}
-
+		
 		for (part in pathParts)
 		{
-			if (part == "")
-				continue;
-
+			if (part == "") continue;
+			
 			if (currentPath == "/")
 			{
 				currentPath += part;
@@ -418,7 +413,7 @@ class StorageSystem
 			{
 				currentPath += "/" + part;
 			}
-
+			
 			if (!FileSystem.exists(currentPath))
 			{
 				try

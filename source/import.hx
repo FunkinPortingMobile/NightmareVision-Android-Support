@@ -40,7 +40,7 @@ import funkin.backend.MusicBeatState;
 #if mobile
 import mobile.backend.StorageSystem;
 import mobile.backend.utils.TouchUtil;
-import mobile.backend.utils.Popup;
+import mobile.backend.utils.PopUp;
 #end
 
 #if android

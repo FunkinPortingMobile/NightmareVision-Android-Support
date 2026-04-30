@@ -56,6 +56,17 @@ jobs:
           git -C .haxelib/lime/git submodule update --init --recursive --force
           haxelib dev lime .haxelib/lime/git
           
+      - name: Rebuild Linux Lime ndll
+        env:
+          CC: gcc-13
+          CXX: g++-13
+        run: |
+          haxelib run lime rebuild cpp -release
+          if [ ! -f .haxelib/lime/git/ndll/Linux64/lime.ndll ]; then
+            echo "ERROR: Missing Lime ndll"
+            exit 1
+          fi
+          
       - name: Configure Android
         run: |
           haxelib run lime setup android

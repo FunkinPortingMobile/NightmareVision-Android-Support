@@ -56,14 +56,14 @@ jobs:
           git -C .haxelib/lime/git submodule update --init --recursive --force
           haxelib dev lime .haxelib/lime/git
 
-      - name: Rebuild Android Lime ndll
+      - name: Rebuild Android Lime so
         env:
           CC: gcc-13
           CXX: g++-13
         run: |
           haxelib run lime rebuild cpp -release
-          if [ ! -f .haxelib/lime/git/ndll/Android/lime.ndll ]; then
-            echo "ERROR: Missing Lime ndll"
+          if [ ! -f .haxelib/lime/git/ndll/Android/liblime-64.so ]; then
+            echo "ERROR: Missing Liblime 64 so"
             exit 1
           fi
 

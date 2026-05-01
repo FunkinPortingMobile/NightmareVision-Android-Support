@@ -211,6 +211,34 @@ class Controls extends FlxActionSet
 		return check;
 	}
 	
+	public var UI_UP_R(get, never):Bool;
+	inline function get_UI_UP_R() {
+		var check = _ui_upR.check();
+		#if mobile check = check || mobilePadJustReleased([UP]); #end
+		return check;
+	}
+	
+	public var UI_LEFT_R(get, never):Bool;
+	inline function get_UI_LEFT_R() {
+		var check = _ui_leftR.check();
+		#if mobile check = check || mobilePadJustReleased([LEFT]); #end
+		return check;
+	}
+	
+	public var UI_RIGHT_R(get, never):Bool;
+	inline function get_UI_RIGHT_R() {
+		var check = _ui_rightR.check();
+		#if mobile check = check || mobilePadJustReleased([RIGHT]); #end
+		return check;
+	}
+	
+	public var UI_DOWN_R(get, never):Bool;
+	inline function get_UI_DOWN_R() {
+		var check = _ui_downR.check();
+		#if mobile check = check || mobilePadJustReleased([DOWN]); #end
+		return check;
+	}
+	
 	
 	public var NOTE_UP_P(get, never):Bool;
 	inline function get_NOTE_UP_P() {
@@ -237,6 +265,34 @@ class Controls extends FlxActionSet
 	inline function get_NOTE_DOWN_P() {
 		var check = _note_downP.check();
 		#if mobile check = check || hitboxJustPressed([noteDOWN]) || mobilePadJustPressed([noteDOWN]); #end
+		return check;
+	}
+	
+	public var NOTE_UP_R(get, never):Bool;
+	inline function get_NOTE_UP_R() {
+		var check = _note_upR.check();
+		#if mobile check = check || hitboxJustReleased([noteUP]) || mobilePadJustReleased([noteUP]); #end
+		return check;
+	}
+	
+	public var NOTE_LEFT_R(get, never):Bool;
+	inline function get_NOTE_LEFT_R() {
+		var check = _note_leftR.check();
+		#if mobile check = check || hitboxJustReleased([noteLEFT]) || mobilePadJustReleased([noteLEFT]); #end
+		return check;
+	}
+	
+	public var NOTE_RIGHT_R(get, never):Bool;
+	inline function get_NOTE_RIGHT_R() {
+		var check = _note_rightR.check();
+		#if mobile check = check || hitboxJustReleased([noteRIGHT]) || mobilePadJustReleased([noteRIGHT]); #end
+		return check;
+	}
+	
+	public var NOTE_DOWN_R(get, never):Bool;
+	inline function get_NOTE_DOWN_R() {
+		var check = _note_downR.check();
+		#if mobile check = check || hitboxJustReleased([noteDOWN]) || mobilePadJustReleased([noteDOWN]); #end
 		return check;
 	}
 	

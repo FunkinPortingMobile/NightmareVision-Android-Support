@@ -756,7 +756,7 @@ class Controls extends FlxActionSet
 	public var requested(get, never):Dynamic; 
 	public var gameplayRequest(get, never):Dynamic; 
 	
-	private function mobilePadPressed(keys:Array<FlxMobileInputID>):Bool
+	public function mobilePadPressed(keys:Array<FlxMobileInputID>):Bool
 	{
 		if (keys != null && requested != null && requested.virtualPad != null)
 		{
@@ -765,7 +765,7 @@ class Controls extends FlxActionSet
 		return false;
 	}
 	
-	private function mobilePadJustPressed(keys:Array<FlxMobileInputID>):Bool
+	public function mobilePadJustPressed(keys:Array<FlxMobileInputID>):Bool
 	{
 		if (keys != null && requested != null && requested.virtualPad != null)
 		{
@@ -774,7 +774,7 @@ class Controls extends FlxActionSet
 		return false;
 	}
 	
-	private function mobilePadJustReleased(keys:Array<FlxMobileInputID>):Bool
+	public function mobilePadJustReleased(keys:Array<FlxMobileInputID>):Bool
 	{
 		if (keys != null && requested != null && requested.virtualPad != null)
 		{
@@ -783,7 +783,7 @@ class Controls extends FlxActionSet
 		return false;
 	}
 	
-	private function hitboxPressed(keys:Array<FlxMobileInputID>):Bool
+	public function hitboxPressed(keys:Array<FlxMobileInputID>):Bool
 	{
 		if (keys != null && gameplayRequest != null)
 		{
@@ -792,7 +792,7 @@ class Controls extends FlxActionSet
 		return false;
 	}
 	
-	private function hitboxJustPressed(keys:Array<FlxMobileInputID>):Bool
+	public function hitboxJustPressed(keys:Array<FlxMobileInputID>):Bool
 	{
 		if (keys != null && gameplayRequest != null)
 		{
@@ -801,7 +801,7 @@ class Controls extends FlxActionSet
 		return false;
 	}
 	
-	private function hitboxJustReleased(keys:Array<FlxMobileInputID>):Bool
+	public function hitboxJustReleased(keys:Array<FlxMobileInputID>):Bool
 	{
 		if (keys != null && gameplayRequest != null)
 		{

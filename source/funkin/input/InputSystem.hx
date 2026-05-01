@@ -10,6 +10,10 @@ import flixel.input.FlxInput.FlxInputState;
 import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 
+#if mobile
+import mobile.backend.flixel.input.FlxMobileInputID;
+#end
+
 import funkin.input.Controls;
 import funkin.input.Controls.Action;
 
@@ -144,7 +148,11 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 	 */
 	public function inputPressed(noteData:Int)
 	{
-		return pressedActions[noteData].check();
+		var check = pressedActions[noteData].check();
+		#if mobile
+		check = check || controls.hitboxPressed(getMobileKeysForNote(noteData)) || controls.mobilePadPressed(getMobileKeysForNote(noteData));
+		#end
+		return check;
 	}
 	
 	/**
@@ -153,7 +161,11 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 	 */
 	public function inputJustPressed(noteData:Int)
 	{
-		return justPressedActions[noteData].check();
+		var check = justPressedActions[noteData].check();
+		#if mobile
+		check = check || controls.hitboxJustPressed(getMobileKeysForNote(noteData)) || controls.mobilePadJustPressed(getMobileKeysForNote(noteData));
+		#end
+		return check;
 	}
 	
 	/**
@@ -162,8 +174,26 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 	 */
 	public function inputJustReleased(noteData:Int)
 	{
-		return justReleasedActions[noteData].check();
+		var check = justReleasedActions[noteData].check();
+		#if mobile
+		check = check || controls.hitboxJustReleased(getMobileKeysForNote(noteData)) || controls.mobilePadJustReleased(getMobileKeysForNote(noteData));
+		#end
+		return check;
 	}
+	
+	#if mobile
+	private function getMobileKeysForNote(noteData:Int):Array<FlxMobileInputID>
+	{
+		return switch(noteData) {
+			case 0: [noteLEFT];  // NOTE_LEFT
+			case 1: [noteDOWN];  // NOTE_DOWN
+			case 2: [noteUP];    // NOTE_UP
+			case 3: [noteRIGHT]; // NOTE_RIGHT
+			default: [];
+		};
+	}
+	#end
+	
 	
 	/**
 	 * Dispatches all awaiting input events
@@ -171,6 +201,23 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 	@:nullSafety(Off)
 	public function update():Void
 	{
+		#if mobile
+		for (i in 0...ACTION_LIST.length)
+		{
+			var keys = getMobileKeysForNote(i);
+			
+			if (controls.hitboxJustPressed(keys) || controls.mobilePadJustPressed(keys))
+			{
+				awaitingEvents.push(new InputEvent(InputEvent.INPUT_PRESSED, false, true, i, Keys, -1, System.getTimer()));
+			}
+			
+			if (controls.hitboxJustReleased(keys) || controls.mobilePadJustReleased(keys))
+			{
+				awaitingEvents.push(new InputEvent(InputEvent.INPUT_RELEASED, false, true, i, Keys, -1, System.getTimer()));
+			}
+		}
+		#end
+
 		while (awaitingAxisEvents.length > 0)
 		{
 			final info = awaitingAxisEvents.shift();
@@ -180,6 +227,7 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 		while (awaitingEvents.length > 0)
 			dispatchEvent(awaitingEvents.shift());
 	}
+
 	
 	public function destroy():Void
 	{

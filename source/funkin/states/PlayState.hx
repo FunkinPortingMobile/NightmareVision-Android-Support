@@ -791,6 +791,11 @@ class PlayState extends MusicBeatState
 		addSongScripts('songs/${Paths.sanitize(SONG.song)}/');
 		addSongScripts('songs/${Paths.sanitize(SONG.song)}/scripts/');
 		
+		#if mobile
+		addMobileControls(false);
+	    hitbox.visible = false;
+		#end
+		
 		scripts.call('preNoteGeneration', []);
 		
 		if (genNotesBeforeCountdown) generatePlayfields();
@@ -1023,6 +1028,10 @@ class PlayState extends MusicBeatState
 		}
 		
 		inCutscene = false;
+		
+		#if mobile
+		hitbox.visible = true;
+		#end
 		
 		final ret:Dynamic = scripts.call('onStartCountdown', []);
 		
@@ -2565,6 +2574,10 @@ class PlayState extends MusicBeatState
 		camZooming = false;
 		inCutscene = false;
 		updateTime = false;
+		
+		#if mobile
+		hitbox.visible = false;
+		#end
 		
 		deathCounter = 0;
 		seenCutscene = false;

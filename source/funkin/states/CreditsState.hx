@@ -178,6 +178,10 @@ class CreditsState extends MusicBeatState
 		descBox.sprTracker = descText;
 		add(descText);
 		
+		#if mobile
+		addVirtualPad(UP_DOWN, A_B);
+		#end
+		
 		changeSelection();
 		super.create();
 		

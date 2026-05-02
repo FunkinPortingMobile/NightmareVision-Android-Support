@@ -30,6 +30,10 @@ class FlashingState extends MusicBeatState
 		warnText.setFormat(Paths.DEFAULT_FONT, 32, FlxColor.WHITE, CENTER);
 		warnText.screenCenter(Y);
 		add(warnText);
+		
+		#if mobile
+		addVirtualPad(NONE, A_B);
+		#end
 	}
 	
 	override function update(elapsed:Float)
@@ -62,8 +66,8 @@ class FlashingState extends MusicBeatState
 						{
 							onComplete: function(twn:FlxTween) {
 								FlxG.switchState(TitleState.new);
-							}
-						});
+						}
+					});
 				}
 			}
 		}

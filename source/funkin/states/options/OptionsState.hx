@@ -82,6 +82,10 @@ class OptionsState extends MusicBeatState
 		selectorRight = new Alphabet(0, 0, '<', true, false);
 		add(selectorRight);
 		
+		#if mobile
+		addVirtualPad(UP_DOWN, A_B);
+		#end
+		
 		changeSelection();
 		
 		super.create();

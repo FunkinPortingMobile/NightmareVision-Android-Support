@@ -152,6 +152,10 @@ class FreeplayState extends MusicBeatState
 		
 		WeekData.setDirectoryFromWeek();
 		
+		#if mobile
+		addVirtualPad(LEFT_FULL, A_B_C);
+		#end
+		
 		changeTab();
 		
 		changeDiff();

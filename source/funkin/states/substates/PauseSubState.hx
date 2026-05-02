@@ -165,6 +165,12 @@ class PauseSubState extends MusicBeatSubstate
 		debugTxt.screenCenter(Y);
 		add(debugTxt);
 		
+		#if mobile
+		controls.isInSubstate = true;
+		addVirtualPad(PlayState.chartingMode ? LEFT_FULL : UP_DOWN, A_B);
+		addVirtualPadCamera();
+		#end
+		
 		regenMenu();
 		cameras = [cam];
 		

@@ -1672,6 +1672,7 @@ class PlayState extends MusicBeatState
 			
 			resetDiscordRPC(startTimer != null && startTimer.finished);
 		}
+		#if mobile controls.isInSubstate = false; #end
 		scripts.call('onSubstateClose', []);
 		super.closeSubState();
 	}
@@ -1738,7 +1739,7 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 		input.update();
 		
-		if (controls.PAUSE && startedCountdown && canPause)
+		if (controls.PAUSE #if android || FlxG.android.justReleased.BACK #end && startedCountdown && canPause)
 		{
 			if (scripts.call('onPause', []) != ScriptConstants.STOP_FUNC) openPauseMenu();
 		}

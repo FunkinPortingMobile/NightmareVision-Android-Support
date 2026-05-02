@@ -78,6 +78,10 @@ class Main extends Sprite
 			if (e.keyCode == FlxKey.ENTER && e.altKey) e.stopImmediatePropagation();
 		}, false, 100);
 		
+		#if android
+		FlxG.android.preventDefaultKeys = [BACK];
+		#end
+		
 		DebugDisplay.init();
 		
 		FlxG.signals.gameResized.add(onResize);

@@ -200,6 +200,10 @@ class StoryMenuState extends MusicBeatState
 		changeWeek();
 		
 		super.closeSubState();
+		#if mobile
+		removeVirtualPad();
+		addVirtualPad(LEFT_FULL, A_B_C);
+		#end
 	}
 	
 	override function update(elapsed:Float)
@@ -242,7 +246,7 @@ class StoryMenuState extends MusicBeatState
 			else if (controls.UI_LEFT_P) changeDifficulty(-1);
 			else if (upP || downP) changeDifficulty();
 			
-			if (FlxG.keys.justPressed.CONTROL)
+			if (FlxG.keys.justPressed.CONTROL #if || virtualPad.buttonC.justPressed #end)
 			{
 				persistentUpdate = false;
 				openSubState(new GameplayChangersSubstate());

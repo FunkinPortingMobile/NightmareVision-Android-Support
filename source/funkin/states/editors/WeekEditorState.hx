@@ -105,7 +105,6 @@ class WeekEditorState extends MusicBeatState
 		reloadAllShit();
 		
 		FlxG.mouse.visible = true;
-		
 		super.create();
 	}
 	

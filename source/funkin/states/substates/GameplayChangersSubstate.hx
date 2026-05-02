@@ -140,6 +140,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		reloadCheckboxes();
 		
 		#if mobile
+		controls.isInSubstate = true;
 		addVirtualPad(LEFT_FULL, A_B_C);
 		#end
 	}

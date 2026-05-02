@@ -22,7 +22,6 @@ class MusicBeatSubstate extends FlxSubState
 	{
 	    instance = this;
 		super();
-		#if mobile controls.isInSubstate = true; #end
 	}
 	
 	private var curSection:Int = 0;

@@ -255,6 +255,7 @@ class StoryMenuState extends MusicBeatState
 			{
 				persistentUpdate = false;
 				openSubState(new GameplayChangersSubstate());
+				#if mobile removeVirtualPad(); #end
 			}
 			else if (controls.RESET)
 			{

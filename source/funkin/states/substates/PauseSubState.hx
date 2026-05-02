@@ -322,6 +322,7 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			PlayState.deathCounter = 0;
 			PlayState.seenCutscene = false;
+			#if mobile controls.isInSubstate = false; #end
 			FlxG.switchState(() -> PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 			CoolUtil.cancelMusicFadeTween();
 			FunkinSound.playMusic(Paths.music('freakyMenu'));
@@ -336,6 +337,7 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			PlayState.instance.paused = true;
 			PlayState.instance.audio.volume = 0;
+			#if mobile controls.isInSubstate = false; #end
 			FlxG.switchState(() -> new OptionsState());
 			@:privateAccess
 			{

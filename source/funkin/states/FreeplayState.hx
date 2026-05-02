@@ -177,7 +177,16 @@ class FreeplayState extends MusicBeatState
 	{
 		changeSelection();
 		persistentUpdate = true;
+		#if mobile
+		new FlxTimer().start(0.1, function(tmr:FlxTimer) {
+			controls.isInSubstate = false;
+		});
+		#end
 		super.closeSubState();
+		#if mobile
+		removeVirtualPad();
+		addVirtualPad(LEFT_FULL, A_B_C);
+		#end
 	}
 	
 	function createSongs()
@@ -356,10 +365,11 @@ class FreeplayState extends MusicBeatState
 			FlxG.switchState(MainMenuState.new);
 		}
 		
-		if (FlxG.keys.justPressed.CONTROL)
+		if (FlxG.keys.justPressed.CONTROL #if mobile || virtualPad.buttonC.justPressed #end)
 		{
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
+			#if mobile removeVirtualPad(); #end
 		}
 		else if (FlxG.keys.justPressed.SPACE)
 		{

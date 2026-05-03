@@ -4,7 +4,7 @@ import haxe.Json;
 
 import lime.system.Clipboard;
 
-import openfl.net.FileReference;
+import extensions.openfl.net.FileReference;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileFilter;
@@ -511,12 +511,16 @@ class WeekEditorState extends MusicBeatState
 	
 	public static function loadWeek()
 	{
+        #if ios
+        PopUp.showAlert("Sorry!", "This function is not implemented yet.");
+        #else
 		var jsonFilter:FileFilter = new FileFilter('JSON', 'json');
 		_file = new FileReference();
 		_file.addEventListener(Event.SELECT, onLoadComplete);
 		_file.addEventListener(Event.CANCEL, onLoadCancel);
 		_file.addEventListener(IOErrorEvent.IO_ERROR, onLoadError);
 		_file.browse([jsonFilter]);
+        #end
 	}
 	
 	public static var loadedWeek:WeekFile = null;
@@ -588,11 +592,15 @@ class WeekEditorState extends MusicBeatState
 		var data:String = Json.stringify(weekFile, "\t");
 		if (data.length > 0)
 		{
+            #if ios
+			StorageSystem.saveContent(weekFileName, ".json", data.trim());
+			#else
 			_file = new FileReference();
 			_file.addEventListener(Event.COMPLETE, onSaveComplete);
 			_file.addEventListener(Event.CANCEL, onSaveCancel);
 			_file.addEventListener(IOErrorEvent.IO_ERROR, onSaveError);
 			_file.save(data, weekFileName + ".json");
+            #end
 		}
 	}
 	
@@ -677,6 +685,11 @@ class WeekEditorFreeplayState extends MusicBeatState
 		
 		addEditorBox();
 		changeSelection();
+
+        #if mobile
+		addVirtualPad(LEFT_FULL, A_B);
+		#end
+
 		super.create();
 	}
 	
@@ -865,7 +878,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			FlxG.sound.muteKeys = [];
 			FlxG.sound.volumeDownKeys = [];
 			FlxG.sound.volumeUpKeys = [];
-			if (FlxG.keys.justPressed.ENTER)
+			if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end)
 			{
 				iconInputText.hasFocus = false;
 			}
@@ -875,14 +888,14 @@ class WeekEditorFreeplayState extends MusicBeatState
 			FlxG.sound.muteKeys = ClientPrefs.muteKeys;
 			FlxG.sound.volumeDownKeys = ClientPrefs.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = ClientPrefs.volumeUpKeys;
-			if (FlxG.keys.justPressed.ESCAPE)
+			if (FlxG.keys.justPressed.ESCAPE #if mobile || virtualPad.buttonB.justPressed #end)
 			{
 				FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
 				FunkinSound.playMusic(Paths.music('freakyMenu'));
 			}
 			
-			if (controls.UI_UP_P) changeSelection(-1);
-			if (controls.UI_DOWN_P) changeSelection(1);
+			if (controls.UI_UP_P #if mobile || virtualPad.buttonUp.justPressed #end) changeSelection(-1);
+			if (controls.UI_DOWN_P #if mobile || virtualPad.buttonDown.justPressed #end) changeSelection(1);
 		}
 		super.update(elapsed);
 	}

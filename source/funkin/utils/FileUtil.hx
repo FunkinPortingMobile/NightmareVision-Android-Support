@@ -1,13 +1,12 @@
 package funkin.utils;
 
 import haxe.io.Bytes as HaxeBytes;
-#if desktop
 import lime.ui.FileDialog;
 import lime.utils.Bytes;
 import openfl.utils.ByteArray;
 import openfl.net.FileFilter;
 import openfl.filesystem.File;
-#end
+
 typedef BrowseOptions =
 {
 	var ?typeFilter:Array<FileFilter>;

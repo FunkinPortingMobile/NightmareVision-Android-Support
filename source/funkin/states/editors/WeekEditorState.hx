@@ -512,7 +512,7 @@ class WeekEditorState extends MusicBeatState
 	public static function loadWeek()
 	{
         #if ios
-        PopUp.showAlert("Sorry!", "This function is not implemented yet.");
+        PopUp.showAlert("This function is not implemented yet.", "Sorry!");
         #else
 		var jsonFilter:FileFilter = new FileFilter('JSON', 'json');
 		_file = new FileReference();

@@ -1,14 +1,13 @@
 package funkin.utils;
 
 import haxe.io.Bytes as HaxeBytes;
-
+#if desktop
 import lime.ui.FileDialog;
 import lime.utils.Bytes;
-
 import openfl.utils.ByteArray;
 import openfl.net.FileFilter;
 import openfl.filesystem.File;
-
+#end
 typedef BrowseOptions =
 {
 	var ?typeFilter:Array<FileFilter>;
@@ -22,6 +21,10 @@ typedef BrowseOptions =
 @:nullSafety
 class FileUtil
 {
+	#if android
+	private static var _saveFile_jni = JNI.createStaticMethod("mobile/backend/java/FileUtils", "saveFile", "(Ljava/lang/String;Ljava/lang/String;)V");
+	#end
+	
 	public static function browseForFile(options:BrowseOptions, ?onSelect:String->Void, ?onCancel:Void->Void)
 	{
 		final title = options.title;
@@ -62,6 +65,34 @@ class FileUtil
 	{
 		if (data == null) return;
 		
+		#if android
+		try
+		{
+			var content:String = "";
+			
+			if (data is HaxeBytes)
+			{
+				content = (cast data : HaxeBytes).toString();
+			}
+			else if (Std.isOfType(data, String))
+			{
+				content = data;
+			}
+			else
+			{
+				content = Std.string(data);
+			}
+			
+			_saveFile_jni(fileName != null ? fileName : "file.json", content);
+			
+			if (onSelect != null) onSelect("Storage Picker Opened");
+		}
+		catch (e:Dynamic)
+		{
+			trace("[FileUtil.saveFile] JNI Error: " + e);
+			if (onCancel != null) onCancel();
+		}
+		#elseif desktop
 		var filters = null;
 		if (fileName != null && fileName.extension().length > 0)
 		{
@@ -81,6 +112,7 @@ class FileUtil
 				if (onCancel != null) onCancel();
 			}
 		}, filters, fileName);
+		#end
 	}
 	
 	public static function saveFileToPath(data:Dynamic, path:String, ensureDirectory:Bool = true):Bool

@@ -85,7 +85,6 @@ class Main extends Sprite
 		DebugDisplay.init();
 		
 		FlxG.signals.gameResized.add(onResize);
-		
 		#if DISABLE_TRACES
 		haxe.Log.trace = (v:Dynamic, ?infos:haxe.PosInfos) -> {}
 		#end

@@ -87,18 +87,20 @@ class ModsState extends MusicBeatState
 		checkbox.scale.set(0.625, 0.625);
 		checkbox.updateHitbox();
 		add(checkbox);
-		
+
 		add(new FlxSprite().loadGraphic(Paths.image("menus/mods/menuborder1")));
 		add(new FlxSprite(685, 645).loadGraphic(Paths.image("menus/mods/menuborder2")));
-		
-        #if mobile
-        addVirtualPad(UP_DOWN, A_B);
-        #end
-        
+
 		changeDir(0);
+
+        #if mobile
+        addVirtualPad(UP_DOWN, A_B_C);
+        #end
     }
 	override public function update(elapsed)
 	{
+        super.update(elapsed);
+
 		if (controls.UI_UP_P)
 		{
 			changeDir(-1);
@@ -109,10 +111,10 @@ class ModsState extends MusicBeatState
 			changeDir(1);
 			FlxG.sound.play(Paths.sound("scrollMenu"));
 		}
-		if (controls.ACCEPT) toggleMod();
+		if (controls.ACCEPT #if mobile || virtualPad.buttonA.pressed #end) toggleMod();
 		
-		if (FlxG.keys.justPressed.TAB) makeTopMod(modList[curDir]);
-		if (controls.BACK)
+		if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.buttonC.pressed #end) makeTopMod(modList[curDir]);
+		if (controls.BACK #if mobile || virtualPad.buttonB.pressed #end)
 		{
 			Mods.currentModDirectory = topMod;
 			

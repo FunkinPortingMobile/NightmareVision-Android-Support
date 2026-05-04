@@ -78,6 +78,10 @@ class ChartConverterState extends MusicBeatState
 		}
 		
 		changeSel();
+		
+		#if mobile
+		addVirtualPad(UP_DOWN, A_B);
+		#end
 	}
 	
 	override function update(elapsed:Float)
@@ -246,7 +250,7 @@ class ChartConverterState extends MusicBeatState
 				}
 				
 				FileUtil.browseForMultipleFiles({typeFilter: [new FileFilter('json', 'json')]}, onSelect, onCancel);
-				
+       
 			case 2: // psych 1.0
 				function onSelect(path:String)
 				{
@@ -274,13 +278,16 @@ class ChartConverterState extends MusicBeatState
 	}
 	
 	function saveFromFormat(path:String, format:OneOfArray<DynamicFormat>, ?diff:FormatDifficulty)
-	{
-		final nmvChart = new FNFPsych().fromFormat(format, diff);
-		nmvChart.beautify = true;
-		final saveResult = nmvChart.save(path.replace('.json', '-converted.json'));
-		if (saveResult == null) throw "failed to save.";
-		Logger.log('Successfuly saved chart at ${saveResult.dataPath}', NOTICE, true);
-	}
+    {
+        final nmvChart = new FNFPsych().fromFormat(format, diff);
+        nmvChart.beautify = true;
+        final saveResult = nmvChart.save(path.replace('.json', '-converted.json'));
+        if (saveResult == null) throw "failed to save.";
+        Logger.log('Successfully saved chart at ${saveResult.dataPath}', NOTICE, true);
+        #if android
+        PopUp.showAlert("Success!", "Successfully saved chart at:\n" + saveResult.dataPath, "OK");
+        #end
+    }
 	
 	override function destroy()
 	{

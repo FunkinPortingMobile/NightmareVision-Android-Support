@@ -52,7 +52,6 @@ import extension.androidtools.os.Build.VERSION_CODES;
 import extension.androidtools.Tools;
 import lime.system.JNI;
 #end
-
 using flixel.util.FlxArrayUtil;
 
 using StringTools;

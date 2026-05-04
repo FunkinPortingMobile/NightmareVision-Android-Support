@@ -94,7 +94,7 @@ class ModsState extends MusicBeatState
 		changeDir(0);
 		
 		#if mobile
-        addVirtualPad(UP_DOWN, A_B);
+        addVirtualPad(UP_DOWN, A_B_C);
         #end
     }
 	override public function update(elapsed)

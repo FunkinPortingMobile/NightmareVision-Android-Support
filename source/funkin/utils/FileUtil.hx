@@ -1,8 +1,10 @@
 package funkin.utils;
 
 import haxe.io.Bytes as HaxeBytes;
+
 import lime.ui.FileDialog;
 import lime.utils.Bytes;
+
 import openfl.utils.ByteArray;
 import openfl.net.FileFilter;
 import openfl.filesystem.File;
@@ -22,6 +24,9 @@ class FileUtil
 {
 	#if android
 	private static var _saveFile_jni = JNI.createStaticMethod("mobile/backend/java/FileUtils", "saveFile", "(Ljava/lang/String;Ljava/lang/String;)V");
+	private static var _browseForFile = JNI.createStaticMethod("mobile/backend/java/FileUtils", "browseFiles", "(Ljava/lang/String;Lorg/haxe/lime/HaxeObject;)V");
+	private static var _onSelectCallback:Null<String->Void> = null;
+	private static var _onCancelCallback:Null<Void->Void> = null;
 	#end
 	
 	public static function browseForFile(options:BrowseOptions, ?onSelect:String->Void, ?onCancel:Void->Void)
@@ -30,6 +35,34 @@ class FileUtil
 		final filters = options.typeFilter;
 		final startPath = options.defaultSearch;
 		
+		#if android
+		_onSelectCallback = onSelect;
+		_onCancelCallback = onCancel;
+		
+		var mimeType:String = "*/*";
+		if (options.typeFilter != null && options.typeFilter.length > 0)
+		{
+			var ext = options.typeFilter[0].extension;
+			if (ext == "json") mimeType = "application/json";
+			else if (ext == "txt") mimeType = "text/plain";
+		}
+		
+		var callback =
+			{
+				onFileSelected: function(bytes:haxe.io.BytesData, fileName:String):Void {
+					var cb = _onSelectCallback;
+					if (cb != null)
+					{
+						cb(fileName);
+					}
+				},
+				onCancel: function():Void {
+					var cb = _onCancelCallback;
+					if (cb != null) cb();
+				}
+			};
+		_browseForFile(mimeType, callback);
+		#elseif desktop
 		FileDialog.openFile(FlxG.stage.window, title, (files, filter) -> {
 			if (files != null && files.length > 0)
 			{
@@ -40,6 +73,7 @@ class FileUtil
 				if (onCancel != null) onCancel();
 			}
 		}, @:privateAccess @:nullSafety(Off) File.__getFilterTypes(filters), startPath);
+		#end
 	}
 	
 	public static function browseForMultipleFiles(options:BrowseOptions, ?onSelect:Array<String>->Void, ?onCancel:Void->Void)

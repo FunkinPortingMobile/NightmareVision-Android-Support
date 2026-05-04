@@ -111,7 +111,7 @@ class FunkinAssets
 	{
 		var exists:Bool = false;
 		
-		#if (MODS_ALLOWED || ASSET_REDIRECT)
+		#if MODS_ALLOWED
 		if (FileSystem.exists(path)) exists = true;
 		else
 		#end

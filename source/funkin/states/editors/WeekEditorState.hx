@@ -531,36 +531,55 @@ class WeekEditorState extends MusicBeatState
 		_file.removeEventListener(Event.SELECT, onLoadComplete);
 		_file.removeEventListener(Event.CANCEL, onLoadCancel);
 		_file.removeEventListener(IOErrorEvent.IO_ERROR, onLoadError);
+
+        var rawJson:String = null;
 		
 		#if sys
-		var fullPath:String = null;
 		@:privateAccess
-		if (_file.__path != null) fullPath = _file.__path;
-		
-		if (fullPath != null)
+		var hasPath:Bool = (_file.__path != null && _file.__path != "");
+
+		if (hasPath)
 		{
-			var rawJson:String = File.getContent(fullPath);
-			if (rawJson != null)
+			rawJson = File.getContent(_file.__path);
+		}
+		else if (_file.data != null)
+		{
+			rawJson = _file.data.toString();
+		}
+		#else
+		if (_file.data != null)
+		{
+			rawJson = _file.data.toString();
+		}
+		#end
+
+		if (rawJson != null && rawJson.length > 0)
+		{
+			try
 			{
-				loadedWeek = cast Json.parse(rawJson);
-				if (loadedWeek.weekCharacters != null && loadedWeek.weekName != null) // Make sure it's really a week
+				loadedWeek = cast haxe.Json.parse(rawJson);
+
+				if (loadedWeek.weekCharacters != null && loadedWeek.weekName != null)
 				{
 					var cutName:String = _file.name.substr(0, _file.name.length - 5);
 					trace("Successfully loaded file: " + cutName);
+
 					loadError = false;
-					
 					weekFileName = cutName;
 					_file = null;
 					return;
 				}
 			}
+			catch (e:Dynamic)
+			{
+				trace("Error Parsing JSON: " + e);
+			}
 		}
+
 		loadError = true;
 		loadedWeek = null;
 		_file = null;
-		#else
-		trace("File couldn't be loaded! You aren't on Desktop, are you?");
-		#end
+		trace("Error on Loading Week: Invalid File or empty.");
 	}
 	
 	/**

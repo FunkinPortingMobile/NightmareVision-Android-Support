@@ -130,19 +130,27 @@ public class FileUtils extends Extension {
             @Override
             public void run() {
                 try {
+                    String fileName = "file.json";
+                    android.database.Cursor cursor = Extension.mainActivity.getContentResolver().query(uri, null, null,
+                            null, null);
+                    if (cursor != null && cursor.moveToFirst()) {
+                        int nameIndex = cursor.getColumnIndex(android.provider.OpenableColumns.DISPLAY_NAME);
+                        if (nameIndex != -1)
+                            fileName = cursor.getString(nameIndex);
+                        cursor.close();
+                    }
+
                     InputStream inputStream = Extension.mainActivity.getContentResolver().openInputStream(uri);
                     ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-
                     byte[] buffer = new byte[1024];
                     int len;
                     while ((len = inputStream.read(buffer)) != -1) {
                         byteBuffer.write(buffer, 0, len);
                     }
-
                     byte[] fileBytes = byteBuffer.toByteArray();
-                    String fileName = "file.json";
-
-                    callbackObject.call("onFileSelected", new Object[] { fileBytes, fileName });
+                    if (callbackObject != null) {
+                        callbackObject.call("onFileSelected", new Object[] { fileBytes, fileName });
+                    }
 
                     inputStream.close();
                     byteBuffer.close();

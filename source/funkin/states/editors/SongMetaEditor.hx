@@ -64,14 +64,12 @@ class SongMetaEditor extends UISubState
 			final col = FlxColor.fromString(ev.value.toString());
 			updateColour(col);
 		}
-		
-		dialog.loadButton.onClick = (ev) -> {
+        dialog.loadButton.onClick = (ev) -> {
 			FileUtil.browseForFile({typeFilter: [new FileFilter('json', 'json')]}, (str) -> {
 				loadMeta(str);
 				_song = null;
 			});
 		}
-		
 		dialog.clearButton.onClick = (ev) -> clearMeta();
 		
 		dialog.saveButton.onClick = (ev) -> saveMeta();
@@ -141,7 +139,6 @@ class SongMetaEditor extends UISubState
 			}
 		return Json.stringify(meta, '\t');
 	}
-	
 	function loadMeta(file:String)
 	{
 		if (!FunkinAssets.exists(file)) return;

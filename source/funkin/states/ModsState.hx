@@ -91,9 +91,12 @@ class ModsState extends MusicBeatState
 		add(new FlxSprite().loadGraphic(Paths.image("menus/mods/menuborder1")));
 		add(new FlxSprite(685, 645).loadGraphic(Paths.image("menus/mods/menuborder2")));
 		
+        #if mobile
+        addVirtualPad(UP_DOWN, A_B);
+        #end
+        
 		changeDir(0);
-	}
-	
+    }
 	override public function update(elapsed)
 	{
 		if (controls.UI_UP_P)

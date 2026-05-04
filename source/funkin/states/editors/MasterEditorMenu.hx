@@ -16,7 +16,7 @@ class MasterEditorMenu extends MusicBeatState
 	var options:Array<String> = [
 		'Chart Editor',
 		'Character Editor',
-		'Note Skin Editor',
+	//	'Note Skin Editor',
 		'Chart Converter',
 		"Metadata Editor",
 		'Mods Manager',

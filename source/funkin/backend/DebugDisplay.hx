@@ -195,6 +195,10 @@ class DebugDisplay extends Sprite
 		#else
 		var str = 'FPS: $currentFPS • GC: ${FlxStringUtil.formatBytes(gcMemory)}';
 		#end
+
+        #if mobile
+		str += ' • Arch: ${get_arch()}';
+		#end
 		
 		if (displayType == FpsDisplayMode.ADVANCED)
 		{
@@ -254,6 +258,21 @@ class DebugDisplay extends Sprite
 		return hl.Gc.stats().currentMemory;
 		#else
 		return (cast openfl.system.System.totalMemoryNumber : UInt);
+		#end
+	}
+
+    inline function get_arch():String
+	{
+		#if HXCPP_ARM64
+		return "ARM64";
+		#elseif HXCPP_ARMV7
+		return "ARMv7";
+		#elseif HXCPP_X86
+		return "x86";
+		#elseif (HXCPP_X86_64 || HXCPP_M64)
+		return "x86_64";
+		#else
+		return "Unknown Arch";
 		#end
 	}
 	

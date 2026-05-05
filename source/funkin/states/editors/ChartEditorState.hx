@@ -528,7 +528,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		updateGrid();
 		
 		#if mobile
-		addVirtualPad(LEFT_FULL, CHART_EDITOR);
+		addVirtualPad(CHART_EDITOR, CHART_EDITOR);
 		#end
 	}
 	

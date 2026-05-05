@@ -1747,10 +1747,8 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			nextGridBG.y += gridBG.height;
 		}
 		
-		#if desktop
 		updateWaveform();
-		#end
-		
+
 		updateGrid();
 		
 		// events -> strum1 seperator
@@ -1786,7 +1784,6 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 	
 	function updateWaveform(hard:Bool = false)
 	{
-		#if desktop
 		final instWave:Bool = (FlxG.save.data.chart_waveformInst ?? false);
 		final vocalsWave:Bool = (FlxG.save.data.chart_waveformVoices ?? false);
 		final opponentVocalsWave:Bool = (FlxG.save.data.chart_waveformOpponentVoices ?? false);
@@ -1852,7 +1849,6 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		if (opponentVocalsWave) drawWave(audio.opponentVocals?.getFirstAlive(), scale * (both ? 2 / 3 : .5), null);
 		
 		waveformPrinted = true;
-		#end
 	}
 	
 	static function waveformData(buffer:AudioBuffer, bytes:Bytes, time:Float, endTime:Float, multiply:Float = 1, ?array:Array<Array<Array<Float>>>, ?steps:Float):Array<Array<Array<Float>>>

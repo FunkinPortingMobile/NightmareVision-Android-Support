@@ -2,7 +2,11 @@ package funkin.states.editors;
 
 import haxe.Json;
 
+#if mobile
 import extensions.openfl.net.FileReference;
+#else
+import openfl.net.FileReference;
+#end
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileFilter;

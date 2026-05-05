@@ -4,7 +4,11 @@ import haxe.Json;
 
 import lime.system.Clipboard;
 
+#if mobile
 import extensions.openfl.net.FileReference;
+#else
+import openfl.net.FileReference;
+#end
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
 import openfl.net.FileFilter;
@@ -535,23 +539,25 @@ class WeekEditorState extends MusicBeatState
         var rawJson:String = null;
 		
 		#if sys
-		@:privateAccess
-		var hasPath:Bool = (_file.__path != null && _file.__path != "");
+        @:privateAccess
+        {
+            var hasPath:Bool = (_file.__path != null && _file.__path != "");
 
-		if (hasPath)
-		{
-			rawJson = File.getContent(_file.__path);
-		}
-		else if (_file.data != null)
-		{
-			rawJson = _file.data.toString();
-		}
-		#else
-		if (_file.data != null)
-		{
-			rawJson = _file.data.toString();
-		}
-		#end
+            if (hasPath)
+            {
+                rawJson = File.getContent(_file.__path);
+            }
+            else if (_file.data != null)
+            {
+                rawJson = _file.data.toString();
+            }
+        }
+        #else
+        if (_file.data != null)
+        {
+            rawJson = _file.data.toString();
+        }
+        #end
 
 		if (rawJson != null && rawJson.length > 0)
 		{

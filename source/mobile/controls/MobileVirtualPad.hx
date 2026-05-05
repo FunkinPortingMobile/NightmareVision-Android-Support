@@ -33,7 +33,7 @@ enum MobileActionMode
 	A_B_C;
 	CHART_EDITOR;
 	CHARACTER_EDITOR;
-    NOTE_SPLASH_DEBUG;
+ //   NOTE_SPLASH_DEBUG;
 	NONE;
 }
 
@@ -96,6 +96,9 @@ class MobileVirtualPad extends TouchInputManager
 		var screenW = FlxG.width;
 		var screenH = FlxG.height;
 
+        var dPad2_X = 420; // Move para os lados (maior = mais para a direita)
+        var dPad2_Y = screenH - 620; // Move para cima/baixo (maior = mais para cima) só para mim n esquecer sempre q for mexer
+
 		switch (Action)
 		{
 			case A:
@@ -120,19 +123,19 @@ class MobileVirtualPad extends TouchInputManager
 				buttonB = add(createButton(screenW - 258, screenH - 135, 'b', 0xFFCB00, [B]));
 				buttonZ = add(createButton(screenW - 132, screenH - 255, 'z', 0xCCB98E, [Z]));
 				buttonA = add(createButton(screenW - 132, screenH - 135, 'a', 0xFF0000, [A]));
-			case CHARACTER_EDITOR:
+		/*	case CHARACTER_EDITOR:
 				buttonV = add(createButton(screenW - 384, screenH - 255, 'v', 0x49A9B2, [V]));
 				buttonD = add(createButton(screenW - 510, screenH - 135, 'd', 0x0078FF, [D]));
 				buttonX = add(createButton(screenW - 258, screenH - 255, 'x', 0x99062D, [X]));
 				buttonC = add(createButton(screenW - 384, screenH - 135, 'c', 0x44FF00, [C]));
 				buttonB = add(createButton(screenW - 258, screenH - 135, 'b', 0xFFCB00, [B]));
 				buttonZ = add(createButton(screenW - 132, screenH - 255, 'z', 0xCCB98E, [Z]));
-				buttonA = add(createButton(screenW - 132, screenH - 135, 'a', 0xFF0000, [A]));
-			case NOTE_SPLASH_DEBUG:
-				buttonUp2 = add(createButton(screenW - 105, screenH - 345, 'up', 0x00FF00, [UP, noteUP]));
-				buttonLeft2 = add(createButton(screenW - 207, screenH - 243, 'left', 0xFF00FF, [LEFT, noteLEFT]));
-				buttonRight2 = add(createButton(screenW, screenH - 243, 'right', 0xFF0000, [RIGHT, noteRIGHT]));
-				buttonDown2 = add(createButton(screenW - 105, screenH - 135, 'down', 0x00FFFF, [DOWN, noteDOWN]));
+				buttonA = add(createButton(screenW - 132, screenH - 135, 'a', 0xFF0000, [A]));*/
+			case CHARACTER_EDITOR:
+                buttonUp2 = add(createButton(dPad2_X + 105, dPad2_Y, 'up', 0x00FF00, [UP, noteUP]));
+                buttonLeft2 = add(createButton(dPad2_X, dPad2_Y + 105, 'left', 0xFF00FF, [LEFT, noteLEFT]));
+                buttonRight2 = add(createButton(dPad2_X + 210, dPad2_Y + 105, 'right', 0xFF0000, [RIGHT, noteRIGHT]));
+                buttonDown2 = add(createButton(dPad2_X + 105, dPad2_Y + 210, 'down', 0x00FFFF, [DOWN, noteDOWN]));
 				buttonV = add(createButton(screenW - 510, screenH - 255, 'v', 0x49A9B2, [V]));
 				buttonD = add(createButton(screenW - 510, screenH - 135, 'd', 0x0078FF, [D]));
 				buttonX = add(createButton(screenW - 384, screenH - 255, 'x', 0x99062D, [X]));

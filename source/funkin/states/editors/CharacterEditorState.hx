@@ -184,15 +184,18 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		add(pointerBounds);
 		pointerBounds.alpha = 0;
 
-       #if mobile
-	   addVirtualPad(LEFT_FULL, CHARACTER_EDITOR);
-	//	virtualPad.y -= 120;
+        #if mobile
+	    addVirtualPad(LEFT_FULL, CHARACTER_EDITOR);
+        addVirtualPadCamera();
 		#end
-
 	}
 	
 	function exitState()
 	{
+		#if mobile
+		virtualPad.visible = false;
+		#end
+
 		// i want this to only show up on unsaved changes but i think id ahve to do a bit of refactoring for that to work nice
 		ToolKitUtils.openPrompt('Are you sure you want to exit? There may be unsaved changes.', 'Exiting Menu', 'yesno', (button) -> {
 			if (button.toString().contains('yes'))
@@ -207,6 +210,12 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 					FunkinSound.playMusic(Paths.music('freakyMenu'));
 				}
 				FlxG.mouse.visible = false;
+			}
+			else
+			{
+				#if mobile
+				virtualPad.visible = true;
+				#end
 			}
 		});
 	}
@@ -977,22 +986,22 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		
 		final moveDistance = FlxG.keys.pressed.SHIFT ? 10 : 1;
 		
-		if (FlxG.keys.justPressed.LEFT)
+		if (FlxG.keys.justPressed.LEFT #if mobile || virtualPad.buttonLeft.justPressed #end)
 		{
 			character.animOffset.x += moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.DOWN)
+		else if (FlxG.keys.justPressed.DOWN #if mobile || virtualPad.buttonDown.justPressed #end)
 		{
 			character.animOffset.y -= moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.UP)
+		else if (FlxG.keys.justPressed.UP #if mobile || virtualPad.buttonUp.justPressed #end)
 		{
 			character.animOffset.y += moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.RIGHT)
+		else if (FlxG.keys.justPressed.RIGHT #if mobile || virtualPad.buttonRight.justPressed #end)
 		{
 			character.animOffset.x -= moveDistance;
 			return true;
@@ -1025,36 +1034,36 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 			uiElements.animationList.animationList.selectItemBy((item) -> return item.id == anim);
 		}
 		
-		if (FlxG.keys.justPressed.A)
+		if (FlxG.keys.justPressed.A #if mobile || virtualPad.buttonLeft2.justPressed #end)
 		{
 			playSing('singLEFT');
 		}
-		else if (FlxG.keys.justPressed.W)
+		else if (FlxG.keys.justPressed.W #if mobile || virtualPad.buttonUp2.justPressed #end)
 		{
 			playSing('singUP');
 		}
-		else if (FlxG.keys.justPressed.S)
+		else if (FlxG.keys.justPressed.S #if mobile || virtualPad.buttonDown2.justPressed #end)
 		{
 			playSing('singDOWN');
 		}
-		else if (FlxG.keys.justPressed.D)
+		else if (FlxG.keys.justPressed.D #if mobile || virtualPad.buttonRight2.justPressed #end)
 		{
 			playSing('singRIGHT');
 		}
-		else if (FlxG.keys.justPressed.SPACE)
+		else if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.buttonA.justPressed #end)
 		{
 			dance();
 		}
 		
 		if (character.isAnimNull()) return;
 		
-		if ((FlxG.keys.justPressed.Z || FlxG.keys.justPressed.X))
+		if ((FlxG.keys.justPressed.Z || FlxG.keys.justPressed.X #if mobile || virtualPad.buttonC.justPressed #end))
 		{
 			character.pauseAnim();
 			character.animCurFrame = FlxMath.wrap(character.animCurFrame + (FlxG.keys.justPressed.Z ? -1 : 1), 0, character.getAnimNumFrames() - 1);
 		}
 		
-		if (FlxG.keys.justPressed.C)
+		if (FlxG.keys.justPressed.C #if mobile || virtualPad.buttonZ.justPressed #end)
 		{
 			character.playAnim(character.getAnimName(), true);
 		}
@@ -1062,22 +1071,22 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 	
 	function controlCamera(elapsed:Float)
 	{
-		if (FlxG.keys.pressed.E && FlxG.camera.zoom < 3)
+		if (FlxG.keys.pressed.E #if mobile || virtualPad.buttonD.justPressed #end && FlxG.camera.zoom < 3)
 		{
 			FlxG.camera.zoom += elapsed * FlxG.camera.zoom;
 		}
-		if (FlxG.keys.pressed.Q && FlxG.camera.zoom > 0.1)
+		if (FlxG.keys.pressed.Q #if mobile || virtualPad.buttonB.justPressed #end && FlxG.camera.zoom > 0.1)
 		{
 			FlxG.camera.zoom -= elapsed * FlxG.camera.zoom;
 		}
 		
 		final speedMult = FlxG.keys.pressed.SHIFT ? 2 : 1;
 		
-		if (FlxG.keys.pressed.I)
+		if (FlxG.keys.pressed.I #if mobile || virtualPad.buttonX.justPressed #end)
 		{
 			FlxG.camera.scroll.y -= 200 * elapsed * speedMult;
 		}
-		else if (FlxG.keys.pressed.K)
+		else if (FlxG.keys.pressed.K #if mobile || virtualPad.buttonV.justPressed #end)
 		{
 			FlxG.camera.scroll.y += 200 * elapsed * speedMult;
 		}

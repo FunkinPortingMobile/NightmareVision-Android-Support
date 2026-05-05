@@ -97,8 +97,19 @@ class OptionsState extends MusicBeatState
 	{
 		ClientPrefs.flush();
 		
+		#if mobile
+		new FlxTimer().start(0.1, function(tmr:FlxTimer) {
+			controls.isInSubstate = false;
+		});
+		#end
+		
 		super.closeSubState();
         justLeftSubState = true;
+        
+        #if mobile
+		removeVirtualPad();
+		addVirtualPad(UP_DOWN, A_B);
+		#end
 	}
 	
 	override function update(elapsed:Float)

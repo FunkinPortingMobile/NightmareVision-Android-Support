@@ -526,6 +526,10 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		lastSong = currentSongName;
 		
 		updateGrid();
+		
+		#if mobile
+		addVirtualPad(LEFT_FULL, CHART_EDITOR);
+		#end
 	}
 	
 	public static function getDefaultSong():Song
@@ -1405,12 +1409,12 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		
 		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S) return saveLevel();
 		
-		if (FlxG.keys.justPressed.ENTER) return enterSong();
+		if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end) return enterSong();
 		
 		if (FlxG.keys.justPressed.E) changeNoteSustain(Conductor.stepCrotchet);
 		if (FlxG.keys.justPressed.Q) changeNoteSustain(-Conductor.stepCrotchet);
 		
-		if (FlxG.keys.justPressed.BACKSPACE)
+		if (FlxG.keys.justPressed.BACKSPACE #if mobile || virtualPad.buttonB.justPressed #end)
 		{
 			PlayState.chartingMode = false;
 			FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
@@ -1418,23 +1422,23 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			return;
 		}
 		
-		if (FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL)
+		if (FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL #if mobile || virtualPad.buttonV.justPressed #end)
 		{
 			undo();
 		}
 		
-		if (FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL)
+		if (FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL #if mobile || virtualPad.buttonZ.justPressed #end)
 		{
 			--curZoom;
 			updateZoom();
 		}
-		if (FlxG.keys.justPressed.X && curZoom < zoomList.length - 1)
+		if (FlxG.keys.justPressed.X #if mobile || virtualPad.buttonD.justPressed #end && curZoom < zoomList.length - 1)
 		{
 			curZoom++;
 			updateZoom();
 		}
 		
-		if (FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) enterSong(startTime > 0 ? startTime : audio.time);
+		if ((FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) #if mobile || (virtualPad.buttonC.justPressed && virtualPad.buttonY.pressed) #end) enterSong(startTime > 0 ? startTime : audio.time);
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			autosaveSong();
@@ -1442,7 +1446,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			openSubState(new ChartingOptionsSubmenu());
 		}
 		
-		if (FlxG.keys.justPressed.SPACE && audio.time < (audio.songLength - endOffset)) togglePause();
+		if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.buttonX.justPressed #end && audio.time < (audio.songLength - endOffset)) togglePause();
 		
 		if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R)
 		{
@@ -1452,7 +1456,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		
 		// ARROW VORTEX SHIT NO DEADASS
 		
-		if (FlxG.keys.pressed.W || FlxG.keys.pressed.S)
+		if ((FlxG.keys.pressed.W || FlxG.keys.pressed.S) #if mobile || (virtualPad.buttonUp.pressed || virtualPad.buttonDown.pressed) #end)
 		{
 			toggleMusic(false);
 			
@@ -1462,7 +1466,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			
 			var delta:Float = (700 * FlxG.elapsed * holdingShift);
 			
-			audio.time = FlxMath.bound(audio.time + delta * (FlxG.keys.pressed.W ? -1 : 1), 0, audio.songLength - endOffset);
+			audio.time = FlxMath.bound(audio.time + delta * (FlxG.keys.pressed.W #if mobile || virtualPad.buttonUp.pressed #end ? -1 : 1), 0, audio.songLength - endOffset);
 		}
 		
 		if (FlxG.keys.justPressed.RIGHT) changeQuantization(1);
@@ -1472,16 +1476,16 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		
 		var style = currentType;
 		
-		if (FlxG.keys.pressed.SHIFT)
+		if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end)
 		{
 			style = 3;
 		}
 		
 		var shiftThing:Int = 1;
-		if (FlxG.keys.pressed.SHIFT) shiftThing = 4;
+		if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end) shiftThing = 4;
 		
-		if (FlxG.keys.justPressed.D) changeSection(curSec + shiftThing);
-		if (FlxG.keys.justPressed.A) changeSection(curSec - shiftThing);
+		if (FlxG.keys.justPressed.D #if mobile || virtualPad.buttonRight.justPressed #end) changeSection(curSec + shiftThing);
+		if (FlxG.keys.justPressed.A #if mobile || virtualPad.buttonLeft.justPressed #end) changeSection(curSec - shiftThing);
 		
 		if (FlxG.keys.justPressed.DELETE)
 		{

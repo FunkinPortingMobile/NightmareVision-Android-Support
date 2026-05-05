@@ -291,6 +291,11 @@ class WeekEditorState extends MusicBeatState
 		reloadBG();
 		reloadWeekThing();
 		updateText();
+
+        #if mobile
+		addVirtualPad(NONE, B);
+        virtualPad.buttonB.x -= 300;
+		#end
 	}
 	
 	function updateText()
@@ -481,7 +486,7 @@ class WeekEditorState extends MusicBeatState
 				FlxG.sound.volumeUpKeys = [];
 				blockInput = true;
 				
-				if (FlxG.keys.justPressed.ENTER) inputText.hasFocus = false;
+				if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end) inputText.hasFocus = false;
 				break;
 			}
 		}
@@ -492,7 +497,7 @@ class WeekEditorState extends MusicBeatState
 			FlxG.sound.volumeDownKeys = ClientPrefs.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = ClientPrefs.volumeUpKeys;
 			
-			if (FlxG.keys.justPressed.ESCAPE)
+			if (FlxG.keys.justPressed.ESCAPE #if mobile || virtualPad.buttonB.justPressed #end)
 			{
 				FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
 				FunkinSound.playMusic(Paths.music('freakyMenu'));

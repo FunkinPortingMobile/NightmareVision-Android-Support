@@ -112,6 +112,11 @@ class BaseOptionsMenu extends MusicBeatSubstate
 			updateTextFrom(optionsArray[i]);
 		}
 		
+		#if mobile
+		controls.isInSubstate = true;
+		addVirtualPad(LEFT_FULL, A_B);
+		#end
+		
 		changeSelection();
 		reloadCheckboxes();
 		
@@ -122,6 +127,7 @@ class BaseOptionsMenu extends MusicBeatSubstate
 		scriptGroup.set('descBox', descBox);
 		scriptGroup.set('titleText', titleText);
 		scriptGroup.set('descText', descText);
+		#if mobile scriptGroup.set('virtualPad', virtualPad); #end
 		scriptGroup.call('onCreatePost', []);
 	}
 	

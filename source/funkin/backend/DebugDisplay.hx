@@ -140,7 +140,7 @@ class DebugDisplay extends Sprite
 		addChild(textUnderlay);
 		addChild(textField);
 		
-		this.x = x;
+		this.x = x #if mobile + 50 #end;
 		this.y = y;
 	}
 	

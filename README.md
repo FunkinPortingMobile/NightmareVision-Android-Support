@@ -1,46 +1,54 @@
-helloe we hit single
-
+***
 Havee fun with NightmareVision V1! (***[follow me on twitter](https://twitter.com/DuskieWhy)***)
 
 ![](https://github.com/NMVTeam/NightmareVision/blob/dev/assets/game/images/branding/watermarks/NMV.png)
 
 
+## 🛠️ Credits Mobile Port to...
+* FNF BR (LumiCoder)
+* StarNovaBR (StarNova)
 
-## Special thanks to...
+## 🌟 Special thanks to...
 
 * ShadowMario and Co. for [Psych engine](https://github.com/ShadowMario/FNF-PsychEngine)
-
 * Nebula_Zorua for the [specific Psych fork](https://github.com/nebulazorua/exe-psych-fork) NMV is built off and for the Modchart backend
-
 * Rozebud for the chart editor little buddies ([Check out their engine too](https://github.com/ThatRozebudDude/FPS-Plus-Public))
-
 * Cne crew for camera rotation support ([Check out codename engine](https://github.com/CodenameCrew/CodenameEngine))
-
 * FunkinCrew for their [Lime](https://github.com/FunkinCrew/lime), [Openfl](https://github.com/FunkinCrew/openfl), [Hxcpp](https://github.com/FunkinCrew/hxcpp) forks
-
 * MaybeMaru for [MoonChart](https://github.com/MaybeMaru/moonchart) and [Flixel-Animate](https://github.com/MaybeMaru/flixel-animate)
+  
+---
 
-
-## How to compile NMV Engine
+## 🛠️ How to compile NMV Engine
 
 ### Quick Note
-- Haxe 4.3.6 and Haxelib 4.2.0 or newer is expected
-- This engine ENFORCES the use of local libraries with hxpkg/hmm to prevent issues in relation to `hxvlc`
-- The expected library versions are listed within the .hxpkg file. 
+* Haxe 4.3.6 and Haxelib 4.2.0 or newer is expected
+* This engine ENFORCES the use of local libraries with hxpkg/hmm to prevent issues in relation to `hxvlc`
+* The expected library versions are listed within the .hxpkg file.
+* if compilation errors arise, Ensure your Haxe version is correct and your haxelibs match what is listed in the .hxpkg file
 
-if compilation errors arise, Ensure your Haxe version is correct and your haxelibs match what is listed in the .hxpkg file
+### 1. Download the prerequisites
 
-### Download the prerequisites... (skip this if you already have compiled any fnf project, or any flixel project basically lol)
+**For Both Platforms:**
+* [Haxe](https://haxe.org/download/)
+* [Git](https://git-scm.com/downloads)
+* [Android Studio](https://developer.android.com/studio?hl=pt-br)
 
-[Haxe](https://haxe.org/download/)
+**For PC (Windows) Compilation:**
+* [VS Community](https://visualstudio.microsoft.com/vs/community/)
+* within the VS Community Installer, download `Desktop development with c++`
 
-[Git](https://git-scm.com/downloads)
+To get the correct SDK and NDK, open **Android Studio** and go to the **SDK Manager** (Settings > Languages & Frameworks > Android SDK).
 
-[VS Community](https://visualstudio.microsoft.com/vs/community/)
+In the **SDK Platforms** tab, make sure you have a recent Android API version installed to build the app:
+![SDK Platforms](docs/image1.png)
 
-within the VS Community Installer, download `Desktop development with c++`
+Then, switch to the **SDK Tools** tab. Here you must check the boxes for **Android SDK Build-Tools**, **NDK (Side by side)** (you can check "Show Package Details" to select the r21e version), and **Android SDK Platform-Tools**. Click Apply to download them:
+![SDK Tools](docs/image.png)
 
-### Download the projects required libraries...
+---
+
+### 2. Download the projects required libraries
 
 #### Recommended Method (Slower)
 In a cmd within the project directory, in order run...
@@ -73,9 +81,31 @@ haxelib run hmm reinstall grig.audio
 haxelib fixrepo
 ```
 
-### Setup Lime
+---
+
+### 3. Setup Lime & Compile
+
+#### 💻 For Windows (PC)
 After that is complete, run `haxelib run lime rebuild cpp -release`
 
 Then, run `haxelib run lime test windows -release` and you should be compiling
 
-If you get errors related to lime, run [limeFixer](https://github.com/DuskieWhy/NightmareVision/blob/dev/projFiles/limeFixer.bat) and try again
+If you get errors related to lime, run limeFixer and try again
+
+#### 📱 For Android (Mobile)
+First, set up your Android environment by running:
+```sh
+lime setup android
+```
+
+When prompted, provide your exact absolute paths ex:
+* **Absolute path to Android SDK:** `C:\Users\User\AppData\Local\Android\Sdk`
+* **Absolute path to Android NDK:** `C:\Users\User\Downloads\android-ndk-r21e-windows-x86_64\android-ndk-r21e`
+* **Absolute path to Java JDK:** `C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot`
+*(Leave the Apache Ant path blank and press Enter).*
+
+After setting up the paths, run the following command to compile:
+```sh
+haxelib lime build android -release
+```
+*(Use `test android` instead if your device is plugged in via USB Debugging and you want it to install automatically).*

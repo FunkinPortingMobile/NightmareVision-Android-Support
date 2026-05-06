@@ -1,14 +1,18 @@
 ***
-
-# NightmareVision V1 - Compilation Guide (PC & Android)
-
 Havee fun with NightmareVision V1! (***[follow me on twitter](https://twitter.com/DuskieWhy)***)
+
+![](https://github.com/NMVTeam/NightmareVision/blob/dev/assets/game/images/branding/watermarks/NMV.png)
+
 
 ## 🛠️ Credits Mobile Port to...
 * FNF BR (LumiCoder)
 * StarNovaBR (StarNova)
 
 ## 🌟 Special thanks to...
+
+* ShadowMario and Co. for [Psych engine](https://github.com/ShadowMario/FNF-PsychEngine)
+* Nebula_Zorua for the [specific Psych fork](https://github.com/nebulazorua/exe-psych-fork) NMV is built off and for the Modchart backend
+* Rozebud for the chart editor little buddies ([Check out their engine too](https://github.com/ThatRozebudDude/FPS-Plus-Public))
 
 * ShadowMario and Co. for Psych engine
 * Nebula_Zorua for the specific Psych fork NMV is built off and for the Modchart backend
@@ -60,7 +64,7 @@ haxelib run hxpkg install
 
 #### Advanced Method (Faster)
 > [!IMPORTANT]
-> This requires Rust to be installed!
+> This requires [Rust](https://rust-lang.org/tools/install/) to be installed!
 
 In a cmd within the project directory, in order run...
 

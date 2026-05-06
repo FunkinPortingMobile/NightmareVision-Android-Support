@@ -68,6 +68,7 @@ class MobileVirtualPad extends TouchInputManager
 	public var buttonX:FlxButton;
 	public var buttonY:FlxButton;
 	public var buttonZ:FlxButton;
+	public var buttonS:FlxButton;
 	
 	public function new(DPad:MobileDPadMode, Action:MobileActionMode)
 	{
@@ -123,6 +124,7 @@ class MobileVirtualPad extends TouchInputManager
 				buttonA = add(createButton(screenW - 132, screenH - 135, 'a', 0xFF0000, [A]));
 			case CHART_EDITOR:
 				buttonV = add(createButton(screenW - 258, screenH - 495, 'v', 0x49A9B2, [V]));
+				buttonS = add(createButton(screenW - 132, screenH - 615, 's', 0xFDD6AB, [NONE]));
 				buttonX = add(createButton(screenW - 132, screenH - 495, 'x', 0x99062D, [X]));
 				buttonD = add(createButton(screenW - 258, screenH - 375, 'd', 0x0078FF, [D]));
 				buttonC = add(createButton(screenW - 132, screenH - 375, 'c', 0x44FF00, [C]));

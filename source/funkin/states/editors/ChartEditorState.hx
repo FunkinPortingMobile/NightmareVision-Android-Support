@@ -1407,7 +1407,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			];
 		}
 		
-		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S) return saveLevel();
+		if ((FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S) #if mobile || virtualPad.buttonS.justPressed #end) return saveLevel();
 		
 		if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end) return enterSong();
 		
@@ -1438,7 +1438,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			updateZoom();
 		}
 		
-		if ((FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) #if mobile || (virtualPad.buttonC.justPressed && virtualPad.buttonY.pressed) #end) enterSong(startTime > 0 ? startTime : audio.time);
+		if ((FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) #if mobile || (virtualPad.buttonC.justPressed && virtualPad.buttonY.justPressed) #end) enterSong(startTime > 0 ? startTime : audio.time);
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			autosaveSong();

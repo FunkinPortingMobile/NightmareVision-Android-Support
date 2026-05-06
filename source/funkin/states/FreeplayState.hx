@@ -118,7 +118,11 @@ class FreeplayState extends MusicBeatState
 		
 		tabHint = new FlxText(tabText.x, tabText.y + 28, 0, 24);
 		tabHint.font = scoreText.font;
+		#if mobile
+		tabHint.text = "Press S to switch tabs.";
+		#else
 		tabHint.text = "Press TAB to switch tabs.";
+		#end
 		tabHint.color = FlxColor.GRAY;
 		add(tabHint);
 		
@@ -132,7 +136,11 @@ class FreeplayState extends MusicBeatState
 		textBG.alpha = 0.6;
 		add(textBG);
 		
+		#if mobile
+		final leText:String = "Press SPACE to listen to the Song / Press C to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		#else
 		final leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		#end
 		final size:Int = 16;
 		
 		var text:FlxText = new FlxText(textBG.x, textBG.y + 4, FlxG.width, leText, size);
@@ -153,7 +161,7 @@ class FreeplayState extends MusicBeatState
 		WeekData.setDirectoryFromWeek();
 		
 		#if mobile
-		addVirtualPad(LEFT_FULL, A_B_C);
+		addVirtualPad(LEFT_FULL, FREEPLAY);
 		#end
 		
 		changeTab();
@@ -185,7 +193,7 @@ class FreeplayState extends MusicBeatState
 		super.closeSubState();
 		#if mobile
 		removeVirtualPad();
-		addVirtualPad(LEFT_FULL, A_B_C);
+		addVirtualPad(LEFT_FULL, FREEPLAY);
 		#end
 	}
 	
@@ -291,7 +299,7 @@ class FreeplayState extends MusicBeatState
 		
 		if (freeplayTabs.length > 1)
 		{
-			if (FlxG.keys.justPressed.TAB)
+			if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.buttonS.justPressed #end)
 			{
 				if (FlxG.keys.pressed.SHIFT) changeTab(-1);
 				else changeTab(1);

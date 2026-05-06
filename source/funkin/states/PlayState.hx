@@ -2008,7 +2008,7 @@ class PlayState extends MusicBeatState
 		if (automatedDiscord) DiscordClient.changePresence(rpcPausedDescription, 'Paused');
 	}
 	
-	function openChartEditor():Void
+	public function openChartEditor():Void
 	{
 		FlxG.camera.followLerp = 0;
 		
@@ -2017,7 +2017,11 @@ class PlayState extends MusicBeatState
 		CoolUtil.cancelMusicFadeTween();
 		
 		ChartEditorState.song = SONG;
+		#if mobile
+		FlxG.switchState(ChartEditorState.new);
+		#else
 		FlxG.switchState(FlxG.keys.pressed.SHIFT ? ChartEditorState.new : OLDChartEditorState.new);
+		#end
 		chartingMode = true;
 		
 		if (automatedDiscord) DiscordClient.changePresence('Chart Editor');

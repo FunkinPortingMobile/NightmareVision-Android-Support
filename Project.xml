@@ -189,7 +189,7 @@
 	
 		<android target-sdk-version="34" />
 		<android min-sdk-version="19" />
-		<certificate path="key.keystore" password="nvport" alias="nvport" alias-password="nvport" unless="test || ios" />
+		<certificate path="key.keystore" password="nvport" alias="nvport" alias-password="nvport"/>
     </section>
 
      <java path="source" if="android"/>

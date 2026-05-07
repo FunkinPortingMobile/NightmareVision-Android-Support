@@ -192,6 +192,10 @@ class NoteOffsetState extends MusicBeatState
 		changeModeText.scrollFactor.set();
 		changeModeText.cameras = [camHUD];
 		add(changeModeText);
+		#if mobile
+		addVirtualPad(LEFT_RIGHT, A_B_C);
+		addVirtualPadCamera();
+		#end
 		updateMode();
 		
 		Conductor.bpm = 128.0;
@@ -469,6 +473,7 @@ class NoteOffsetState extends MusicBeatState
 		dumbTexts.visible = onComboMenu;
 		
 		timeBarBG.visible = !onComboMenu;
+		#if mobile virtualPad.buttonLeft.visible = virtualPad.buttonRight.visible = !onComboMenu; #end
 		timeBar.visible = !onComboMenu;
 		timeTxt.visible = !onComboMenu;
 		beatText.visible = !onComboMenu;

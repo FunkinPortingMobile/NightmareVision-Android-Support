@@ -36,6 +36,7 @@ enum MobileActionMode
 	X;
 	A_B;
 	A_B_C;
+	STORYMENU;
 	FREEPLAY;
 	CHART_EDITOR;
 	CHARACTER_EDITOR;

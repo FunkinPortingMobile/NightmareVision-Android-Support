@@ -81,7 +81,7 @@ jobs:
           fi
 
       - name: Compile
-        run: haxelib run lime build android -release -D ${{inputs.buildFlags}}
+        run: haxelib run lime build android -final -D ${{inputs.buildFlags}}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4

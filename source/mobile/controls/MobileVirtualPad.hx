@@ -65,6 +65,7 @@ class MobileVirtualPad extends TouchInputManager
 	public var buttonC:FlxButton;
 	public var buttonD:FlxButton;
 	public var buttonE:FlxButton;
+	public var buttonR:FlxButton;
 	public var buttonV:FlxButton;
 	public var buttonX:FlxButton;
 	public var buttonY:FlxButton;
@@ -123,8 +124,15 @@ class MobileVirtualPad extends TouchInputManager
 				buttonC = add(createButton(screenW - 384, screenH - 135, 'c', 0x44FF00, [C]));
 				buttonB = add(createButton(screenW - 258, screenH - 135, 'b', 0xFFCB00, [B]));
 				buttonA = add(createButton(screenW - 132, screenH - 135, 'a', 0xFF0000, [A]));
+			case STORYMENU:
+			    buttonR = add(createButton(screenW - 510, screenH - 135, 'r', 0x00D0FF, [NONE]));
+				buttonC = add(createButton(screenW - 384, screenH - 135, 'c', 0x44FF00, [C]));
+				buttonB = add(createButton(screenW - 258, screenH - 135, 'b', 0xFFCB00, [B]));
+				buttonA = add(createButton(screenW - 132, screenH - 135, 'a', 0xFF0000, [A]));
 			case FREEPLAY:
+			    buttonX = add(createButton(screenW - 258, screenH - 255, 'x', 0x99062D, [X]));
 			    buttonS = add(createButton(screenW - 132, screenH - 255, 's', 0xFDD6AB, [NONE]));
+			    buttonR = add(createButton(screenW - 510, screenH - 135, 'r', 0x00D0FF, [NONE]));
 				buttonC = add(createButton(screenW - 384, screenH - 135, 'c', 0x44FF00, [C]));
 				buttonB = add(createButton(screenW - 258, screenH - 135, 'b', 0xFFCB00, [B]));
 				buttonA = add(createButton(screenW - 132, screenH - 135, 'a', 0xFF0000, [A]));

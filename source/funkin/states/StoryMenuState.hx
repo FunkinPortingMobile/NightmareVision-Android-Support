@@ -184,7 +184,7 @@ class StoryMenuState extends MusicBeatState
 		add(txtWeekTitle);
 		
 		#if mobile
-		addVirtualPad(LEFT_FULL, A_B_C);
+		addVirtualPad(LEFT_FULL, STORYMENU);
 		#end
 		
 		changeWeek();
@@ -207,7 +207,7 @@ class StoryMenuState extends MusicBeatState
 		super.closeSubState();
 		#if mobile
 		removeVirtualPad();
-		addVirtualPad(LEFT_FULL, A_B_C);
+		addVirtualPad(LEFT_FULL, STORYMENU);
 		#end
 	}
 	
@@ -257,7 +257,7 @@ class StoryMenuState extends MusicBeatState
 				openSubState(new GameplayChangersSubstate());
 				#if mobile removeVirtualPad(); #end
 			}
-			else if (controls.RESET)
+			else if (controls.RESET #if mobile || virtualPad.buttonR.justPressed #end)
 			{
 				persistentUpdate = false;
 				openSubState(new ResetScoreSubState('', curDifficulty, '', curWeek));

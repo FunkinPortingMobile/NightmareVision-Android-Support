@@ -162,6 +162,10 @@ class FreeplayState extends MusicBeatState
 		
 		#if mobile
 		addVirtualPad(LEFT_FULL, FREEPLAY);
+		if (freeplayTabs.length <= 1) {
+	        virtualPad.buttonS.visible = false;
+	        virtualPad.buttonX.x = FlxG.width - 132;
+        }
 		#end
 		
 		changeTab();
@@ -194,6 +198,10 @@ class FreeplayState extends MusicBeatState
 		#if mobile
 		removeVirtualPad();
 		addVirtualPad(LEFT_FULL, FREEPLAY);
+		if (freeplayTabs.length <= 1) {
+	        virtualPad.buttonS.visible = false;
+	        virtualPad.buttonX.x = FlxG.width - 132;
+        }
 		#end
 	}
 	
@@ -447,7 +455,7 @@ class FreeplayState extends MusicBeatState
 			
 			destroyFreeplayVocals();
 		}
-		else if (controls.RESET)
+		else if (controls.RESET #if mobile || virtualPad.buttonR.justPressed #end)
 		{
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));

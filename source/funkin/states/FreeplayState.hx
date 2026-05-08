@@ -137,7 +137,7 @@ class FreeplayState extends MusicBeatState
 		add(textBG);
 		
 		#if mobile
-		final leText:String = "Press SPACE to listen to the Song / Press C to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
+		final leText:String = "Press X to listen to the Song / Press C to open the Gameplay Changers Menu / Press R to Reset your Score and Accuracy.";
 		#else
 		final leText:String = "Press SPACE to listen to the Song / Press CTRL to open the Gameplay Changers Menu / Press RESET to Reset your Score and Accuracy.";
 		#end
@@ -387,7 +387,7 @@ class FreeplayState extends MusicBeatState
 			openSubState(new GameplayChangersSubstate());
 			#if mobile removeVirtualPad(); #end
 		}
-		else if (FlxG.keys.justPressed.SPACE)
+		else if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.buttonX.justPressed #end)
 		{
 			if (instPlaying != curSelected)
 			{
@@ -460,6 +460,7 @@ class FreeplayState extends MusicBeatState
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));
 			FlxG.sound.play(Paths.sound('scrollMenu'));
+			#if mobile removeVirtualPad(); #end
 		}
 		
 		super.update(elapsed);

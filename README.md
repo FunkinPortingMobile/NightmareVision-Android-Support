@@ -27,7 +27,8 @@ Havee fun with NightmareVision V1! (***[follow me on twitter](https://twitter.co
 * The expected library versions are listed within the .hxpkg file.
 * if compilation errors arise, Ensure your Haxe version is correct and your haxelibs match what is listed in the .hxpkg file
 
-### 1. Download the prerequisites
+## 1. Download the prerequisites
+***
 
 **For Both Platforms:**
 * [Haxe](https://haxe.org/download/)
@@ -35,7 +36,7 @@ Havee fun with NightmareVision V1! (***[follow me on twitter](https://twitter.co
 * [Android Studio](https://developer.android.com/studio?hl=pt-br)
 
 **For PC (Windows) Compilation:**
-* [VS Community](https://visualstudio.microsoft.com/vs/community/)
+* [VS Community Build Tools](https://aka.ms/vs/17/release/vs_BuildTools.exe)
 * within the VS Community Installer, download `Desktop development with c++`
 
 To get the correct SDK and NDK, open **Android Studio** and go to the **SDK Manager** (Settings > Languages & Frameworks > Android SDK).
@@ -80,10 +81,10 @@ haxelib run hmm reinstall grig.audio
 
 haxelib fixrepo
 ```
-
+***
 ---
 
-### 3. Setup Lime & Compile
+## 3. Setup Lime & Compile
 
 #### 💻 For Windows (PC)
 After that is complete, run `haxelib run lime rebuild cpp -release`

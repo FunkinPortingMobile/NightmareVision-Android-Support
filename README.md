@@ -1,4 +1,3 @@
-***
 Havee fun with NightmareVision V1! (***[follow me on twitter](https://twitter.com/DuskieWhy)***)
 
 ![](https://github.com/NMVTeam/NightmareVision/blob/dev/assets/game/images/branding/watermarks/NMV.png)
@@ -29,7 +28,6 @@ Havee fun with NightmareVision V1! (***[follow me on twitter](https://twitter.co
 
 ## 1. Download the prerequisites
 ***
-
 **For Both Platforms:**
 * [Haxe](https://haxe.org/download/)
 * [Git](https://git-scm.com/downloads)
@@ -50,7 +48,7 @@ Then, switch to the **SDK Tools** tab. Here you must check the boxes for **Andro
 ---
 
 ### 2. Download the projects required libraries
-
+***
 #### Recommended Method (Slower)
 In a cmd within the project directory, in order run...
 
@@ -81,7 +79,6 @@ haxelib run hmm reinstall grig.audio
 
 haxelib fixrepo
 ```
-***
 ---
 
 ## 3. Setup Lime & Compile

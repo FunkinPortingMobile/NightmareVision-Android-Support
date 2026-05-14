@@ -97,9 +97,9 @@ lime setup android
 ```
 
 When prompted, provide your exact absolute paths ex:
-* **Absolute path to Android SDK:** `C:\Users\User\AppData\Local\Android\Sdk`
-* **Absolute path to Android NDK:** `C:\Users\User\Downloads\android-ndk-r21e-windows-x86_64\android-ndk-r21e`
-* **Absolute path to Java JDK:** `C:\Program Files\Eclipse Adoptium\jdk-17.0.18.8-hotspot`
+* **Absolute path to Android SDK:** `C:\Path\to\your\sdk`
+* **Absolute path to Android NDK:** `C:\Path\to\your\ndk`
+* **Absolute path to Java JDK:** `C:\Path\to\your\jdk`
 *(Leave the Apache Ant path blank and press Enter).*
 
 After setting up the paths, run the following command to compile:

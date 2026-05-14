@@ -99,8 +99,6 @@ class ModsState extends MusicBeatState
     }
 	override public function update(elapsed)
 	{
-        super.update(elapsed);
-
 		if (controls.UI_UP_P)
 		{
 			changeDir(-1);
@@ -111,10 +109,10 @@ class ModsState extends MusicBeatState
 			changeDir(1);
 			FlxG.sound.play(Paths.sound("scrollMenu"));
 		}
-		if (controls.ACCEPT #if mobile || virtualPad.buttonA.justPressed #end) toggleMod();
+		if (controls.ACCEPT) toggleMod();
 		
 		if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.buttonC.justPressed #end) makeTopMod(modList[curDir]);
-		if (controls.BACK #if mobile || virtualPad.buttonB.justPressed #end)
+		if (controls.BACK)
 		{
 			Mods.currentModDirectory = topMod;
 			
@@ -133,6 +131,8 @@ class ModsState extends MusicBeatState
 				new MainMenuState();
 			});
 		}
+		
+		super.update(elapsed);
 	}
 	
 	function changeDir(change:Int = 0)

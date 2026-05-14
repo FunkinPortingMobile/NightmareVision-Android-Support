@@ -1462,7 +1462,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			
 			var holdingShift:Float = 1;
 			if (FlxG.keys.pressed.CONTROL) holdingShift = 0.25;
-			else if (FlxG.keys.pressed.SHIFT) holdingShift = 4;
+			else if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end) holdingShift = 4;
 			
 			var delta:Float = (700 * FlxG.elapsed * holdingShift);
 			

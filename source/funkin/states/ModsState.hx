@@ -99,20 +99,20 @@ class ModsState extends MusicBeatState
     }
 	override public function update(elapsed)
 	{
-		if (controls.UI_UP_P)
+		if (controls.UI_UP_P #if mobile || virtualPad.buttonUp.justPressed #end)
 		{
 			changeDir(-1);
 			FlxG.sound.play(Paths.sound("scrollMenu"));
 		}
-		if (controls.UI_DOWN_P)
+		if (controls.UI_DOWN_P #if mobile || virtualPad.buttonDown.justPressed #end)
 		{
 			changeDir(1);
 			FlxG.sound.play(Paths.sound("scrollMenu"));
 		}
-		if (controls.ACCEPT) toggleMod();
+		if (controls.ACCEPT #if mobile || virtualPad.buttonA.justPressed #end) toggleMod();
 		
 		if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.buttonC.justPressed #end) makeTopMod(modList[curDir]);
-		if (controls.BACK)
+		if (controls.BACK #if mobile || virtualPad.buttonB.justPressed #end)
 		{
 			Mods.currentModDirectory = topMod;
 			

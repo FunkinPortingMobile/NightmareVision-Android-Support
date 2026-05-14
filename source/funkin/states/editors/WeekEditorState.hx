@@ -108,6 +108,11 @@ class WeekEditorState extends MusicBeatState
 		addEditorBox();
 		reloadAllShit();
 		
+		#if mobile
+		addVirtualPad(NONE, B);
+        virtualPad.buttonB.x -= 300;
+		#end
+		
 		FlxG.mouse.visible = true;
 		super.create();
 	}
@@ -291,11 +296,6 @@ class WeekEditorState extends MusicBeatState
 		reloadBG();
 		reloadWeekThing();
 		updateText();
-
-        #if mobile
-		addVirtualPad(NONE, B);
-        virtualPad.buttonB.x -= 300;
-		#end
 	}
 	
 	function updateText()

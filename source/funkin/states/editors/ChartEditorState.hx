@@ -1438,7 +1438,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			updateZoom();
 		}
 		
-		if ((FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) #if mobile || (virtualPad.buttonC.justPressed && virtualPad.buttonY.justPressed) #end) enterSong(startTime > 0 ? startTime : audio.time);
+		if ((FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) #if mobile || (virtualPad.buttonC.justPressed) #end) enterSong(startTime > 0 ? startTime : audio.time);
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			autosaveSong();
@@ -1530,7 +1530,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		}
 		
 		// PLAYBACK SPEED CONTROLS //
-		var holdingShift = FlxG.keys.pressed.SHIFT;
+		var holdingShift = FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end;
 		var holdingLB = FlxG.keys.pressed.LBRACKET;
 		var holdingRB = FlxG.keys.pressed.RBRACKET;
 		var pressedLB = FlxG.keys.justPressed.LBRACKET;

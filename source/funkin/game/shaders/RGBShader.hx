@@ -120,13 +120,13 @@ class RGBShader extends FlxShader
 		attribute float a_alpha;
 		attribute float a_flash;
 	
-		out vec3 _r;
-		out vec3 _g;
-		out vec3 _b;
-        out float _mult;
-
-        out float _a_alpha;
-        out float _a_flash;
+		// CHANGED "out" TO "varying"
+        varying vec3 _r;
+        varying vec3 _g;
+        varying vec3 _b;
+        varying float _mult;
+        varying float _a_alpha;
+        varying float _a_flash;
 
 		void main()
 		{
@@ -142,13 +142,13 @@ class RGBShader extends FlxShader
 	@:glFragmentHeader('
 		#pragma header
 
-        in vec3 _r;
-		in vec3 _g;
-		in vec3 _b;
-        in float _mult;
-
-        in float _a_alpha;
-        in float _a_flash;
+        // CHANGED "in" TO "varying"
+        varying vec3 _r;
+        varying vec3 _g;
+        varying vec3 _b;
+        varying float _mult;
+        varying float _a_alpha;
+        varying float _a_flash;
 
 		vec4 flixel_texture2DCustom(sampler2D bitmap, vec2 coord) 
 		{

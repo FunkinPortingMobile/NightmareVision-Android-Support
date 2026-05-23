@@ -14,9 +14,6 @@ class RGBGraphics
 {
 	static inline var VERTICES_PER_QUAD = 4;
 	
-	@:noCompletion
-	static final __disabledGraphics:RGBGraphics = new RGBGraphics(FlxColor.RED, FlxColor.GREEN, FlxColor.BLUE, 0.0);
-	
 	public var enabled:Bool;
 	
 	public var r:FlxColor;
@@ -86,19 +83,13 @@ class RGBGraphics
 	
 	inline function push<T>(drawItem:FlxDrawBaseItem<T>, indicesLength:Int)
 	{
-		if (!enabled)
-		{
-			// simple way to push values that keep the original appearance of the sprite
-			__disabledGraphics.push(drawItem, indicesLength);
-			return;
-		}
 		for (_ in 0...indicesLength)
 		{
-			pushColor(drawItem.rgbR, r);
-			pushColor(drawItem.rgbG, g);
-			pushColor(drawItem.rgbB, b);
+			pushColor(drawItem.rgbR, enabled ? r : 0xFFFF0000);
+			pushColor(drawItem.rgbG, enabled ? g : 0xFF00FF00);
+			pushColor(drawItem.rgbB, enabled ? b : 0xFF0000FF);
 			
-			drawItem.rgbMult.push(mult);
+			drawItem.rgbMult.push(enabled ? mult : 0);
 			
 			drawItem.rgbAlpha.push(alpha);
 			drawItem.rgbFlash.push(flash);

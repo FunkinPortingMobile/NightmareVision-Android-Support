@@ -84,6 +84,7 @@ class PlayField extends FlxTypedContainer<StrumNote>
 	public var alpha(default, set):Float = 1;
 	
 	public var underlaySpr:FlxSprite;
+	public var underlayAlphaMult:Float = 1;
 	
 	public function set_alpha(value:Float)
 	{
@@ -205,7 +206,6 @@ class PlayField extends FlxTypedContainer<StrumNote>
 			final targetX = minX - UNDERLAY_PADDING;
 			final targetW = (maxX - minX) + (UNDERLAY_PADDING * 2);
 			
-			// Instant update
 			underlaySpr.x = targetX;
 			
 			underlaySpr.scale.x = targetW;
@@ -214,8 +214,7 @@ class PlayField extends FlxTypedContainer<StrumNote>
 			underlaySpr.updateHitbox();
 			
 			underlaySpr.camera = getDefaultCamera();
-			
-			underlaySpr.alpha = ClientPrefs.underlayOpacity;
+			underlaySpr.alpha = ClientPrefs.underlayOpacity * underlayAlphaMult;
 			
 			if (PlayState.instance.modManager != null) // temp
 			{

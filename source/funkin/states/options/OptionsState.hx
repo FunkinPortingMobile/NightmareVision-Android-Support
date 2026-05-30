@@ -25,8 +25,8 @@ class OptionsState extends MusicBeatState
 	
 	private static var curSelected:Int = 0;
 	public static var menuBG:FlxSprite;
-
-    var justLeftSubState = false;
+	
+	var justLeftSubState = false;
 	
 	public function openSelectedSubstate(label:String)
 	{
@@ -35,7 +35,7 @@ class OptionsState extends MusicBeatState
 			case 'Notes':
 				openSubState(new funkin.states.options.NoteSettingsSubState());
 			case 'Controls':
-                final gamepad = FlxG.gamepads.getFirstActiveGamepad();
+				final gamepad = FlxG.gamepads.getFirstActiveGamepad();
 				openSubState(new funkin.states.options.ControlsSubState(gamepad != null ? Gamepad(gamepad.id) : Keys));
 			case 'Graphics':
 				openSubState(new funkin.states.options.GraphicsSettingsSubState());
@@ -65,6 +65,8 @@ class OptionsState extends MusicBeatState
 		
 		bg.screenCenter();
 		add(bg);
+		
+		scriptGroup.set('bg', bg);
 		
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
@@ -101,15 +103,12 @@ class OptionsState extends MusicBeatState
 		new FlxTimer().start(0.1, function(tmr:FlxTimer) {
 			controls.isInSubstate = false;
 		});
-		#end
-		
-		super.closeSubState();
-        justLeftSubState = true;
-        
-        #if mobile
 		removeVirtualPad();
 		addVirtualPad(UP_DOWN, A_B);
 		#end
+		
+		super.closeSubState();
+		justLeftSubState = true;
 	}
 	
 	override function update(elapsed:Float)
@@ -142,7 +141,7 @@ class OptionsState extends MusicBeatState
 		}
 		
 		scriptGroup.call('onUpdatePost', [elapsed]);
-        justLeftSubState = false;
+		justLeftSubState = false;
 	}
 	
 	function changeSelection(diff:Int = 0)

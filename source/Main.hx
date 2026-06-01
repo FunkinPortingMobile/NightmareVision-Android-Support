@@ -95,7 +95,7 @@ class Main extends Sprite
 	}
 	
 	#if android
-	override public function onKeyUp(keyCode:lime.ui.KeyCode, modifier:lime.ui.KeyModifier):Void {
+	public function onKeyUp(keyCode:lime.ui.KeyCode, modifier:lime.ui.KeyModifier):Void {
         if (keyCode == lime.ui.KeyCode.APP_CONTROL_BACK) {
             return;
         }

@@ -6,10 +6,6 @@ import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.display.StageScaleMode;
 
-#if android
-import lime.app.Application;
-#end
-
 import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.input.keyboard.FlxKey;
@@ -93,15 +89,6 @@ class Main extends Sprite
 		haxe.Log.trace = (v:Dynamic, ?infos:haxe.PosInfos) -> {}
 		#end
 	}
-	
-	#if android
-	public function onKeyUp(keyCode:lime.ui.KeyCode, modifier:lime.ui.KeyModifier):Void {
-        if (keyCode == lime.ui.KeyCode.APP_CONTROL_BACK) {
-            return;
-        }
-        super.onKeyUp(keyCode, modifier);
-    }
-    #end
 	
 	@:access(flixel.FlxCamera)
 	static function onResize(w:Int, h:Int)

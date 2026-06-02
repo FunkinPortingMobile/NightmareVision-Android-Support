@@ -46,7 +46,7 @@ class Main extends Sprite
 		super();
 
 		#if mobile
-		StorageSystem.getPermissions()
+		StorageSystem.getPermissions();
 		Sys.setCwd(StorageSystem.getStorageDirectory());
 		#end
 

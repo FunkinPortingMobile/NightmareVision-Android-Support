@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6.0.2
 
       - name: Setup Haxe
         uses: krdlab/setup-haxe@v2.1.0
@@ -84,7 +84,7 @@ jobs:
         run: haxelib run lime build android -final -D ${{inputs.buildFlags}}
 
       - name: Upload Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: NightmareVision (Android)
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
@@ -144,7 +144,7 @@ jobs:
         run: haxelib run lime build windows -D ${{inputs.buildFlags}}
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: NightmareVision (Windows)
           path: export/release/windows/bin
@@ -208,7 +208,7 @@ jobs:
         run: haxelib run lime build Project.xml linux -D ${{inputs.buildFlags}}
 
       - name: Upload Linux artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: NightmareVision (Linux)
           path: export/release/linux/bin

@@ -45,17 +45,11 @@ class Main extends Sprite
 	{
 		super();
 
-        #if mobile
-        var assetsExists = FileSystem.exists(StorageSystem.getDirectory() + "assets");
-        var modsExists = FileSystem.exists(StorageSystem.getDirectory() + "content");
-
-        if (!assetsExists || !modsExists) {
-            trace("Assets or Mods missing. Starting installation system...");
-            StorageSystem.getPermissions(); 
-            return; 
-        }
-        Sys.setCwd(StorageSystem.getStorageDirectory());
+		#if mobile
+		StorageSystem.getPermissions()
+		Sys.setCwd(StorageSystem.getStorageDirectory());
 		#end
+
 		
 		#if (CRASH_HANDLER && !debug)
 		funkin.backend.CrashHandler.init();

@@ -601,7 +601,7 @@ class PlayState extends MusicBeatState
 		
 		instance = this;
 		
-		traceCheck = #if debug true #else false #end || ClientPrefs.inDevMode;
+		traceCheck = #if debug true #else false #end || #if VERBOSE_LOGS true #else false #end || ClientPrefs.inDevMode;
 		
 		if (traceCheck) loadStart = Sys.time();
 		
@@ -2855,6 +2855,8 @@ class PlayState extends MusicBeatState
 	}
 	
 	// Hold notes
+	var holders:Array<Character> = [];
+	
 	function keyShit():Void
 	{
 		// HOLDING
@@ -2917,6 +2919,14 @@ class PlayState extends MusicBeatState
 				for (field in playFields)
 				{
 					if (field.playerControls && field.owner?.holding) field.owner.holding = false;
+				}
+				
+				if (holders.length > 0)
+				{
+					for (holder in holders)
+						holder.holding = false;
+						
+					holders.resize(0);
 				}
 			}
 		}
@@ -2983,8 +2993,6 @@ class PlayState extends MusicBeatState
 		super.beatHit();
 		
 		if (lastBeatHit >= curBeat) return;
-		
-		if (generatedMusic) notes.sort(FlxSort.byY, ClientPrefs.downScroll ? FlxSort.ASCENDING : FlxSort.DESCENDING);
 		
 		handleBoppers(curBeat);
 		

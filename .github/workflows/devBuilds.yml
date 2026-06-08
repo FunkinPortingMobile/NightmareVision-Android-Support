@@ -11,10 +11,12 @@ on:
 jobs:
    Android:
     name: Build Android
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6.0.2
+        with:
+          submodules: true
 
       - name: Setup Haxe
         uses: krdlab/setup-haxe@v2.1.0

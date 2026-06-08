@@ -486,7 +486,8 @@ class WeekEditorState extends MusicBeatState
 				FlxG.sound.volumeUpKeys = [];
 				blockInput = true;
 				
-				if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end) inputText.hasFocus = false;
+				if (FlxG.keys.justPressed.ENTER) 
+                    inputText.hasFocus = false;
 				break;
 			}
 		}

@@ -73,6 +73,9 @@ class MobileVirtualPad extends TouchInputManager
 	public var buttonZ:FlxButton;
 	public var buttonS:FlxButton;
 	
+	static var keyboardPressed:Bool = false;
+	static var gamepadPressed:Bool = false;
+	
 	public function new(DPad:MobileDPadMode, Action:MobileActionMode)
 	{
 		super();
@@ -225,6 +228,8 @@ class MobileVirtualPad extends TouchInputManager
 			if (!this.visible)
 			{
 				this.visible = true;
+				keyboardPressed = false;
+				gamepadPressed = false;
 				for (btn in buttons)
 				{
 					btn.active = true;
@@ -233,9 +238,8 @@ class MobileVirtualPad extends TouchInputManager
 			}
 		}
 
-		var keyboardPressed = FlxG.keys.justPressed.ANY;
+		keyboardPressed = FlxG.keys.justPressed.ANY;
 
-		var gamepadPressed = false;
 		if (FlxG.gamepads.numActiveGamepads > 0)
 		{
 			for (gamepad in FlxG.gamepads.getActiveGamepads())

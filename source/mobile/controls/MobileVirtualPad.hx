@@ -216,6 +216,52 @@ class MobileVirtualPad extends TouchInputManager
 		return button;
 	}
 	
+	override public function update(elapsed:Float):Void
+	{
+		super.update(elapsed);
+
+		if (FlxG.touches.justStarted().length > 0)
+		{
+			if (!this.visible)
+			{
+				this.visible = true;
+				for (btn in buttons)
+				{
+					btn.active = true;
+					btn.visible = true;
+				}
+			}
+		}
+
+		var keyboardPressed = FlxG.keys.justPressed.ANY;
+
+		var gamepadPressed = false;
+		if (FlxG.gamepads.numActiveGamepads > 0)
+		{
+			for (gamepad in FlxG.gamepads.getActiveGamepads())
+			{
+				if (gamepad.justPressed.ANY)
+				{
+					gamepadPressed = true;
+					break;
+				}
+			}
+		}
+
+		if (keyboardPressed || gamepadPressed)
+		{
+			if (this.visible)
+			{
+				this.visible = false;
+				for (btn in buttons)
+				{
+					btn.active = false;
+					btn.visible = false;
+				}
+			}
+		}
+	}
+	
 	override public function destroy():Void
 	{
 		for (btn in buttons)

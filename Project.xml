@@ -27,7 +27,7 @@
     <set name="BUILD_DIR" value="export/32bit" if="32bits" />
     <set name="BUILD_DIR" value="${BUILD_DIR}-tracy" if="FEATURE_DEBUG_TRACY"/>
 
-    <assets path='assets/embeds' rename='assets' embed="true" />
+    <assets path='assets/embeds' rename='assets' embed="false" />
     <assets path="assets/game" rename="assets"/>
     
     <assets path="assets" include="*.ttf|*.otf" type="binary" nocompress="true"/>

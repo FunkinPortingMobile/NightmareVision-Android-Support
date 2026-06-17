@@ -88,9 +88,8 @@
                 "version": "1.0.2"
             },
             {
-                "name": "extension-androidtools",
-                "link":"https://github.com/DeveloperPorting-Stuff/extension-androidtools",
-                "branch":"cdf6fe6e4eb2df90e35e902bb670e85ba9a383e8"
+                "name": "android-manager",
+                "version":"1.0.1"
             }
         ]
     }

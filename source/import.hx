@@ -41,6 +41,7 @@ import funkin.backend.MusicBeatState;
 import mobile.backend.StorageSystem;
 import mobile.backend.utils.TouchUtil;
 import mobile.backend.utils.PopUp;
+import lime.system.JNI;
 #end
 
 using flixel.util.FlxArrayUtil;

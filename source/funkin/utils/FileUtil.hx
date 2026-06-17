@@ -9,10 +9,6 @@ import openfl.utils.ByteArray;
 import openfl.net.FileFilter;
 import openfl.filesystem.File;
 
-#if android
-import lime.system.JNI;
-#end
-
 typedef BrowseOptions =
 {
 	var ?typeFilter:Array<FileFilter>;

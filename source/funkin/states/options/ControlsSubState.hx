@@ -73,6 +73,7 @@ class ControlsSubState extends MusicBeatSubstate
 			{label: "Down", action: NOTE_DOWN},
 			{label: "Up", action: NOTE_UP},
 			{label: "Right", action: NOTE_RIGHT},
+			{label: "Dodge", action: NOTE_DODGE},
 			null,
 		], 0);
 		controlsGroup.add(group);

@@ -73,6 +73,7 @@ enum Control
 	NOTE_LEFT;
 	NOTE_RIGHT;
 	NOTE_DOWN;
+	NOTE_DODGE;
 	RESET;
 	ACCEPT;
 	BACK;
@@ -386,6 +387,9 @@ class Controls extends FlxActionSet
 		add(_note_leftR);
 		add(_note_rightR);
 		add(_note_downR);
+		add(_note_dodge);
+		add(_note_dodgeP);
+		add(_note_dodgeR);
 		add(_accept);
 		add(_back);
 		add(_pause);
@@ -409,6 +413,7 @@ class Controls extends FlxActionSet
 			case NOTE_DOWN: _note_down;
 			case NOTE_LEFT: _note_left;
 			case NOTE_RIGHT: _note_right;
+			case NOTE_DODGE: _note_dodge;
 			case ACCEPT: _accept;
 			case BACK: _back;
 			case PAUSE: _pause;
@@ -458,6 +463,10 @@ class Controls extends FlxActionSet
 				func(_note_down, PRESSED);
 				func(_note_downP, JUST_PRESSED);
 				func(_note_downR, JUST_RELEASED);
+			case NOTE_DODGE:
+				func(_note_dodge, PRESSED);
+				func(_note_dodgeP, JUST_PRESSED);
+				func(_note_dodgeR, JUST_RELEASED);
 			case ACCEPT:
 				func(_accept, JUST_PRESSED);
 			case BACK:
@@ -573,6 +582,7 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.NOTE_DOWN, keysMap.get('note_down'));
 				inline bindKeys(Control.NOTE_LEFT, keysMap.get('note_left'));
 				inline bindKeys(Control.NOTE_RIGHT, keysMap.get('note_right'));
+				inline bindKeys(Control.NOTE_DODGE, keysMap.get('note_dodge'));
 				
 				inline bindKeys(Control.ACCEPT, keysMap.get('accept'));
 				inline bindKeys(Control.BACK, keysMap.get('back'));
@@ -587,6 +597,7 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.NOTE_DOWN, [S]);
 				inline bindKeys(Control.NOTE_LEFT, [A]);
 				inline bindKeys(Control.NOTE_RIGHT, [D]);
+				inline bindKeys(Control.NOTE_DODGE, [SPACE]);
 				inline bindKeys(Control.ACCEPT, [G, Z]);
 				inline bindKeys(Control.BACK, [H, X]);
 				inline bindKeys(Control.PAUSE, [ONE]);
@@ -600,6 +611,7 @@ class Controls extends FlxActionSet
 				inline bindKeys(Control.NOTE_DOWN, [FlxKey.DOWN]);
 				inline bindKeys(Control.NOTE_LEFT, [FlxKey.LEFT]);
 				inline bindKeys(Control.NOTE_RIGHT, [FlxKey.RIGHT]);
+				inline bindKeys(Control.NOTE_DODGE, [FlxKey.SPACE]);
 				inline bindKeys(Control.ACCEPT, [O]);
 				inline bindKeys(Control.BACK, [P]);
 				inline bindKeys(Control.PAUSE, [ENTER]);
@@ -667,6 +679,7 @@ class Controls extends FlxActionSet
 			Control.NOTE_DOWN => binds.get(Action.NOTE_DOWN),
 			Control.NOTE_LEFT => binds.get(Action.NOTE_LEFT),
 			Control.NOTE_RIGHT => binds.get(Action.NOTE_RIGHT),
+			Control.NOTE_DODGE => binds.get(Action.NOTE_DODGE),
 			Control.PAUSE => [START],
 			Control.RESET => [8]
 		]);

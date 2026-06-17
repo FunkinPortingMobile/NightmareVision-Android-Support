@@ -200,7 +200,7 @@ class ClientPrefs
 		'note_down' => [S, DOWN],
 		'note_up' => [W, UP],
 		'note_right' => [D, RIGHT],
-		'dodge' => [SPACE, NONE],
+		'note_dodge' => [SPACE, NONE],
 		'ui_left' => [A, LEFT],
 		'ui_down' => [S, DOWN],
 		'ui_up' => [W, UP],

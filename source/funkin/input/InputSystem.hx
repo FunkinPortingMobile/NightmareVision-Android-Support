@@ -51,7 +51,7 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 	/**
 	 * The list of actions checked for, in order of their note direction
 	 */
-	public static final ACTION_LIST:Array<Action> = [NOTE_LEFT, NOTE_DOWN, NOTE_UP, NOTE_RIGHT];
+	public static var ACTION_LIST:Array<Action> = [NOTE_LEFT, NOTE_DOWN, NOTE_UP, NOTE_RIGHT];
 	
 	/**
 	 * The current controls instance used for this input system

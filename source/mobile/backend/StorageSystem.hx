@@ -90,7 +90,7 @@ class StorageSystem
 			var path = getDirectory();
 			if (!FileSystem.exists(path)) FileSystem.createDirectory(path);
 			
-			if (!FileSystem.exists(path + "assets") || !FileSystem.exists(path + "mods"))
+			if (!FileSystem.exists(path + "assets") || !FileSystem.exists(path + "content"))
 			{
 				startApkCopy();
 				return true;
@@ -99,7 +99,7 @@ class StorageSystem
 			{
 				trace("Running silent integrity check...");
 				var restoredAssets = copyFromAPK("assets/", null, false);
-				var restoredContent = copyFromAPK("mods/", null, false);
+				var restoredContent = copyFromAPK("content/", null, false);
 				
 				if (restoredAssets > 0 || restoredContent > 0)
 				{
@@ -129,7 +129,7 @@ class StorageSystem
 		try
 		{
 			copyFromAPK("assets/", null, true);
-			copyFromAPK("mods/", null, true);
+			copyFromAPK("content/", null, true);
 			
 			PopUp.showConfirm("Success!", "Files extracted. The game will now restart.", "Restart", "Cancel", function() {
 				lime.system.System.exit(0);

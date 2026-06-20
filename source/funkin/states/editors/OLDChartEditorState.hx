@@ -2773,6 +2773,8 @@ class OLDChartEditorState extends MusicBeatState
 	
 	function updateWaveform()
 	{
+		if(ClientPrefs.streamedMusic) return;
+
 		#if desktop
 		if (waveformPrinted)
 		{

@@ -13,7 +13,8 @@ echo.
 echo Updating Git submodules...
 cd ../
 cd .haxelib/lime/git/
-git submodule update
+git submodule sync --recursive
+git submodule update --init --recursive --force
 cd ../../../
 
 if "%choice%"=="1" goto windows

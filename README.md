@@ -12,7 +12,6 @@ Havee fun with NightmareVision V1! (***[follow me on twitter](https://twitter.co
 * ShadowMario and Co. for [Psych engine](https://github.com/ShadowMario/FNF-PsychEngine)
 * Nebula_Zorua for the [specific Psych fork](https://github.com/nebulazorua/exe-psych-fork) NMV is built off and for the Modchart backend
 * Rozebud for the chart editor little buddies ([Check out their engine too](https://github.com/ThatRozebudDude/FPS-Plus-Public))
-* Cne crew for camera rotation support ([Check out codename engine](https://github.com/CodenameCrew/CodenameEngine))
 * FunkinCrew for their [Lime](https://github.com/FunkinCrew/lime), [Openfl](https://github.com/FunkinCrew/openfl), [Hxcpp](https://github.com/FunkinCrew/hxcpp) forks
 * MaybeMaru for [MoonChart](https://github.com/MaybeMaru/moonchart) and [Flixel-Animate](https://github.com/MaybeMaru/flixel-animate)
   

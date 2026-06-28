@@ -26,6 +26,11 @@ class GameplaySettingsSubState extends BaseOptionsMenu
 		// var option:Option = new Option('Middlescroll', '[IS NOT FUNCTIONAL AS OF NOW]\nIf checked, your notes get centered.', 'middleScroll', 'bool', false);
 		// addOption(option);
 		
+		#if mobile
+		var option:Option = new Option('Invisible Hitbox', "If checked, the hitbox will become invisible.", 'invisibleHitbox', BOOL, false);
+		addOption(option);
+		#end
+		
 		var option:Option = new Option('Ghost Tapping', "If checked, you won't get misses from pressing keys\nwhile there are no notes able to be hit.", 'ghostTapping', BOOL, true);
 		addOption(option);
 		

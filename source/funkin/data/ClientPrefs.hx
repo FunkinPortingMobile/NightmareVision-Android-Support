@@ -91,6 +91,10 @@ class ClientPrefs
 	
 	@saveVar public static var middleScroll:Bool = false;
 	
+	#if mobile
+	@saveVar public static var invisibleHitbox:Bool = false;
+	#end
+	
 	@saveVar public static var opponentStrums:Bool = true;
 	
 	@saveVar public static var ghostTapping:Bool = true;

@@ -61,7 +61,7 @@ class StorageSystem
 	public static function getAssetsDirectory():String
 	{
 		#if android
-		return Environment.getExternalStorageDirectory() + 'Android/media' + Application.current.meta.get('packageName') + '/';
+		return Environment.getExternalStorageDirectory() + '/Android/media/' + Application.current.meta.get('packageName') + '/';
 		#elseif ios
 		return lime.system.System.documentsDirectory;
 		#else

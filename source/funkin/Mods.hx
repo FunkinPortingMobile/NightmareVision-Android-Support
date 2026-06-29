@@ -129,9 +129,9 @@ class Mods
 	 */
 	static function ensureModsListExists()
 	{
-		if (!FunkinAssets.exists('modsList.txt'))
+		if (!FunkinAssets.exists(#if mobile StorageSystem.getDirectory() + #end 'modsList.txt'))
 		{
-			File.saveContent('modsList.txt', '');
+			File.saveContent(#if mobile StorageSystem.getDirectory() + #end 'modsList.txt', '');
 		}
 	}
 	
@@ -253,7 +253,7 @@ class Mods
 		var list:ModsList = {enabled: [], disabled: [], all: []};
 		
 		#if MODS_ALLOWED
-		for (mod in CoolUtil.coolTextFile('modsList.txt'))
+		for (mod in CoolUtil.coolTextFile(#if mobile StorageSystem.getDirectory() + #end 'modsList.txt'))
 		{
 			if (mod.trim().length < 1) continue;
 			
@@ -280,7 +280,7 @@ class Mods
 				list.push({folder: top, enabled: true});
 			}
 		}
-		for (mod in CoolUtil.coolTextFile('modsList.txt'))
+		for (mod in CoolUtil.coolTextFile(#if mobile StorageSystem.getDirectory() + #end 'modsList.txt'))
 		{
 			var dat:Array<String> = mod.split("|");
 			var folder:String = dat[0];
@@ -325,7 +325,7 @@ class Mods
 			if (fileStr.length > 0) fileStr += '\n';
 			fileStr += values.folder + '|' + (values.enabled ? '1' : '0');
 		}
-		File.saveContent('modsList.txt', fileStr);
+		File.saveContent(#if mobile StorageSystem.getDirectory() + #end 'modsList.txt', fileStr);
 		#end
 	}
 	

@@ -112,7 +112,7 @@ class StorageSystem
 			else
 			{
 				trace("Running silent integrity check...");
-				var restoredAssets = copyFromAPK("assets/", null, false);
+				var restoredAssets = copyFromAPK("assets/", null, false, getAssetsDirectory());
 				var restoredContent = copyFromAPK("content/", null, false);
 				
 				if (restoredAssets > 0 || restoredContent > 0)
@@ -160,7 +160,7 @@ class StorageSystem
 	 * Recursively copies folders from the APK to external directory.
 	 * @return Int The number of files successfully copied.
 	 */
-	public static function copyFromAPK(sourceDir:String, targetDir:String = null, forceOverwrite:Bool = true, baseDirectory:String):Int
+	public static function copyFromAPK(sourceDir:String, targetDir:String = null, forceOverwrite:Bool = true, ?baseDirectory:String):Int
 	{
 		var copiedCount = 0;
 		

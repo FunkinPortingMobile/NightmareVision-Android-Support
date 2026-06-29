@@ -489,7 +489,7 @@ class FreeplayState extends MusicBeatState
 			
 			if (tabs == null)
 			{
-				var dir = FunkinAssets.readDirectory('content/${i.folder}/data/weeks');
+				var dir = FunkinAssets.readDirectory(#if mobile StorageSystem.getDirectory() + #end 'content/${i.folder}/data/weeks');
 				
 				var fromWeeks = [];
 				for (week in dir)

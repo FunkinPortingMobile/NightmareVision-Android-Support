@@ -103,8 +103,10 @@ class StorageSystem
 		{
 			var path = getDirectory();
 			if (!FileSystem.exists(path)) FileSystem.createDirectory(path);
+			var assetsPath = getAssetsDirectory();
+			if (!FileSystem.exists(assetsPath)) FileSystem.createDirectory(assetsPath);
 			
-			if (!FileSystem.exists(path + "assets") || !FileSystem.exists(path + "content"))
+			if (!FileSystem.exists(assetsPath + "assets") || !FileSystem.exists(path + "content"))
 			{
 				startApkCopy();
 				return true;

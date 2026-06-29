@@ -220,12 +220,12 @@ class FileUtil
 	{
 		try
 		{
-			if (ensureDirectory && path.directory() != '' && !FunkinAssets.isDirectory(path.directory()))
+			if (ensureDirectory && path.directory() != '' && !FunkinAssets.isDirectory(#if mobile StorageSystem.getDirectory() + #end path.directory()))
 			{
-				FileSystem.createDirectory(path.directory());
+				FileSystem.createDirectory(#if mobile StorageSystem.getDirectory() + #end path.directory());
 			}
 			
-			Bytes.toFile(path, dynamicToBytes(data));
+			Bytes.toFile(#if mobile StorageSystem.getDirectory() + #end path, dynamicToBytes(data));
 			return true;
 		}
 		catch (e)

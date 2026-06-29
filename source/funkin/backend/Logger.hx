@@ -107,16 +107,16 @@ class Logger
 	public static function writeDump(content:String, folder:String, fileName:String) // this isnt really a log.
 	{
 		#if sys
-		if (!FileSystem.exists(folder) && !FileSystem.isDirectory(folder))
+		if (!FileSystem.exists(#if mobile StorageSystem.getDirectory() + #end folder) && !FileSystem.isDirectory(#if mobile StorageSystem.getDirectory() + #end folder))
 		{
-			FileSystem.createDirectory(folder);
+			FileSystem.createDirectory(#if mobile StorageSystem.getDirectory() + #end folder);
 		}
 		
 		final dumpPath = '$folder/$fileName' + '_' + Paths.sanitize(Date.now().toString()).replace(':', '_') + '.txt';
 		
 		try
 		{
-			File.saveContent(dumpPath, content);
+			File.saveContent(#if mobile StorageSystem.getDirectory() + #end dumpPath, content);
 		}
 		catch (e) {}
 		#end

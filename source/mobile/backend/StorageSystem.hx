@@ -56,6 +56,20 @@ class StorageSystem
 	}
 	
 	/**
+	 * Returns the assets storage directory path.
+	 */
+	public static function getAssetsDirectory():String
+	{
+		#if android
+		return Environment.getExternalStorageDirectory() + 'Android/media' + Application.current.meta.get('packageName') + '/';
+		#elseif ios
+		return lime.system.System.documentsDirectory;
+		#else
+		return Sys.getCwd();
+		#end
+	}
+	
+	/**
 	 * Requests Android storage permissions and verifies external assets.
 	 * @return Bool Returns TRUE if the game boot should halt (permissions pending or full extract), FALSE if ready to play.
 	 */
@@ -128,7 +142,7 @@ class StorageSystem
 		
 		try
 		{
-			copyFromAPK("assets/", null, true);
+			copyFromAPK("assets/", null, true, getAssetsDirectory());
 			copyFromAPK("content/", null, true);
 			
 			PopUp.showConfirm("Success!", "Files extracted. The game will now restart.", "Restart", "Cancel", function() {
@@ -146,14 +160,14 @@ class StorageSystem
 	 * Recursively copies folders from the APK to external directory.
 	 * @return Int The number of files successfully copied.
 	 */
-	public static function copyFromAPK(sourceDir:String, targetDir:String = null, forceOverwrite:Bool = true):Int
+	public static function copyFromAPK(sourceDir:String, targetDir:String = null, forceOverwrite:Bool = true, baseDirectory:String):Int
 	{
 		var copiedCount = 0;
 		
 		#if mobile
 		if (!StringTools.endsWith(sourceDir, "/")) sourceDir += "/";
 		
-		var baseDirectory = getDirectory();
+		if (baseDirectory == null) baseDirectory = getDirectory();
 		if (targetDir == null) targetDir = baseDirectory + sourceDir;
 		if (!StringTools.endsWith(targetDir, "/")) targetDir += "/";
 		

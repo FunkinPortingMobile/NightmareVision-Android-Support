@@ -16,7 +16,7 @@ import sys.io.File;
 using StringTools;
 
 /** * @Authors StarNova (Cream.BR), LumiCoder (FNF BR)
- * @version 0.1.7
+ * @version 0.1.8
  */
 class StorageSystem
 {
@@ -27,18 +27,11 @@ class StorageSystem
 		return Application.current.meta.get('file');
 	}
 	
-	/**
-	 * Returns the base storage directory path without forcing a trailing slash.
-	 */
-	public static inline function getStorageDirectory():String
+	private static var packageName(get, never):String;
+	
+	private static function get_packageName():String
 	{
-		#if android
-		return Path.addTrailingSlash(Environment.getExternalStorageDirectory() + '/.' + folderName);
-		#elseif ios
-		return lime.system.System.documentsDirectory;
-		#else
-		return Sys.getCwd();
-		#end
+		return Application.current.meta.get('packageName');
 	}
 	
 	/**
@@ -56,12 +49,12 @@ class StorageSystem
 	}
 	
 	/**
-	 * Returns the assets storage directory path.
+	 * Returns the assets directory path.
 	 */
 	public static function getAssetsDirectory():String
 	{
 		#if android
-		return Environment.getExternalStorageDirectory() + '/Android/media/' + Application.current.meta.get('packageName') + '/';
+		return Environment.getExternalStorageDirectory() + '/Android/media/' + packageName + '/';
 		#elseif ios
 		return lime.system.System.documentsDirectory;
 		#else
@@ -101,15 +94,14 @@ class StorageSystem
 		
 		try
 		{
-			var path = getDirectory();
-			if (!FileSystem.exists(path)) FileSystem.createDirectory(path);
-			var assetsPath = getAssetsDirectory();
-			if (!FileSystem.exists(assetsPath)) FileSystem.createDirectory(assetsPath);
+			var paths = [getAssetsDirectory(), getDirectory()];
+			if (!FileSystem.exists(paths[0])) FileSystem.createDirectory(paths[0]);
+			if (!FileSystem.exists(paths[1])) FileSystem.createDirectory(paths[1]);
 			
 			// Creating .nomedia files to avoid images remaining in the gallery
-			if (!FileSystem.exists(getAssetsDirectory() + ".nomedia")) File.saveContent(getAssetsDirectory() + ".nomedia", "/storage/emulated/0/Android/media/com.nmvTeam.nightmareEngine");
+			if (!FileSystem.exists(paths[0] + ".nomedia")) File.saveContent(paths[0] + ".nomedia", "/storage/emulated/0/Android/media/" + packageName);
 			
-			if (!FileSystem.exists(assetsPath + "assets") || !FileSystem.exists(path + "content"))
+			if (!FileSystem.exists(paths[0] + "assets") || !FileSystem.exists(paths[1] + "content"))
 			{
 				startApkCopy();
 				return true;
@@ -165,7 +157,7 @@ class StorageSystem
 	 * Recursively copies folders from the APK to external directory.
 	 * @return Int The number of files successfully copied.
 	 */
-	public static function copyFromAPK(sourceDir:String, targetDir:String = null, forceOverwrite:Bool = true, ?baseDirectory:String):Int
+	public static function copyFromAPK(sourceDir:String, ?targetDir:String = null, ?forceOverwrite:Bool = true, ?baseDirectory:String):Int
 	{
 		var copiedCount = 0;
 		

@@ -7,11 +7,18 @@ on:
       buildFlags:
         required: false
         type: string
-        
+
+env:
+  HAXE_VER: 4.3.7
+  LIME_HASH: 6421de16b9dfa4fb55c19f12db65d392a57585c8
+
 jobs:
-   Android:
+  Android:
     name: Build Android
     runs-on: ubuntu-latest
+    env:
+      CC: gcc-13
+      CXX: g++-13
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v6.0.2
@@ -21,7 +28,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@v2.1.0
         with:
-          haxe-version: 4.3.7
+          haxe-version: ${{ env.HAXE_VER }}
 
       - name: Install Linux system deps
         run: |
@@ -37,9 +44,6 @@ jobs:
             libvulkan-dev pkg-config
 
       - name: Prepare Android Lime rebuild
-        env:
-          CC: gcc-13
-          CXX: g++-13
         run: |
           set -euo pipefail
           haxelib setup ~/haxelib
@@ -48,14 +52,11 @@ jobs:
           haxelib run hxpkg install
           rm -rf .haxelib/lime
           git clone https://github.com/FunkinCrew/lime .haxelib/lime/git
-          git -C .haxelib/lime/git checkout 6421de16b9dfa4fb55c19f12db65d392a57585c8
+          git -C .haxelib/lime/git checkout ${{ env.LIME_HASH }}
           git -C .haxelib/lime/git submodule update --init --recursive --force
           haxelib dev lime .haxelib/lime/git
           
       - name: Rebuild Linux Lime ndll
-        env:
-          CC: gcc-13
-          CXX: g++-13
         run: |
           haxelib run lime rebuild cpp -release
           if [ ! -f .haxelib/lime/git/ndll/Linux64/lime.ndll ]; then
@@ -72,9 +73,6 @@ jobs:
           haxelib run lime config ANDROID_SETUP true
 
       - name: Rebuild Android Lime so
-        env:
-          CC: gcc-13
-          CXX: g++-13
         run: |
           haxelib run lime rebuild android -release
           if [ ! -f .haxelib/lime/git/ndll/Android/liblime-64.so ]; then
@@ -83,7 +81,7 @@ jobs:
           fi
 
       - name: Compile
-        run: haxelib run lime build android -release -D ${{inputs.buildFlags}}
+        run: haxelib run lime build android -release -D ${{ inputs.buildFlags }}
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v7.0.1
@@ -91,18 +89,20 @@ jobs:
           name: NightmareVision (Android)
           path: export/release/android/bin/app/build/outputs/apk/release/*.apk
           if-no-files-found: error
-   Windows:
+
+  Windows:
     name: Build Windows
     runs-on: windows-latest
-
     steps:
-      - uses: actions/checkout@v6.0.2
+      - name: Checkout Repository
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
           
-      - uses: krdlab/setup-haxe@v2.1.0
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@v2.1.0
         with:
-          haxe-version: 4.3.7
+          haxe-version: ${{ env.HAXE_VER }}
 
       - name: Prepare Windows Lime rebuild
         shell: pwsh
@@ -129,7 +129,7 @@ jobs:
           }
           Run git clone https://github.com/FunkinCrew/lime .haxelib/lime/git
           Run git -C .haxelib/lime/git fetch --all --tags --prune
-          Run git -C .haxelib/lime/git checkout 6421de16b9dfa4fb55c19f12db65d392a57585c8
+          Run git -C .haxelib/lime/git checkout ${{ env.LIME_HASH }}
           Run git -C .haxelib/lime/git submodule sync --recursive
           Run git -C .haxelib/lime/git submodule update --init --recursive --force
           Run haxelib dev lime .haxelib/lime/git
@@ -143,25 +143,30 @@ jobs:
           Run haxelib run lime rebuild cpp -release
 
       - name: Build Windows
-        run: haxelib run lime build windows -D ${{inputs.buildFlags}}
+        run: haxelib run lime build windows -D ${{ inputs.buildFlags }}
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v7.0.1
         with:
           name: NightmareVision (Windows)
           path: export/release/windows/bin
-   Linux:
+
+  Linux:
     name: Build Linux
     runs-on: ubuntu-24.04
-
+    env:
+      CC: gcc-13
+      CXX: g++-13
     steps:
-      - uses: actions/checkout@v6.0.2
+      - name: Checkout Repository
+        uses: actions/checkout@v6.0.2
         with:
           submodules: true
 
-      - uses: krdlab/setup-haxe@v2.1.0
+      - name: Setup Haxe
+        uses: krdlab/setup-haxe@v2.1.0
         with:
-          haxe-version: 4.3.7
+          haxe-version: ${{ env.HAXE_VER }}
 
       - name: Install Linux system deps
         run: |
@@ -177,9 +182,6 @@ jobs:
             libvulkan-dev pkg-config
 
       - name: Prepare Linux Lime rebuild
-        env:
-          CC: gcc-13
-          CXX: g++-13
         run: |
           set -euo pipefail
           haxelib setup ~/haxelib
@@ -188,14 +190,11 @@ jobs:
           haxelib run hxpkg install
           rm -rf .haxelib/lime
           git clone https://github.com/FunkinCrew/lime .haxelib/lime/git
-          git -C .haxelib/lime/git checkout 6421de16b9dfa4fb55c19f12db65d392a57585c8
+          git -C .haxelib/lime/git checkout ${{ env.LIME_HASH }}
           git -C .haxelib/lime/git submodule update --init --recursive --force
           haxelib dev lime .haxelib/lime/git
 
       - name: Rebuild Linux Lime ndll
-        env:
-          CC: gcc-13
-          CXX: g++-13
         run: |
           haxelib run lime rebuild cpp -release
           if [ ! -f .haxelib/lime/git/ndll/Linux64/lime.ndll ]; then
@@ -204,14 +203,10 @@ jobs:
           fi
 
       - name: Build Linux
-        env:
-          CC: gcc-13
-          CXX: g++-13
-        run: haxelib run lime build Project.xml linux -D ${{inputs.buildFlags}}
+        run: haxelib run lime build Project.xml linux -D ${{ inputs.buildFlags }}
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v7.0.1
         with:
           name: NightmareVision (Linux)
           path: export/release/linux/bin
-

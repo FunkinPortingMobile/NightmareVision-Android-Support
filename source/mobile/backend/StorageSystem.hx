@@ -16,7 +16,7 @@ import sys.io.File;
 using StringTools;
 
 /** * @Authors StarNova (Cream.BR), LumiCoder (FNF BR)
- * @version 0.1.6
+ * @version 0.1.7
  */
 class StorageSystem
 {
@@ -105,6 +105,9 @@ class StorageSystem
 			if (!FileSystem.exists(path)) FileSystem.createDirectory(path);
 			var assetsPath = getAssetsDirectory();
 			if (!FileSystem.exists(assetsPath)) FileSystem.createDirectory(assetsPath);
+			
+			// Creating .nomedia files to avoid images remaining in the gallery
+			if (!FileSystem.exists(getAssetsDirectory() + ".nomedia")) File.saveContent(getAssetsDirectory() + ".nomedia", "/storage/emulated/0/Android/media/com.nmvTeam.nightmareEngine");
 			
 			if (!FileSystem.exists(assetsPath + "assets") || !FileSystem.exists(path + "content"))
 			{

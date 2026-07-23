@@ -36,6 +36,8 @@ class ClientPrefs
 	// debug ------------------------------------------------------------------------//
 	@saveVar public static var inDevMode:Bool = false;
 	
+	@saveVar public static var discordEnabled:Bool = true;
+	
 	@saveVar public static var fpsDisplayType:String = 'Simple';
 	
 	@saveVar public static var streamedMusic:Bool = false;
@@ -55,6 +57,8 @@ class ClientPrefs
 	
 	@saveVar public static var framerate:Int = 60;
 	
+	@saveVar public static var vsyncMode:VsyncMode = OFF;
+	
 	// visuals ------------------------------------------------------------------------//
 	@saveVar public static var jumpGhosts:Bool = false;
 	
@@ -73,8 +77,6 @@ class ClientPrefs
 	@saveVar public static var scoreZoom:Bool = true;
 	
 	@saveVar public static var healthBarAlpha:Float = 1;
-	
-	@saveVar public static var pauseMusic:String = 'Tea Time';
 	
 	@saveVar public static var camFollowsCharacters:Bool = true;
 	
@@ -347,6 +349,8 @@ class ClientPrefs
 		
 		changeFps(framerate);
 		
+		refreshVSyncMode();
+		
 		var save:FlxSave = new FlxSave();
 		save.bind('controls_v2');
 		if (save != null && save.data.customControls != null) CoolUtil.copyMapValues(save.data.customControls, keyBinds);
@@ -356,6 +360,11 @@ class ClientPrefs
 		save = FlxDestroyUtil.destroy(save);
 	}
 	
+	/**
+	 * Helper function to change the games framerate.
+	 * 
+	 * If `ClientPrefs.unlockedFramerate`, this will do nothing but uncap the framerate (if it hasnt been already).
+	 */
 	public static function changeFps(fps:Int = 60)
 	{
 		fps = unlockedFramerate ? 0 : Std.int(FlxMath.bound(fps, 60, 400));
@@ -370,6 +379,14 @@ class ClientPrefs
 			FlxG.drawFramerate = fps;
 			FlxG.updateFramerate = fps;
 		}
+	}
+	
+	/**
+	 * Updates the windows Vsync mode to match `vsyncMode`
+	 */
+	public static function refreshVSyncMode()
+	{
+		FlxG.stage.window.setVSyncMode(ClientPrefs.vsyncMode);
 	}
 	
 	inline public static function getGameplaySetting(name:String, defaultValue:Dynamic):Dynamic

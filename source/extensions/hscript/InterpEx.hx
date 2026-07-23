@@ -64,6 +64,10 @@ class InterpEx extends crowplexus.hscript.Interp
 	
 	function set_parent(value:Dynamic)
 	{
+		if (value != null && value == parent)
+		{
+			return parent;
+		}
 		parent = value;
 		parentFields = value != null ? Type.getInstanceFields(Type.getClass(value)) : [];
 		return parent;
@@ -81,10 +85,12 @@ class InterpEx extends crowplexus.hscript.Interp
 				var l = locals.get(id);
 				var v:Dynamic = (locals.exists(id) ? l.r : resolve(id));
 				
-				function setTo(a) {
+				function setTo(a)
+				{
 					if (locals.exists(id))
 					{
-						if (l.const != true) l.r = a else error(ECustom("Cannot reassign final, for constant expression -> " + id));
+						if (l.const != true) l.r = a
+						else error(ECustom("Cannot reassign final, for constant expression -> " + id));
 						
 						return;
 					}
@@ -114,7 +120,7 @@ class InterpEx extends crowplexus.hscript.Interp
 				}
 				
 				return v;
-			
+				
 			default:
 				return super.increment(e, prefix, delta);
 		}
@@ -125,7 +131,7 @@ class InterpEx extends crowplexus.hscript.Interp
 		if (locals.exists(id)) return locals.get(id).r;
 		
 		if (variables.exists(id)) return variables.get(id);
-				
+		
 		if (imports.exists(id)) return imports.get(id);
 		
 		if (parentFields?.contains(id)) return Reflect.getProperty(parent, id);

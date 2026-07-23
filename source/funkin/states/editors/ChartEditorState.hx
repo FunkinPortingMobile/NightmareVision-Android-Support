@@ -1,10 +1,12 @@
 package funkin.states.editors;
 
+import funkin.objects.AttachedModule;
 import funkin.data.Chart;
 
 import haxe.ds.IntMap;
 import haxe.Json;
 import haxe.io.Bytes;
+import haxe.io.Path;
 
 import lime.media.AudioBuffer;
 
@@ -433,12 +435,11 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		strumLine = new FlxSprite(0, 50).makeGraphic(Std.int(GRID_SIZE * ((song.keys * song.lanes) + 1)), 4);
 		add(strumLine);
 		
-		quant = new AttachedSprite('editors/chart_quant', 'chart_quant');
+		quant = cast new AttachedSprite().loadAtlasFrames(Paths.getAtlasFrames('editors/chart_quant'));
 		quant.animation.addByPrefix('q', 'chart_quant', 0, false);
 		quant.animation.play('q', true, false, 0);
-		quant.sprTracker = strumLine;
-		quant.xAdd = -32;
-		quant.yAdd = 8;
+		quant.attachedModule.tracked = strumLine;
+		quant.attachedModule.positionOffset.set(-32, 8);
 		add(quant);
 		
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -973,10 +974,8 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 	function prepareEventsUI():Void
 	{
 		#if MODS_ALLOWED
-		var eventPushedMap:Map<String, Bool> = new Map<String, Bool>();
 		var directories:Array<String> = [];
 		
-		#if MODS_ALLOWED
 		directories.push(Paths.mods('data/events/'));
 		directories.push(Paths.mods(Mods.currentModDirectory + '/data/events/'));
 		for (mod in Mods.globalMods)
@@ -986,49 +985,41 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		directories.push(Paths.mods(Mods.currentModDirectory + '/events/'));
 		for (mod in Mods.globalMods)
 			directories.push(Paths.mods(mod + '/events/'));
-		#end
+			
+		var eventExts:Array<String> = FunkinScript.H_EXTS.concat(["txt"]);
 		
-		var eventexts = ['.txt', '.hx', '.hxs', '.hscript'];
-		var removeShit = [4, 3, 4, 8];
-		
+		var pushedEvents:Array<String> = [];
+		for (event in eventStuff)
+			pushedEvents.push(event[0]);
+			
 		for (i in 0...directories.length)
 		{
 			var directory:String = directories[i];
-			if (!FunkinAssets.exists(directory)) continue;
-			
-			for (file in FunkinAssets.readDirectory(directory))
+			if (FunkinAssets.exists(directory))
 			{
-				var path = haxe.io.Path.join([directory, file]);
-				for (ext in 0...eventexts.length)
+				var files = FunkinAssets.readDirectory(directory);
+				files.sort((a, b) -> return Path.extension(a) == "txt" ? 1 : 0);
+				
+				for (file in files)
 				{
-					if (FunkinAssets.isDirectory(path) || file == 'readme.txt' || !file.endsWith(eventexts[ext])) continue;
-					
-					var fileToCheck:String = file.substr(0, file.length - removeShit[ext]);
-					
-					if (eventPushedMap.exists(fileToCheck)) break;
-					
-					eventPushedMap.set(fileToCheck, true);
-					
-					for (x in ['.hx', '.hxs', '.hscript'])
+					var path = Path.join([directory, file]);
+					if (!FunkinAssets.isDirectory(path) && file != 'readme.txt' && eventExts.contains(Path.extension(file)))
 					{
-						if (file.endsWith(x))
+						var fileToCheck:String = Path.withoutExtension(file);
+						if (!pushedEvents.contains(fileToCheck))
 						{
-							eventStuff.push([fileToCheck, 'scripted description']);
-							break;
+							if (FunkinScript.isHxFile(file)) eventStuff.push([fileToCheck, 'Script Event']);
+							else
+							{
+								final desc = FunkinAssets.getContent(path);
+								eventStuff.push([fileToCheck, desc]);
+							}
 						}
-						else
-						{
-							eventStuff.push([fileToCheck, File.getContent(path)]);
-							break;
-						}
+						pushedEvents.push(fileToCheck);
 					}
-					
-					break;
 				}
 			}
 		}
-		eventPushedMap.clear();
-		eventPushedMap = null;
 		#end
 		
 		ui.songDialog.eventDropdown.populateList([for (ev in eventStuff) {id: ev[0], text: (ev[0].length == 0 ? 'None' : ev[0])}]);
@@ -1322,9 +1313,8 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 					}
 					else if (FlxG.keys.pressed.ALT)
 					{
-						selectNote(note);
 						note.chartData[3] = noteTypeIntMap.get(currentType);
-						updateGrid();
+						selectNote(note);
 					}
 					else
 					{

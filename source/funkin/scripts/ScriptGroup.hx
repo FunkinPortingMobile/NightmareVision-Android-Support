@@ -21,16 +21,16 @@ class ScriptGroup implements IFlxDestroyable
 	
 	function set_parent(value:Dynamic)
 	{
+		if (value != null && value == parent)
+		{
+			return parent;
+		}
+		
 		parent = value;
 		@:privateAccess
-		for (i in members)
+		for (script in members)
 		{
-			final interp:InterpEx = cast i.interp;
-			if (interp.parent != parent)
-			{
-				interp.parent = parent;
-				interp.sharedFields = scriptShareables;
-			}
+			copyGroup(script);
 		}
 		
 		return parent;
@@ -53,19 +53,36 @@ class ScriptGroup implements IFlxDestroyable
 	}
 	
 	/**
-	 * Adds a new script to the group
+	 * Adds a new script to the group.
 	 * @param script 
 	 */
 	public function addScript(script:Null<FunkinScript>, allowDupeNames:Bool = false):Bool
 	{
 		if (script == null || (!allowDupeNames && exists(script.name))) return false;
 		
+		copyGroup(script);
+		members.push(script);
+		return true;
+	}
+	
+	/**
+	 * Removes a script from the group.
+	 * @return Bool Whether it successfully removed.
+	 */
+	public function removeScript(script:FunkinScript):Bool
+	{
+		return members.remove(script);
+	}
+	
+	/**
+	 * Copys the groups `parent` and `scriptShareables` to the script.
+	 */
+	function copyGroup(script:FunkinScript)
+	{
 		@:privateAccess
 		final interp:InterpEx = cast script.interp;
 		if (interp.parent != parent) interp.parent = parent;
 		interp.sharedFields = scriptShareables;
-		members.push(script);
-		return true;
 	}
 	
 	@:inheritDoc(funkin.scripts.FunkinScript.set)

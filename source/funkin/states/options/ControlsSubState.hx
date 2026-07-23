@@ -90,7 +90,7 @@ class ControlsSubState extends MusicBeatSubstate
 	var resetKeysLabel:Alphabet;
 	var resetGamepadLabel:Alphabet;
 	
-	public function new(device:Device)
+	public function new()
 	{
 		super();
 		
@@ -132,7 +132,9 @@ class ControlsSubState extends MusicBeatSubstate
 		resetKeysLabel.screenCenter(X);
 		add(resetKeysLabel);
 		
-		this.device = device;
+		final gamepad = FlxG.gamepads.getFirstActiveGamepad();
+		
+		this.device = gamepad != null ? Gamepad(gamepad.id) : Keys;
 		
 		refreshOptionsList();
 		

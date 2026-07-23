@@ -1,5 +1,9 @@
 package funkin.utils;
 
+import funkin.data.FunkinTransitionState;
+
+import flixel.util.typeLimit.NextState;
+
 import openfl.display.BlendMode;
 
 import flixel.addons.transition.FlxTransitionableState;
@@ -256,5 +260,35 @@ class CoolUtil
 			@:nullSafety(Off)
 			FlxG.sound.music.fadeTween = null;
 		}
+	}
+	
+	/**
+	 * Attempts to switch from the current game state to `nextState`.
+	 * The state switch is successful if `switchTo()` of the current `state` returns `true`.
+	 * @param   nextState  A constructor for the initial state, ex: `PlayState.new` or `()->new PlayState()`.
+	 *                     Note: Before Flixel 5.6.0, this took a `FlxState` instance,
+	 *                     this is still available, for backwards compatibility.
+	 * @param transition Custom transition to use for this state switch.
+	 */
+	public static function switchState(next:NextState, transition:FunkinTransitionState = ENGINE_DEFAULT)
+	{
+		if (transition == ENGINE_DEFAULT)
+		{
+			FlxG.switchState(next);
+			return;
+		}
+		
+		var _lastIn = MusicBeatState.transitionInState;
+		var _lastOut = MusicBeatState.transitionOutState;
+		
+		MusicBeatState.transitionInState = transition;
+		MusicBeatState.transitionOutState = transition;
+		
+		FlxG.switchState(next);
+		
+		FlxG.signals.postStateSwitch.addOnce(() -> {
+			MusicBeatState.transitionInState = _lastIn;
+			MusicBeatState.transitionOutState = _lastOut;
+		});
 	}
 }

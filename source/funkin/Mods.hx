@@ -346,46 +346,44 @@ class Mods
 		
 		currentModConfig = pack;
 		
-		WindowUtil.setTitle(pack.windowTitle ?? 'Friday Night Funkin');
+		WindowUtil.setTitle(pack.windowTitle ?? WindowUtil.defaultAppTitle);
 		
-		inline function resetIcon()
-		{
-			final path = Paths.getPath('images/branding/icon/icon64.png', null, true);
-			
-			FlxG.stage.window.setIcon(Image.fromBytes(FunkinAssets.getBytes(path)));
-		}
+		var iconPath = Paths.getPath('images/branding/icon/icon64.png', null, true);
 		
 		if (pack.iconFile != null)
 		{
-			final path = Paths.getPath('images/${pack.iconFile}.png', null, true);
-			
-			if (FunkinAssets.exists(path)) FlxG.stage.window.setIcon(Image.fromBytes(FunkinAssets.getBytes(path)));
-			else
+			var path = Paths.getPath('images/${pack.iconFile}.png', null, true);
+			if (!FunkinAssets.exists(path))
 			{
-				resetIcon();
 				Logger.log('Could not find Icon ${pack.iconFile}', ERROR);
 			}
+			else
+			{
+				iconPath = path;
+			}
 		}
-		else resetIcon();
+		
+		WindowUtil.setIconFromPath(iconPath);
 		
 		if (pack.defaultTransition != null)
 		{
 			switch (pack.defaultTransition.toLowerCase())
 			{
 				case 'base', 'swipe':
-					MusicBeatState.transitionInState = SwipeTransition;
-					MusicBeatState.transitionOutState = SwipeTransition;
+					MusicBeatState.transitionInState = SWIPE;
+					MusicBeatState.transitionOutState = SWIPE;
 				case 'fade':
-					MusicBeatState.transitionInState = FadeTransition;
-					MusicBeatState.transitionOutState = FadeTransition;
+					MusicBeatState.transitionInState = FADE;
+					MusicBeatState.transitionOutState = FADE;
 				default:
-					ScriptedTransition.setTransition(pack.defaultTransition);
+					MusicBeatState.transitionInState = SCRIPTED(pack.defaultTransition);
+					MusicBeatState.transitionOutState = SCRIPTED(pack.defaultTransition);
 			}
 		}
 		else
 		{
-			MusicBeatState.transitionInState = SwipeTransition;
-			MusicBeatState.transitionOutState = SwipeTransition;
+			MusicBeatState.transitionInState = MusicBeatState.DEFAULT_TRANSITION_STATE;
+			MusicBeatState.transitionOutState = MusicBeatState.DEFAULT_TRANSITION_STATE;
 		}
 		
 		if (pack.discordClientID != null) funkin.api.DiscordClient.rpcId = pack.discordClientID;

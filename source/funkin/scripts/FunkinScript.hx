@@ -1,5 +1,7 @@
 package funkin.scripts;
 
+import funkin.backend.FunkinShader.FunkinRuntimeShader;
+
 import extensions.hscript.Sharables;
 import extensions.hscript.IrisEx;
 
@@ -92,68 +94,69 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 	
 	/**
 	 * Creates a new `FunkinScript` from a string
-	 * @param script 
-	 * @param name 
-	 * @param additionalVars 
+	 * @param scriptContent The raw content of a script in a string.
+	 * @param name The name of the script.
 	 */
-	public static function fromString(script:String, ?name:String = "Script", ?additionalVars:Map<String, Any>, ?shareables:Sharables)
+	public static function fromString(scriptContent:String, name:String = "Script", autoExecute:Bool = true, ?shareables:Sharables)
 	{
-		return new FunkinScript(script, name, additionalVars, shareables);
+		return new FunkinScript(scriptContent, name, autoExecute, shareables);
 	}
 	
 	/**
-	 * Creates a new `FunkinScript` from a filepath
+	 * Creates a new `FunkinScript` from a file path
 	 * 
-	 * @param file 
-	 * @param name 
-	 * @param additionalVars 
+	 * Note: there is no safety checking if the file exists.
+	 * 
+	 * @param file The path to the file
+	 * @param name The name of the script. if null, `file` is used.
 	 */
-	public static function fromFile(file:String, ?name:String, ?additionalVars:Map<String, Any>, ?shareables:Sharables)
+	public static function fromFile(file:String, ?name:String, autoExecute:Bool = true, ?shareables:Sharables)
 	{
 		name ??= file;
 		
-		return new FunkinScript(FunkinAssets.getContent(file), name, additionalVars, shareables);
+		return new FunkinScript(FunkinAssets.getContent(file), name, autoExecute, shareables);
 	}
 	
 	/**
-	 * is true if parsing failed
+	 * The Exception provided when execution fails.
+	 * 
+	 * This will be null if parsing succeeded.
 	 */
-	@:noCompletion public var __garbage:Bool = false;
+	public var parsingException:Null<haxe.Exception> = null;
 	
-	public function new(script:String, ?name:String = "Script", ?additionalVars:Map<String, Any>, ?shareables:Sharables)
+	/**
+	 * @return Bool Whether parsing was successful.
+	 */
+	public function parsingFailed():Bool // this is more so a function for clarity.
 	{
-		super(script, {name: name, autoRun: false, autoPreset: false}, shareables);
+		return parsingException != null;
+	}
+	
+	public function new(content:String, name:String = "Script", autoExecute:Bool = true, ?shareables:Sharables)
+	{
+		super(content, {name: name, autoRun: false, autoPreset: false}, shareables);
 		
 		(cast interp : InterpEx).parent = FlxG.state;
-		// interp = new InterpEx(FlxG.state);
 		
 		preset();
 		
-		if (additionalVars != null)
-		{
-			for (key => obj in additionalVars)
-				set(key, additionalVars.get(obj));
-		}
-		
-		tryExecute();
+		if (autoExecute) execute();
 	}
 	
-	/**
-	 * safer parsing
-	 */
-	inline function tryExecute()
+	override function execute():Dynamic
 	{
-		var ret:Dynamic = null;
-		try
+		final retVal = try
 		{
-			ret = execute();
+			super.execute();
 		}
 		catch (e)
 		{
-			__garbage = true;
+			parsingException = e;
+			
 			Logger.log('[${name}]: PARSING ERROR: $e', ERROR, true);
+			null;
 		}
-		return ret;
+		return retVal;
 	}
 	
 	// kept for notescript stuff
@@ -181,7 +184,7 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 				{
 					returnVal = Reflect.callMethod(theObject, daFunc, parameters ?? []);
 				}
-				catch (e:haxe.Exception)
+				catch (e)
 				{
 					#if sys
 					Sys.println(e.message);
@@ -225,7 +228,6 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 		set('ObjectMap', haxe.ds.ObjectMap);
 		
 		set("Main", Main);
-		set("Lib", openfl.Lib);
 		set("Assets", lime.utils.Assets);
 		set("OpenFlAssets", openfl.utils.Assets);
 		
@@ -343,8 +345,6 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 		set("BGSprite", BGSprite);
 		set("StrumNote", StrumNote);
 		set("Alphabet", Alphabet);
-		set("AttachedSprite", AttachedSprite);
-		set("AttachedAlphabet", AttachedAlphabet);
 		
 		set("CutsceneHandler", funkin.objects.CutsceneHandler);
 		set('DialogueBox', funkin.objects.DialogueBox);
@@ -402,21 +402,6 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 			set("inPlaystate", false);
 		}
 		
-		set("newShader", (?fragFile:String, ?vertFile:String) -> {
-			var fragPath = fragFile != null ? Paths.fragment(fragFile) : null;
-			var vertPath = vertFile != null ? Paths.vertex(vertFile) : null;
-			
-			if (fragPath != null)
-			{
-				if (FunkinAssets.exists(fragPath)) fragPath = FunkinAssets.getContent(fragPath);
-			}
-			
-			if (vertPath != null)
-			{
-				if (FunkinAssets.exists(vertPath)) vertPath = FunkinAssets.getContent(vertPath);
-			}
-			
-			return new funkin.backend.FunkinShader.FunkinRuntimeShader(fragPath, vertPath);
-		});
+		set("newShader", FunkinRuntimeShader.fromPath);
 	}
 }

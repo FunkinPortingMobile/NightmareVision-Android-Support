@@ -1,5 +1,6 @@
 package funkin.objects.note;
 
+import funkin.game.Rating;
 import funkin.backend.math.Vector3;
 
 import flixel.FlxSprite;
@@ -194,6 +195,7 @@ class Note extends FunkinSprite implements funkin.game.modchart.IModNote
 	public var noteSplashSat:Float = 0;
 	public var noteSplashBrt:Float = 0;
 	
+	public var scaleMod:Float = 1; // modify note scale for note types and whatnot
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
 	public var offsetAngle:Float = 0;
@@ -207,8 +209,17 @@ class Note extends FunkinSprite implements funkin.game.modchart.IModNote
 	
 	public var hitHealth:Float = 0.023;
 	public var missHealth:Float = 0.0475;
-	public var rating:String = 'unknown';
-	public var ratingMod:Float = 0; // 9 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
+	public var rating:Null<Rating> = null;
+	
+	@:deprecated("Use Note.rating.ratingMod instead!")
+	public var ratingMod(get, never):Float; // -1 = unknown, 0.25 = shit, 0.5 = bad, 0.75 = good, 1 = sick
+	
+	inline function get_ratingMod():Float
+	{
+		final mod:Float = rating?.ratingMod ?? -1;
+		return mod == 9 ? -1 : mod;
+	}
+	
 	public var ratingDisabled:Bool = false;
 	
 	public var texture(default, set):String = null;
@@ -318,6 +329,7 @@ class Note extends FunkinSprite implements funkin.game.modchart.IModNote
 		hitHealth = .023;
 		missHealth = .0475;
 		coyoteProgress = 0;
+		scaleMod = 1;
 		
 		noAnimation = noMissAnimation = ratingDisabled = hitCausesMiss = false;
 		
@@ -514,7 +526,7 @@ class Note extends FunkinSprite implements funkin.game.modchart.IModNote
 			addOffset(anim.anim, anim.offsets[0], anim.offsets[1]);
 		}
 		
-		setGraphicSize(Std.int(width * skin.noteScale));
+		setGraphicSize(Std.int(width * skin.noteScale * scaleMod));
 		
 		baseScale.copyFrom(scale);
 	}

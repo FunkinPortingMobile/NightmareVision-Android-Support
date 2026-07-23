@@ -128,7 +128,7 @@ class MusicBeatSubstate extends FlxSubState
 		if (FunkinAssets.exists(scriptFile))
 		{
 			var _script = FunkinScript.fromFile(scriptFile);
-			if (_script.__garbage)
+			if (_script.parsingFailed())
 			{
 				_script = FlxDestroyUtil.destroy(_script);
 				return false;

@@ -404,8 +404,8 @@ class PlayField extends FlxTypedContainer<StrumNote>
 		if (field.playerControls)
 		{
 			var ratingThing:funkin.game.Rating = funkin.game.Rating.judgeNote(note, Math.abs(note.strumTime - Conductor.songPosition + ClientPrefs.ratingOffset) / PlayState.instance?.playbackRate);
-			
-			shouldSplash = (ratingThing.name == 'sick' || ratingThing.name == 'epic');
+			note.rating = ratingThing;
+			shouldSplash = ratingThing.ratingMod >= 1;
 		}
 		
 		if (field.noteSplashes && shouldSplash) field.spawnSplash(note);
@@ -535,7 +535,8 @@ class PlayField extends FlxTypedContainer<StrumNote>
 					char.playGhostAnim(note.noteData, ghostAnim, true);
 				}
 				
-				char.playAnim(animToPlay, true);
+				if (note.isSustainNote && !note.isSustainEnd && char.animOffsets.exists('$animToPlay-hold')) char.playAnim('$animToPlay-hold', false);
+				else char.playAnim(animToPlay, true);
 				
 				if (!note.isSustainNote || note.prevNote?.isSustainNote) char.lastHitTime = note.strumTime;
 			}

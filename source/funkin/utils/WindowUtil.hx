@@ -1,6 +1,7 @@
 package funkin.utils;
 
 import lime.app.Application;
+import lime.graphics.Image;
 
 import openfl.Lib;
 
@@ -307,5 +308,19 @@ class WindowUtil
 		}
 		
 		centerWindow();
+	}
+	
+	/**
+	 * Changes the windows `icon` from a file path
+	 */
+	public static function setIconFromPath(path:String)
+	{
+		if (!FunkinAssets.exists(path))
+		{
+			Logger.log('Could not find Icon $path', ERROR);
+			return;
+		}
+		
+		FlxG.stage.window.setIcon(Image.fromBytes(FunkinAssets.getBytes(path)));
 	}
 }

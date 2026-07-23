@@ -195,8 +195,8 @@ class Stage extends FlxTypedContainer<FlxBasic>
 		
 		inline function startScript(scriptFile:String)
 		{
-			script = FunkinScript.fromFile(scriptFile, null, null, group?.scriptShareables);
-			if (script.__garbage)
+			script = FunkinScript.fromFile(scriptFile, null, group?.scriptShareables);
+			if (script.parsingFailed())
 			{
 				script = FlxDestroyUtil.destroy(script);
 				return;

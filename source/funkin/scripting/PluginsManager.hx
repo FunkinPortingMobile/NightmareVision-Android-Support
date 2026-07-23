@@ -28,8 +28,8 @@ class PluginsManager
 			{
 				final scriptName = file.withoutDirectory().withoutExtension();
 				
-				var script = FunkinScript.fromFile(file, scriptName);
-				if (script.__garbage)
+				var script = FunkinScript.fromFile(file, scriptName, false);
+				if (script.parsingFailed())
 				{
 					script = FlxDestroyUtil.destroy(script);
 					continue;

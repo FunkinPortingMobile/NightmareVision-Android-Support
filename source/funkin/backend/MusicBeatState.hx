@@ -38,6 +38,8 @@ class MusicBeatState extends FlxUIState
 	 */
 	public static var transitionOutState:FunkinTransitionState = ENGINE_DEFAULT;
 	
+	public static var instance:MusicBeatState;
+	
 	public function new() super();
 	
 	private var stepsToDo:Int = 0;
@@ -164,6 +166,7 @@ class MusicBeatState extends FlxUIState
 	override function create()
 	{
 		super.create();
+		instance = this;
 		
 		if (!FlxTransitionableState.skipNextTransOut && transitionOutState != NONE)
 		{

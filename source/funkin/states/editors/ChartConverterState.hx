@@ -48,7 +48,7 @@ class ChartConverterState extends MusicBeatState
 		bg.color = 0xFF4D3551;
 		add(bg);
 		
-		var titleText = new Alphabet(0, 0, 'Chart Converter', true, false, 0, 0.6);
+		var titleText = new Alphabet(0, 0, 'Chart Converter', true, 0.6);
 		titleText.x += 60;
 		titleText.y += 40;
 		titleText.alpha = 0.4;
@@ -69,7 +69,7 @@ class ChartConverterState extends MusicBeatState
 		
 		for (k => i in ['From VSlice', 'From CNE', 'From Psych 1.0'])
 		{
-			final txt = new Alphabet(0, 0, i, true, false);
+			final txt = new Alphabet(0, 0, i, true);
 			txt.isMenuItem = true;
 			txt.changeAxis = XY;
 			txt.targetY = k;

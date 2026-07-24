@@ -45,11 +45,8 @@ class Alphabet extends FlxSpriteGroup
 	public var lettersArray:Array<AlphaCharacter> = [];
 	
 	public var finishedText:Bool = false;
-	public var typed:Bool = false;
 	
-	public var typingSpeed:Float = 0.05;
-	
-	public function new(x:Float, y:Float, text:String = "", ?bold:Bool = false, typed:Bool = false, ?typingSpeed:Float = 0.05, ?textSize:Float = 1)
+	public function new(x:Float, y:Float, text:String = "", bold:Bool = false, textSize:Float = 1)
 	{
 		super(x, y);
 		forceX = Math.NEGATIVE_INFINITY;
@@ -57,19 +54,11 @@ class Alphabet extends FlxSpriteGroup
 		
 		_finalText = text;
 		this.text = text;
-		this.typed = typed;
 		isBold = bold;
 		
 		if (text != "")
 		{
-			if (typed)
-			{
-				startTypedText(typingSpeed);
-			}
-			else
-			{
-				addText();
-			}
+			addText();
 		}
 		else
 		{
@@ -77,7 +66,7 @@ class Alphabet extends FlxSpriteGroup
 		}
 	}
 	
-	public function changeText(newText:String, newTypingSpeed:Float = -1)
+	public function changeText(newText:String)
 	{
 		for (i in 0...lettersArray.length)
 		{
@@ -100,21 +89,10 @@ class Alphabet extends FlxSpriteGroup
 		x = 0;
 		_finalText = newText;
 		text = newText;
-		if (newTypingSpeed != -1)
-		{
-			typingSpeed = newTypingSpeed;
-		}
 		
 		if (text != "")
 		{
-			if (typed)
-			{
-				startTypedText(typingSpeed);
-			}
-			else
-			{
-				addText();
-			}
+			addText();
 		}
 		else
 		{
@@ -212,49 +190,7 @@ class Alphabet extends FlxSpriteGroup
 	
 	var dialogueSound:FlxSound = null;
 	
-	private static var soundDialog:Sound = null;
-	
 	var consecutiveSpaces:Int = 0;
-	
-	public static function setDialogueSound(name:String = '')
-	{
-		if (name == null || name.trim() == '') name = 'dialogue';
-		soundDialog = Paths.sound(name);
-		if (soundDialog == null) soundDialog = Paths.sound('dialogue');
-	}
-	
-	var typeTimer:FlxTimer = null;
-	
-	public function startTypedText(speed:Float):Void
-	{
-		_finalText = text;
-		doSplitWords();
-		
-		// trace(arrayShit);
-		
-		if (soundDialog == null)
-		{
-			Alphabet.setDialogueSound();
-		}
-		
-		if (speed <= 0)
-		{
-			while (!finishedText)
-			{
-				timerCheck();
-			}
-			if (dialogueSound != null) dialogueSound.stop();
-			dialogueSound = FlxG.sound.play(soundDialog);
-		}
-		else
-		{
-			typeTimer = new FlxTimer().start(0.1, function(tmr:FlxTimer) {
-				typeTimer = new FlxTimer().start(speed, function(tmr:FlxTimer) {
-					timerCheck(tmr);
-				}, 0);
-			});
-		}
-	}
 	
 	var LONG_TEXT_ADD:Float = -24; // text is over 2 rows long, make it go up a bit
 	
@@ -348,12 +284,6 @@ class Alphabet extends FlxSpriteGroup
 				}
 				letter.x += 90;
 				
-				if (tmr != null)
-				{
-					if (dialogueSound != null) dialogueSound.stop();
-					dialogueSound = FlxG.sound.play(soundDialog);
-				}
-				
 				add(letter);
 				
 				lastSprite = letter;
@@ -363,12 +293,6 @@ class Alphabet extends FlxSpriteGroup
 		loopNum++;
 		if (loopNum >= splitWords.length)
 		{
-			if (tmr != null)
-			{
-				typeTimer = null;
-				tmr.cancel();
-				tmr.destroy();
-			}
 			finishedText = true;
 		}
 	}
@@ -411,16 +335,6 @@ class Alphabet extends FlxSpriteGroup
 				x = (targetY * 20) + 90 + xAdd;
 			}
 		}
-	}
-	
-	public function killTheTimer()
-	{
-		if (typeTimer != null)
-		{
-			typeTimer.cancel();
-			typeTimer.destroy();
-		}
-		typeTimer = null;
 	}
 }
 

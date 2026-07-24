@@ -1,5 +1,7 @@
 package funkin.states;
 
+import funkin.backend.plugins.ModPlugin;
+
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
@@ -38,9 +40,7 @@ class TitleState extends MusicBeatState
 		FunkinAssets.cache.clearStoredMemory();
 		FunkinAssets.cache.clearUnusedMemory();
 		
-		// for some reason the plugin scripts dont run sometimes when first loaded. oh well
-		funkin.scripting.PluginsManager.prepareSignals();
-		funkin.scripting.PluginsManager.populate();
+		ModPlugin.instance.populate();
 		
 		if (FlxG.save.data.flashing == null && !FlashingState.leftState)
 		{
@@ -151,7 +151,7 @@ class TitleState extends MusicBeatState
 					closedState = true;
 				});
 			}
-			else if (pressedEnter && transitioning) 
+			else if (pressedEnter && transitioning)
 			{
 				CoolUtil.setTransSkip(true, false);
 				FlxG.switchState(MainMenuState.new);

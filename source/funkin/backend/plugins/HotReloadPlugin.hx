@@ -13,11 +13,18 @@ import flixel.addons.transition.FlxTransitionableState;
 @:nullSafety
 class HotReloadPlugin extends FlxBasic
 {
-	static var instance:Null<HotReloadPlugin> = null;
+	@:nullSafety(Off)
+	static var instance:HotReloadPlugin;
 	
 	public static function init()
 	{
-		if (instance == null) FlxG.plugins.addPlugin(instance = new HotReloadPlugin());
+		if (instance == null)
+		{
+			FlxG.plugins.addPlugin(instance = new HotReloadPlugin());
+			#if debug
+			FlxG.console.registerClass(HotReloadPlugin);
+			#end
+		}
 	}
 	
 	public function new()
@@ -48,9 +55,7 @@ class HotReloadPlugin extends FlxBasic
 				FunkinAssets.cache.clearStoredMemory();
 				FunkinAssets.cache.clearUnusedMemory();
 			});
-			funkin.scripting.PluginsManager.populate();
-			// @:nullSafety(Off)
-			// ModPlugin.instance.populate();
+			ModPlugin.instance.populate();
 			
 			FlxTransitionableState.skipNextTransIn = FlxTransitionableState.skipNextTransOut = true;
 			FlxG.resetState();

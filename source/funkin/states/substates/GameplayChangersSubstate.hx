@@ -1,6 +1,6 @@
 package funkin.states.substates;
 
-import funkin.objects.AttachedModule;
+import funkin.objects.nodes.AttachedNode;
 import funkin.objects.CheckboxThingie;
 import funkin.objects.Alphabet;
 
@@ -106,7 +106,7 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 		
 		for (i in 0...optionsArray.length)
 		{
-			var optionText:Alphabet = new Alphabet(0, 70 * i, optionsArray[i].name, true, false, 0.05, 0.8);
+			var optionText:Alphabet = new Alphabet(0, 70 * i, optionsArray[i].name, true, 0.8);
 			optionText.isMenuItem = true;
 			optionText.x += 300;
 			/*optionText.forceX = 300;
@@ -126,11 +126,11 @@ class GameplayChangersSubstate extends MusicBeatSubstate
 			}
 			else
 			{
-				var valueText:Alphabet = new Alphabet(0, 0, Std.string(optionsArray[i].getValue()), true, false, 0.05, 0.8);
+				var valueText:Alphabet = new Alphabet(0, 0, Std.string(optionsArray[i].getValue()), true, 0.8);
 				valueText.isMenuItem = false;
 				valueText.ID = i;
 				
-				var attach = new AttachedModule(valueText, optionText);
+				var attach = new AttachedNode(valueText, optionText);
 				add(attach);
 				attach.positionOffset.x = optionText.width + 80;
 				

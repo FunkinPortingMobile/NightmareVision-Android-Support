@@ -1,4 +1,4 @@
-package funkin.objects;
+package funkin.objects.nodes;
 
 import flixel.util.FlxAxes;
 import flixel.FlxObject;
@@ -15,12 +15,12 @@ import flixel.FlxObject;
  * var secondSprite = new FlxSprite();
  * add(secondSprite);
  * 
- * var attachedModule = new AttachedModule(secondSprite, mainSprite);
- * add(attachedModule);
+ * var attachedNode = new AttachedNode(secondSprite, mainSprite);
+ * add(attachedNode);
  * ```
  */
 @:nullSafety
-class AttachedModule extends FlxBasic
+class AttachedNode extends FlxBasic
 {
 	/**
 	 * The core FlxObject that will copy `tracked`.
@@ -114,28 +114,28 @@ class AttachedModule extends FlxBasic
 }
 
 /**
- * FlxSprite with a attachedModule var built in.
+ * FlxSprite with a AttachedNode var built in.
  */
 class AttachedSprite extends FlxSprite
 {
-	public var attachedModule:AttachedModule;
+	public var attachedNode:AttachedNode;
 	
 	public function new(?tracker:FlxObject)
 	{
 		super();
 		
-		attachedModule = new AttachedModule(this, tracker);
+		attachedNode = new AttachedNode(this, tracker);
 	}
 	
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
-		attachedModule.update(elapsed);
+		attachedNode.update(elapsed);
 	}
 	
 	override function destroy()
 	{
-		attachedModule.destroy();
+		attachedNode.destroy();
 		super.destroy();
 	}
 }

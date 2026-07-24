@@ -75,9 +75,6 @@ class Init extends FlxState
 		
 		funkin.backend.plugins.ModPlugin.instance.populate();
 		
-		// funkin.scripting.PluginsManager.prepareSignals();
-		// funkin.scripting.PluginsManager.populate();
-		
 		FunkinAssets.cache.currentTrackedSounds.addPermanentKey('assets/music/freakyMenu.ogg');
 		
 		super.create();

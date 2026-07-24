@@ -1,6 +1,6 @@
 package funkin.states.editors;
 
-import funkin.objects.AttachedModule;
+import funkin.objects.nodes.AttachedNode;
 import funkin.data.Chart;
 
 import haxe.ds.IntMap;
@@ -438,8 +438,8 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		quant = cast new AttachedSprite().loadAtlasFrames(Paths.getAtlasFrames('editors/chart_quant'));
 		quant.animation.addByPrefix('q', 'chart_quant', 0, false);
 		quant.animation.play('q', true, false, 0);
-		quant.attachedModule.tracked = strumLine;
-		quant.attachedModule.positionOffset.set(-32, 8);
+		quant.attachedNode.tracked = strumLine;
+		quant.attachedNode.positionOffset.set(-32, 8);
 		add(quant);
 		
 		strumLineNotes = new FlxTypedGroup<StrumNote>();
@@ -2837,7 +2837,7 @@ class ChartingOptionsSubmenu extends MusicBeatSubstate
 		add(grpMenuShit);
 		for (i in 0...menuItems.length)
 		{
-			var item = new Alphabet(0, 70 * i, menuItems[i], true, false);
+			var item = new Alphabet(0, 70 * i, menuItems[i], true);
 			item.isMenuItem = true;
 			item.targetY = i;
 			item.scrollFactor.set();

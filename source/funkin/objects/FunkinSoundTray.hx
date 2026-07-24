@@ -18,6 +18,13 @@ import funkin.utils.MathUtil;
  */
 class FunkinSoundTray extends FlxSoundTray
 {
+	/**
+	 * Disables functionality of the soundtray.
+	 * 
+	 * Useful if u want to create ur own soundtray plugin.
+	 */
+	public static var canShow:Bool = true;
+	
 	var graphicScale:Float = 0.30;
 	var lerpYPos:Float = 0;
 	var alphaTarget:Float = 0;
@@ -98,15 +105,7 @@ class FunkinSoundTray extends FlxSoundTray
 			visible = false;
 			active = false;
 			
-			#if FLX_SAVE
-			// Save sound preferences
-			if (FlxG.save.isBound)
-			{
-				FlxG.save.data.mute = FlxG.sound.muted;
-				FlxG.save.data.volume = FlxG.sound.volume;
-				FlxG.save.flush();
-			}
-			#end
+			flushVolumeSettings();
 		}
 	}
 	
@@ -134,6 +133,10 @@ class FunkinSoundTray extends FlxSoundTray
 	
 	function showFunkinBar(up:Bool = false)
 	{
+		if (!FunkinSoundTray.canShow)
+		{
+			return;
+		}
 		_timer = 1;
 		lerpYPos = 10;
 		visible = true;
@@ -160,7 +163,6 @@ class FunkinSoundTray extends FlxSoundTray
 		checkAntialiasing();
 	}
 	
-	#if (flixel > "6.0.0")
 	override function showAnim(volume:Float, ?sound:FlxSoundAsset, duration:Float = 1.0, label:String = "VOLUME") {}
 	
 	override function updateSize() {}
@@ -174,5 +176,17 @@ class FunkinSoundTray extends FlxSoundTray
 	{
 		showFunkinBar(false);
 	}
-	#end
+	
+	public static function flushVolumeSettings()
+	{
+		#if FLX_SAVE
+		// Save sound preferences
+		if (FlxG.save.isBound)
+		{
+			FlxG.save.data.mute = FlxG.sound.muted;
+			FlxG.save.data.volume = FlxG.sound.volume;
+			FlxG.save.flush();
+		}
+		#end
+	}
 }

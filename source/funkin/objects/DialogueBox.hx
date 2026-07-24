@@ -146,7 +146,7 @@ class DialogueBox extends FlxSpriteGroup
 		
 		forEachAlive(spr -> spr.antialiasing = false);
 		
-		dialogue = new Alphabet(0, 80, "", false, true); // excuse me?????
+		dialogue = new Alphabet(0, 80, "", false); // excuse me?????
 		// dialogue.x = 90;
 		// add(dialogue);
 	}

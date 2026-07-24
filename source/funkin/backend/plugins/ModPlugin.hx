@@ -13,11 +13,13 @@ class ModPlugin extends FlxTypedGroup<FlxBasic>
 	
 	public static function init()
 	{
-		if (instance == null) FlxG.plugins.addPlugin(instance = new ModPlugin());
-		
-		#if debug
-		FlxG.console.registerClass(ModPlugin);
-		#end
+		if (instance == null)
+		{
+			FlxG.plugins.addPlugin(instance = new ModPlugin());
+			#if debug
+			FlxG.console.registerClass(ModPlugin);
+			#end
+		}
 	}
 	
 	public final scripts:ScriptGroup;

@@ -1,6 +1,6 @@
 package funkin.backend;
 
-import funkin.scripting.PluginsManager;
+import funkin.backend.plugins.ModPlugin;
 
 import flixel.FlxG;
 import flixel.addons.transition.FlxTransitionableState;
@@ -175,7 +175,7 @@ class MusicBeatState extends FlxUIState
 		
 		FlxTransitionableState.skipNextTransOut = false;
 		
-		PluginsManager.callOnScripts('onStateCreate');
+		ModPlugin.instance.callOnPlugins('onStateCreate');
 	}
 	
 	/**
@@ -214,7 +214,6 @@ class MusicBeatState extends FlxUIState
 		
 		final scriptArgs = [elapsed];
 		scriptGroup.call('onUpdate', scriptArgs);
-		PluginsManager.callOnScripts('onUpdate', scriptArgs);
 		super.update(elapsed);
 	}
 	
@@ -274,19 +273,19 @@ class MusicBeatState extends FlxUIState
 	{
 		if (curStep % 4 == 0) beatHit();
 		scriptGroup.call('onStepHit', []);
-		PluginsManager.callOnScripts('onStepHit');
+		ModPlugin.instance.callOnPlugins('onStepHit');
 	}
 	
 	public function beatHit():Void
 	{
 		scriptGroup.call('onBeatHit', []);
-		PluginsManager.callOnScripts('onBeatHit');
+		ModPlugin.instance.callOnPlugins('onBeatHit');
 	}
 	
 	public function sectionHit():Void
 	{
 		scriptGroup.call('onSectionHit', []);
-		PluginsManager.callOnScripts('onSectionHit');
+		ModPlugin.instance.callOnPlugins('onSectionHit');
 	}
 	
 	function getBeatsOnSection():Float

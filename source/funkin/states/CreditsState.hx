@@ -52,12 +52,14 @@ class CreditsState extends MusicBeatState
 {
 	@:unreflective
 	static final hardcodedCredits:Array<Array<String>> = [
+	    #if mobile
 	    // FN devs
 	    ["Funkin' Network Crew"],
 		['StarNova', 'starnova', 'Lead Programmer for Port Mobile', 'https://youtube.com/@starnovaoficial', 'AA4060'],
 		['FNF BR', 'fnfbr', 'Lead Programmer for Port Mobile', 'https://youtube.com/@fnf-br', 'A2DCF8'],
 		['GaboXey', 'gaboxey', "Funkin' Network Credits Icons", 'https://youtube.com/@gaboxey', '775EF3'],
 		[''],
+		#end
 		// NMV devs
 		['NIGHTMARE FEDS'],
 		['DuskieWhy', 'duskie', 'Programmer of Nightmare Vision', 'https://twitter.com/DuskieWhy', '0xA8324A'],

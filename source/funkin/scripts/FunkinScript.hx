@@ -243,6 +243,7 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 		set('curDecBeat', 0);
 		set('curDecStep', 0);
 		set('version', Main.NMV_VERSION.trim());
+		set('asset_redirect', #if ASSET_REDIRECT true #else false #end);
 		set('Defines', funkin.data.Defines);
 		
 		// set flixel related stuff

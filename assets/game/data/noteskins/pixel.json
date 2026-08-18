@@ -313,8 +313,7 @@
 				"anim": "loop",
 				"xmlName": "loop",
 				"offsets": [-160, 0],
-				"looping": true,
-				"fps": 12
+				"looping": true
 			},
 			{
 				"anim": "end",
@@ -334,8 +333,7 @@
 				"anim": "loop",
 				"xmlName": "loop",
 				"offsets": [-160, 0],
-				"looping": true,
-				"fps": 12
+				"looping": true
 			},
 			{
 				"anim": "end",
@@ -355,8 +353,7 @@
 				"anim": "loop",
 				"xmlName": "loop",
 				"offsets": [-160, 0],
-				"looping": true,
-				"fps": 12
+				"looping": true
 			},
 			{
 				"anim": "end",
@@ -376,8 +373,7 @@
 				"anim": "loop",
 				"xmlName": "loop",
 				"offsets": [-160, 0],
-				"looping": true,
-				"fps": 12
+				"looping": true
 			},
 			{
 				"anim": "end",

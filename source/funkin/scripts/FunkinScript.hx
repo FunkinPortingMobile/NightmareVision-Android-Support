@@ -70,7 +70,7 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 		Iris.warn = (x, ?pos) -> {
 			final output:String = formatFileLoc(pos.fileName, pos.lineNumber, x);
 			
-			DebugTextPlugin.addText(Std.string(output), Logger.getHexColourFromSeverity(WARN));
+			DebugTextPlugin.instance.addText(Std.string(output), Logger.getHexColourFromSeverity(WARN));
 			
 			Iris.logLevel(ERROR, x, pos);
 		}
@@ -78,7 +78,7 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 		Iris.error = (x, ?pos) -> {
 			final output:String = formatFileLoc(pos.fileName, pos.lineNumber, x);
 			
-			DebugTextPlugin.addText(Std.string(output), Logger.getHexColourFromSeverity(ERROR));
+			DebugTextPlugin.instance.addText(Std.string(output), Logger.getHexColourFromSeverity(ERROR));
 			
 			Iris.logLevel(NONE, x, pos);
 		}
@@ -86,7 +86,7 @@ class FunkinScript extends IrisEx implements IFlxDestroyable
 		Iris.print = (x, ?pos) -> {
 			final output:String = formatFileLoc(pos.fileName, pos.lineNumber, x);
 			
-			DebugTextPlugin.addText(Std.string(output), Logger.getHexColourFromSeverity(PRINT));
+			DebugTextPlugin.instance.addText(Std.string(output), Logger.getHexColourFromSeverity(PRINT));
 			
 			Iris.logLevel(NONE, x, pos);
 		}

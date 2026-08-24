@@ -118,7 +118,7 @@ class FunkinVideoSprite extends FlxVideoSprite
 	 */
 	public var currentTime(get, never):Int;
 	
-	inline function get_currentTime():Int return bitmap != null ? haxe.Int64.toInt(bitmap.length) : -1;
+	inline function get_currentTime():Int return bitmap != null ? haxe.Int64.toInt(bitmap.time) : -1;
 	
 	/**
 	 * Returns the total duration of the loaded video in milliseconds.

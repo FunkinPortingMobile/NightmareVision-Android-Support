@@ -2725,14 +2725,14 @@ class PlayState extends MusicBeatState
 	
 	function onInputPress(event:InputEvent):Void
 	{
+		var key:Int = event.noteData;
+		
 		if (cpuControlled || paused || !startedCountdown)
 		{
 			scripts.call('onKeyPress', [key]);
 			scripts.call('onInputPress', [key]);
 			return;
 		}
-		
-		var key:Int = event.noteData;
 		
 		var prevTime:Float = Conductor.songPosition;
 		if (audio.inst?.playing) Conductor.songPosition = @:privateAccess audio.inst._channel.position;
@@ -2802,11 +2802,11 @@ class PlayState extends MusicBeatState
 	{
 		var key:Int = event.noteData;
 		
-		if (!startedCountoown || paused)
+		if (!startedCountdown || paused)
 		{
 			scripts.call('onKeyRelease', [key]);
 			scripts.call('onInputRelease', [key]);
-			return
+			return;
 		}
 		
 		for (field in playFields.members)

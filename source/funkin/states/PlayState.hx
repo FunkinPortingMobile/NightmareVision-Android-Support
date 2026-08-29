@@ -2743,9 +2743,14 @@ class PlayState extends MusicBeatState
 	
 	function onInputPress(event:InputEvent):Void
 	{
-		if (cpuControlled || paused || !startedCountdown) return;
-		
 		var key:Int = event.noteData;
+		
+		if (cpuControlled || paused || !startedCountdown)
+		{
+			scripts.call('onKeyPress', [key]);
+			scripts.call('onInputPress', [key]);
+			return;
+		}
 		
 		var prevTime:Float = Conductor.songPosition;
 		if (audio.inst?.playing) Conductor.songPosition = @:privateAccess audio.inst._channel.position;
@@ -2815,27 +2820,31 @@ class PlayState extends MusicBeatState
 	{
 		var key:Int = event.noteData;
 		
-		if (startedCountdown && !paused)
+		if (!startedCountdown || paused)
 		{
-			for (field in playFields.members)
-			{
-				if (!field.canInput()) continue;
-				
-				var spr:StrumNote = field.members[key];
-				if (spr != null)
-				{
-					spr.playAnim('static');
-					spr.resetAnim = 0;
-				}
-				
-				for (splash in field.grpSusSplashes)
-				{
-					if (splash.alive && splash.noteData == key && !splash.completed) splash.kill();
-				}
-			}
 			scripts.call('onKeyRelease', [key]);
 			scripts.call('onInputRelease', [key]);
+			return;
 		}
+		
+		for (field in playFields.members)
+		{
+			if (!field.canInput()) continue;
+			
+			var spr:StrumNote = field.members[key];
+			if (spr != null)
+			{
+				spr.playAnim('static');
+				spr.resetAnim = 0;
+			}
+			
+			for (splash in field.grpSusSplashes)
+			{
+				if (splash.alive && splash.noteData == key && !splash.completed) splash.kill();
+			}
+		}
+		scripts.call('onKeyRelease', [key]);
+		scripts.call('onInputRelease', [key]);
 	}
 	
 	// Hold notes

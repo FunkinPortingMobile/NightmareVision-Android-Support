@@ -1077,7 +1077,7 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 			character.animCurFrame = FlxMath.wrap(character.animCurFrame + (FlxG.keys.justPressed.Z ? -1 : 1), 0, character.getAnimNumFrames() - 1);
 		}
 		
-		if (FlxG.keys.justPressed.C #if mobile || virtualPad.buttonZ.justPressed #end)
+		if (FlxG.keys.justPressed.C #if mobile || virtualPad.getButton('buttonZ').justPressed #end)
 		{
 			character.playAnim(character.getAnimName(), true);
 		}

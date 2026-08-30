@@ -12,12 +12,6 @@ import funkin.states.options.ControlsSubState;
 #if mobile
 import mobile.backend.flixel.input.TouchInputID;
 import mobile.backend.MobileUtil;
-
-private enum abstract InputMode(Int) {
-	var PRESSED = 0;
-	var JUST_PRESSED = 1;
-	var JUST_RELEASED = 2;
-}
 #end
 
 // at some point i do wanna rework this to be simpler and easier to work with
@@ -865,7 +859,8 @@ class Controls extends FlxActionSet
 		return (funkin.backend.MusicBeatState.instance != null) ? funkin.backend.MusicBeatState.instance.hitbox : null;
 	}
 
-	private function processMobileInput(source:Dynamic, keys:Array<TouchInputID>, mode:InputMode):Bool {
+	// mode: 0 = PRESSED, 1 = JUST_PRESSED, 2 = JUST_RELEASED
+	private function processMobileInput(source:Dynamic, keys:Array<TouchInputID>, mode:Int):Bool {
 		if (keys == null || source == null) return false;
 
 		var sub = flixel.FlxG.state.subState;
@@ -885,11 +880,12 @@ class Controls extends FlxActionSet
 
 		if (haxe.Timer.stamp() - _substateCloseTime < 0.1) return false;
 
-		var isTriggered:Bool = switch (mode) {
-			case PRESSED: source.isAnyPressed(keys);
-			case JUST_PRESSED: source.isAnyJustPressed(keys);
-			case JUST_RELEASED: source.isAnyJustReleased(keys);
-		};
+		var isTriggered:Bool = false;
+		switch (mode) {
+			case 0: isTriggered = source.isAnyPressed(keys);
+			case 1: isTriggered = source.isAnyJustPressed(keys);
+			case 2: isTriggered = source.isAnyJustReleased(keys);
+		}
 
 		if (isTriggered) return true;
 		
@@ -897,27 +893,27 @@ class Controls extends FlxActionSet
 	}
 	
 	public function mobilePadPressed(keys:Array<TouchInputID>):Bool {
-		return processMobileInput(activePad, keys, PRESSED);
+		return processMobileInput(activePad, keys, 0);
 	}
 	
 	public function mobilePadJustPressed(keys:Array<TouchInputID>):Bool {
-		return processMobileInput(activePad, keys, JUST_PRESSED);
+		return processMobileInput(activePad, keys, 1);
 	}
 	
 	public function mobilePadJustReleased(keys:Array<TouchInputID>):Bool {
-		return processMobileInput(activePad, keys, JUST_RELEASED);
+		return processMobileInput(activePad, keys, 2);
 	}
 	
 	public function hitboxPressed(keys:Array<TouchInputID>):Bool {
-		return processMobileInput(activeHitbox, keys, PRESSED);
+		return processMobileInput(activeHitbox, keys, 0);
 	}
 	
 	public function hitboxJustPressed(keys:Array<TouchInputID>):Bool {
-		return processMobileInput(activeHitbox, keys, JUST_PRESSED);
+		return processMobileInput(activeHitbox, keys, 1);
 	}
 	
 	public function hitboxJustReleased(keys:Array<TouchInputID>):Bool {
-		return processMobileInput(activeHitbox, keys, JUST_RELEASED);
+		return processMobileInput(activeHitbox, keys, 2);
 	}
 	#end
 }

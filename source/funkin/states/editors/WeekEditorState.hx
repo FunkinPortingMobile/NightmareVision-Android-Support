@@ -110,7 +110,7 @@ class WeekEditorState extends MusicBeatState
 		
 		#if mobile
 		addVirtualPad('NONE', 'B');
-        virtualPad.buttonB.x -= 300;
+        virtualPad.getButton('buttonB').x -= 300;
 		#end
 		
 		FlxG.mouse.visible = true;

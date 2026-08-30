@@ -1422,7 +1422,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			--curZoom;
 			updateZoom();
 		}
-		if (FlxG.keys.justPressed.X #if mobile || virtualPad.buttonD.justPressed #end && curZoom < zoomList.length - 1)
+		if (FlxG.keys.justPressed.X #if mobile || virtualPad.getButton('buttonD').justPressed #end && curZoom < zoomList.length - 1)
 		{
 			curZoom++;
 			updateZoom();

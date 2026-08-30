@@ -1632,7 +1632,8 @@ class PlayState extends MusicBeatState
 	
 	override public function onFocus():Void
 	{
-		if (!isDead && !paused) {
+		if (!isDead && !paused)
+		{
 			resetDiscordRPC(Conductor.songPosition > 0.0);
 			
 			if (audio.inst != null && !startingSong) resyncVocals();
@@ -1677,6 +1678,7 @@ class PlayState extends MusicBeatState
 		audio.pitch = playbackRate;
 		audio.volume = 1 * volumeMult;
 		audio.resync(Conductor.songPosition);
+		audio.hit();
 		#if FLX_PITCH audio.pitch = playbackRate; #end
 	}
 	

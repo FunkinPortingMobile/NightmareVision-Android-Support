@@ -182,7 +182,7 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 	}
 	
 	#if mobile
-	private function getMobileKeysForNote(noteData:Int):Array<FlxMobileInputID>
+	private function getMobileKeysForNote(noteData:Int):Array<TouchInputID>
 	{
 		return switch(noteData) {
 			case 0: [NOTE_LEFT];  // NOTE_LEFT

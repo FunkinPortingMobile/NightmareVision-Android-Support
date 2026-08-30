@@ -19,17 +19,14 @@ class PerspectiveModifier extends NoteModifier
 	
 	var halfOffset = Vector3.get(FlxG.width / 2, FlxG.height / 2);
 	
-	var fov = Math.PI / 2;
-	var near = 0;
-	var far = 2;
-	
-	function FastTan(rad:Float) // thanks schmoovin
-	{
-		return FlxMath.fastSin(rad) / FlxMath.fastCos(rad);
-	}
+	final fov:Float = (Math.PI / 2);
+	final near:Float = 0;
+	final far:Float = 2;
 	
 	public function getVector(curZ:Float, pos:Vector3):Vector3
 	{
+		if (curZ < FlxMath.EPSILON) return pos;
+		
 		pos.subtract(halfOffset, pos);
 		
 		var oX = pos.x;
@@ -47,7 +44,7 @@ class PerspectiveModifier extends NoteModifier
 		var shit = curZ - 1;
 		if (shit > 0) shit = 0; // thanks schmovin!!
 		
-		var ta = FastTan(fov / 2);
+		var ta = MathUtil.fastTan(fov / 2);
 		var x = oX * aspect / ta;
 		var y = oY / ta;
 		var a = (near + far) / (near - far);
@@ -62,11 +59,12 @@ class PerspectiveModifier extends NoteModifier
 	
 	override function getPos(time:Float, visualDiff:Float, timeDiff:Float, beat:Float, pos:Vector3, data:Int, player:Int, obj:FlxSprite) return getVector(pos.z, pos);
 	
-	override function updateReceptor(beat:Float, receptor:StrumNote, pos:Vector3, player:Int) receptor.scale.scale(1 / pos.z);
+	override function updateReceptor(beat:Float, receptor:StrumNote, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) receptor.scale.scale(1 / pos.z);
+	// actually im not sure if that is better or worse
 	
-	override function updateNote(beat:Float, note:Note, pos:Vector3, player:Int) note.scale.scale(1 / pos.z);
+	override function updateNote(beat:Float, note:Note, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) note.scale.scale(1 / pos.z);
 	
-	override function updateNoteSplash(beat:Float, splash:NoteSplash, pos:Vector3, player:Int) splash.scale.scale(1 / pos.z);
+	override function updateNoteSplash(beat:Float, splash:NoteSplash, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) splash.scale.scale(1 / pos.z);
 	
-	override function updateSustainSplash(beat:Float, splash:SustainSplash, pos:Vector3, player:Int) splash.scale.scale(1 / pos.z);
+	override function updateSustainSplash(beat:Float, splash:SustainSplash, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) splash.scale.scale(1 / pos.z);
 }

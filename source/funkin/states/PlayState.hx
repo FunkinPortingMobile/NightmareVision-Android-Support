@@ -1632,8 +1632,11 @@ class PlayState extends MusicBeatState
 	
 	override public function onFocus():Void
 	{
-		if (!isDead && !paused) resetDiscordRPC(Conductor.songPosition > 0.0);
-		resyncVocals();
+		if (!isDead && !paused) {
+			resetDiscordRPC(Conductor.songPosition > 0.0);
+			
+			if (audio.inst != null && !startingSong) resyncVocals();
+		}
 		
 		super.onFocus();
 	}

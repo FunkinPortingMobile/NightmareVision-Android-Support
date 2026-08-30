@@ -84,7 +84,7 @@ class OptionsState extends MusicBeatState
 		add(selectorRight);
 		
 		#if mobile
-		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPad('UP_DOWN', 'A_B');
 		#end
 		
 		changeSelection();
@@ -99,11 +99,8 @@ class OptionsState extends MusicBeatState
 		ClientPrefs.flush();
 		
 		#if mobile
-		new FlxTimer().start(0.1, function(tmr:FlxTimer) {
-			controls.isInSubstate = false;
-		});
 		removeVirtualPad();
-		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPad('UP_DOWN', 'A_B');
 		#end
 		
 		super.closeSubState();

@@ -191,7 +191,7 @@ class CreditsState extends MusicBeatState
 		add(descText);
 		
 		#if mobile
-		addVirtualPad(UP_DOWN, A_B);
+		addVirtualPad('UP_DOWN', 'A_B');
 		#end
 		
 		changeSelection();

@@ -185,10 +185,10 @@ class InputSystem extends EventDispatcher implements flixel.util.IFlxDestroyable
 	private function getMobileKeysForNote(noteData:Int):Array<FlxMobileInputID>
 	{
 		return switch(noteData) {
-			case 0: [noteLEFT];  // NOTE_LEFT
-			case 1: [noteDOWN];  // NOTE_DOWN
-			case 2: [noteUP];    // NOTE_UP
-			case 3: [noteRIGHT]; // NOTE_RIGHT
+			case 0: [NOTE_LEFT];  // NOTE_LEFT
+			case 1: [NOTE_DOWN];  // NOTE_DOWN
+			case 2: [NOTE_UP];    // NOTE_UP
+			case 3: [NOTE_RIGHT]; // NOTE_RIGHT
 			default: [];
 		};
 	}

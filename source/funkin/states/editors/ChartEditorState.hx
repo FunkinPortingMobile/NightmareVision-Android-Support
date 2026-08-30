@@ -529,7 +529,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		updateGrid();
 		
 		#if mobile
-		addVirtualPad(CHART_EDITOR, CHART_EDITOR);
+		addVirtualPad('CHART_EDITOR', 'CHART_EDITOR');
 		#end
 	}
 	
@@ -1397,14 +1397,14 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			];
 		}
 		
-		if ((FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S) #if mobile || virtualPad.buttonS.justPressed #end) return saveLevel();
+		if ((FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.S) #if mobile || virtualPad.getButton('S').justPressed #end) return saveLevel();
 		
-		if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end) return enterSong();
+		if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.getButton('A').justPressed #end) return enterSong();
 		
 		if (FlxG.keys.justPressed.E) changeNoteSustain(Conductor.stepCrotchet);
 		if (FlxG.keys.justPressed.Q) changeNoteSustain(-Conductor.stepCrotchet);
 		
-		if (FlxG.keys.justPressed.BACKSPACE #if mobile || virtualPad.buttonB.justPressed #end)
+		if (FlxG.keys.justPressed.BACKSPACE #if mobile || virtualPad.getButton('B').justPressed #end)
 		{
 			PlayState.chartingMode = false;
 			FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
@@ -1412,12 +1412,12 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			return;
 		}
 		
-		if (FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL #if mobile || virtualPad.buttonV.justPressed #end)
+		if (FlxG.keys.justPressed.Z && FlxG.keys.pressed.CONTROL #if mobile || virtualPad.getButton('V').justPressed #end)
 		{
 			undo();
 		}
 		
-		if (FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL #if mobile || virtualPad.buttonZ.justPressed #end)
+		if (FlxG.keys.justPressed.Z && curZoom > 0 && !FlxG.keys.pressed.CONTROL #if mobile || virtualPad.getButton('Z').justPressed #end)
 		{
 			--curZoom;
 			updateZoom();
@@ -1428,7 +1428,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			updateZoom();
 		}
 		
-		if ((FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) #if mobile || (virtualPad.buttonC.justPressed) #end) enterSong(startTime > 0 ? startTime : audio.time);
+		if ((FlxG.keys.justPressed.ESCAPE && FlxG.keys.pressed.SHIFT) #if mobile || (virtualPad.getButton('C').justPressed) #end) enterSong(startTime > 0 ? startTime : audio.time);
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			autosaveSong();
@@ -1436,7 +1436,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 			openSubState(new ChartingOptionsSubmenu());
 		}
 		
-		if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.buttonX.justPressed #end && audio.time < (audio.songLength - endOffset)) togglePause();
+		if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.getButton('X').justPressed #end && audio.time < (audio.songLength - endOffset)) togglePause();
 		
 		if (!FlxG.keys.pressed.ALT && FlxG.keys.justPressed.R)
 		{
@@ -1446,17 +1446,17 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		
 		// ARROW VORTEX SHIT NO DEADASS
 		
-		if ((FlxG.keys.pressed.W || FlxG.keys.pressed.S) #if mobile || (virtualPad.buttonUp.pressed || virtualPad.buttonDown.pressed) #end)
+		if ((FlxG.keys.pressed.W || FlxG.keys.pressed.S) #if mobile || (virtualPad.getButton('Up').pressed || virtualPad.getButton('Down').pressed) #end)
 		{
 			toggleMusic(false);
 			
 			var holdingShift:Float = 1;
 			if (FlxG.keys.pressed.CONTROL) holdingShift = 0.25;
-			else if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end) holdingShift = 4;
+			else if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.getButton('Y').pressed #end) holdingShift = 4;
 			
 			var delta:Float = (700 * FlxG.elapsed * holdingShift);
 			
-			audio.time = FlxMath.bound(audio.time + delta * (FlxG.keys.pressed.W #if mobile || virtualPad.buttonUp.pressed #end ? -1 : 1), 0, audio.songLength - endOffset);
+			audio.time = FlxMath.bound(audio.time + delta * (FlxG.keys.pressed.W #if mobile || virtualPad.getButton('Up').pressed #end ? -1 : 1), 0, audio.songLength - endOffset);
 		}
 		
 		if (FlxG.keys.justPressed.RIGHT) changeQuantization(1);
@@ -1466,16 +1466,16 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		
 		var style = currentType;
 		
-		if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end)
+		if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.getButton('Y').pressed #end)
 		{
 			style = 3;
 		}
 		
 		var shiftThing:Int = 1;
-		if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end) shiftThing = 4;
+		if (FlxG.keys.pressed.SHIFT #if mobile || virtualPad.getButton('Y').pressed #end) shiftThing = 4;
 		
-		if (FlxG.keys.justPressed.D #if mobile || virtualPad.buttonRight.justPressed #end) changeSection(curSec + shiftThing);
-		if (FlxG.keys.justPressed.A #if mobile || virtualPad.buttonLeft.justPressed #end) changeSection(curSec - shiftThing);
+		if (FlxG.keys.justPressed.D #if mobile || virtualPad.getButton('Right').justPressed #end) changeSection(curSec + shiftThing);
+		if (FlxG.keys.justPressed.A #if mobile || virtualPad.getButton('Left').justPressed #end) changeSection(curSec - shiftThing);
 		
 		if (FlxG.keys.justPressed.DELETE)
 		{
@@ -1520,7 +1520,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		}
 		
 		// PLAYBACK SPEED CONTROLS //
-		var holdingShift = FlxG.keys.pressed.SHIFT #if mobile || virtualPad.buttonY.pressed #end;
+		var holdingShift = FlxG.keys.pressed.SHIFT #if mobile || virtualPad.getButton('Y').pressed #end;
 		var holdingLB = FlxG.keys.pressed.LBRACKET;
 		var holdingRB = FlxG.keys.pressed.RBRACKET;
 		var pressedLB = FlxG.keys.justPressed.LBRACKET;

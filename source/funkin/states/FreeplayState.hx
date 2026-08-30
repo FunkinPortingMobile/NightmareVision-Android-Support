@@ -161,10 +161,10 @@ class FreeplayState extends MusicBeatState
 		WeekData.setDirectoryFromWeek();
 		
 		#if mobile
-		addVirtualPad(LEFT_FULL, FREEPLAY);
+		addVirtualPad('LEFT_FULL', 'FREEPLAY');
 		if (freeplayTabs.length <= 1) {
-	        virtualPad.buttonS.visible = false;
-	        virtualPad.buttonX.x = FlxG.width - 132;
+	        virtualPad.getButton('S').visible = false;
+	        virtualPad.getButton('X').x = FlxG.width - 132;
         }
 		#end
 		
@@ -189,18 +189,13 @@ class FreeplayState extends MusicBeatState
 	{
 		changeSelection();
 		persistentUpdate = true;
-		#if mobile
-		new FlxTimer().start(0.1, function(tmr:FlxTimer) {
-			controls.isInSubstate = false;
-		});
-		#end
 		super.closeSubState();
 		#if mobile
 		removeVirtualPad();
-		addVirtualPad(LEFT_FULL, FREEPLAY);
+		addVirtualPad('LEFT_FULL', 'FREEPLAY');
 		if (freeplayTabs.length <= 1) {
-	        virtualPad.buttonS.visible = false;
-	        virtualPad.buttonX.x = FlxG.width - 132;
+	        virtualPad.getButton('S').visible = false;
+	        virtualPad.getButton('X').x = FlxG.width - 132;
         }
 		#end
 	}
@@ -307,7 +302,7 @@ class FreeplayState extends MusicBeatState
 		
 		if (freeplayTabs.length > 1)
 		{
-			if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.buttonS.justPressed #end)
+			if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.getButton('buttonS').justPressed #end)
 			{
 				if (FlxG.keys.pressed.SHIFT) changeTab(-1);
 				else changeTab(1);
@@ -381,13 +376,13 @@ class FreeplayState extends MusicBeatState
 			FlxG.switchState(MainMenuState.new);
 		}
 		
-		if (FlxG.keys.justPressed.CONTROL #if mobile || virtualPad.buttonC.justPressed #end)
+		if (FlxG.keys.justPressed.CONTROL #if mobile || virtualPad.getButton('buttonC').justPressed #end)
 		{
 			persistentUpdate = false;
 			openSubState(new GameplayChangersSubstate());
 			#if mobile removeVirtualPad(); #end
 		}
-		else if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.buttonX.justPressed #end)
+		else if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.getButton('buttonX').justPressed #end)
 		{
 			if (instPlaying != curSelected)
 			{
@@ -453,7 +448,7 @@ class FreeplayState extends MusicBeatState
 			
 			destroyFreeplayVocals();
 		}
-		else if (controls.RESET #if mobile || virtualPad.buttonR.justPressed #end)
+		else if (controls.RESET #if mobile || virtualPad.getButton('buttonR').justPressed #end)
 		{
 			persistentUpdate = false;
 			openSubState(new ResetScoreSubState(songs[curSelected].songName, curDifficulty, songs[curSelected].songCharacter));

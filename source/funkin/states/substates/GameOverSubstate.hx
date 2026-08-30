@@ -97,8 +97,7 @@ class GameOverSubstate extends MusicBeatSubstate
 			boyfriend.playAnim('firstDeath');
 			
 			#if mobile
-			controls.isInSubstate = true;
-			addVirtualPad(NONE, A_B);
+			addVirtualPad('NONE', 'A_B');
 			addVirtualPadCamera();
 			#end
 			
@@ -150,7 +149,6 @@ class GameOverSubstate extends MusicBeatSubstate
 				FlxG.sound.music.stop();
 				PlayState.deathCounter = 0;
 				PlayState.seenCutscene = false;
-				#if mobile controls.isInSubstate = false; #end
 				
 				FlxG.switchState(() -> PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 				
@@ -211,7 +209,6 @@ class GameOverSubstate extends MusicBeatSubstate
 			isEnding = true;
 			boyfriend.playAnim('deathConfirm', true);
 			FlxG.sound.music.stop();
-			#if mobile controls.isInSubstate = false; #end
 			if (endSoundName != null) FlxG.sound.play(Paths.music(endSoundName));
 			new FlxTimer().start(0.7, function(tmr:FlxTimer) {
 				FlxG.camera.fade(FlxColor.BLACK, 2, false, function() {

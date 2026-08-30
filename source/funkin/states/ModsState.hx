@@ -94,25 +94,25 @@ class ModsState extends MusicBeatState
 		changeDir(0);
 		
 		#if mobile
-        addVirtualPad(UP_DOWN, A_B_C);
+        addVirtualPad('UP_DOWN', 'A_B_C');
         #end
     }
 	override public function update(elapsed)
 	{
-		if (controls.UI_UP_P #if mobile || virtualPad.buttonUp.justPressed #end)
+		if (controls.UI_UP_P #if mobile || virtualPad.getButton('buttonUp').justPressed #end)
 		{
 			changeDir(-1);
 			FlxG.sound.play(Paths.sound("scrollMenu"));
 		}
-		if (controls.UI_DOWN_P #if mobile || virtualPad.buttonDown.justPressed #end)
+		if (controls.UI_DOWN_P #if mobile || virtualPad.getButton('buttonDown').justPressed #end)
 		{
 			changeDir(1);
 			FlxG.sound.play(Paths.sound("scrollMenu"));
 		}
-		if (controls.ACCEPT #if mobile || virtualPad.buttonA.justPressed #end) toggleMod();
+		if (controls.ACCEPT #if mobile || virtualPad.getButton('buttonA').justPressed #end) toggleMod();
 		
-		if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.buttonC.justPressed #end) makeTopMod(modList[curDir]);
-		if (controls.BACK #if mobile || virtualPad.buttonB.justPressed #end)
+		if (FlxG.keys.justPressed.TAB #if mobile || virtualPad.getButton('buttonC').justPressed #end) makeTopMod(modList[curDir]);
+		if (controls.BACK #if mobile || virtualPad.getButton('buttonB').justPressed #end)
 		{
 			Mods.currentModDirectory = topMod;
 			

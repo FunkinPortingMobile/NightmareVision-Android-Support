@@ -1650,7 +1650,6 @@ class PlayState extends MusicBeatState
 			
 			resetDiscordRPC(startTimer != null && startTimer.finished);
 		}
-		#if mobile controls.isInSubstate = false; #end
 		scripts.call('onSubstateClose', []);
 		super.closeSubState();
 	}

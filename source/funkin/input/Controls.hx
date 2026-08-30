@@ -8,11 +8,17 @@ import flixel.input.actions.FlxActionSet;
 import flixel.input.gamepad.FlxGamepad;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
-#if mobile
-import mobile.backend.flixel.input.FlxMobileInputID;
-#end
-
 import funkin.states.options.ControlsSubState;
+#if mobile
+import mobile.backend.flixel.input.TouchInputID;
+import mobile.backend.MobileUtil;
+
+private enum abstract InputMode(Int) {
+	var PRESSED = 0;
+	var JUST_PRESSED = 1;
+	var JUST_RELEASED = 2;
+}
+#end
 
 // at some point i do wanna rework this to be simpler and easier to work with
 
@@ -832,79 +838,86 @@ class Controls extends FlxActionSet
 	}
 	
 	#if mobile
-	public var isInSubstate:Bool = false;
-	public var requested(get, never):Dynamic; 
-	public var gameplayRequest(get, never):Dynamic; 
-	
-	public function mobilePadPressed(keys:Array<FlxMobileInputID>):Bool
-	{
-		if (keys != null && requested != null && requested.virtualPad != null)
-		{
-			if (requested.virtualPad.isAnyPressed(keys) == true) return true;
+	private var _wasInSubstate:Bool = false;
+	private var _substateCloseTime:Float = 0;
+
+	private var activePad(get, never):Dynamic;
+	@:noCompletion private function get_activePad():Dynamic {
+		var sub = flixel.FlxG.state.subState;
+		
+		if (sub != null && Std.isOfType(sub, funkin.backend.MusicBeatSubstate)) {
+			var mbs:funkin.backend.MusicBeatSubstate = cast sub;
+			if (mbs.virtualPad != null) return mbs.virtualPad;
 		}
+		
+		return (funkin.backend.MusicBeatState.instance != null) ? funkin.backend.MusicBeatState.instance.virtualPad : null;
+	}
+
+	private var activeHitbox(get, never):Dynamic;
+	@:noCompletion private function get_activeHitbox():Dynamic {
+		var sub = flixel.FlxG.state.subState;
+		
+		if (sub != null && Std.isOfType(sub, funkin.backend.MusicBeatSubstate)) {
+			var mbs:funkin.backend.MusicBeatSubstate = cast sub;
+			if (mbs.hitbox != null) return mbs.hitbox;
+		}
+		
+		return (funkin.backend.MusicBeatState.instance != null) ? funkin.backend.MusicBeatState.instance.hitbox : null;
+	}
+
+	private function processMobileInput(source:Dynamic, keys:Array<TouchInputID>, mode:InputMode):Bool {
+		if (keys == null || source == null) return false;
+
+		var sub = flixel.FlxG.state.subState;
+		var hasSubControls = false;
+		
+		if (sub != null && Std.isOfType(sub, funkin.backend.MusicBeatSubstate)) {
+			var mbs:funkin.backend.MusicBeatSubstate = cast sub;
+			hasSubControls = (mbs.virtualPad != null || mbs.hitbox != null);
+		}
+
+		if (hasSubControls) {
+			_wasInSubstate = true;
+		} else if (_wasInSubstate) {
+			_wasInSubstate = false;
+			_substateCloseTime = haxe.Timer.stamp();
+		}
+
+		if (haxe.Timer.stamp() - _substateCloseTime < 0.1) return false;
+
+		var isTriggered:Bool = switch (mode) {
+			case PRESSED: source.isAnyPressed(keys);
+			case JUST_PRESSED: source.isAnyJustPressed(keys);
+			case JUST_RELEASED: source.isAnyJustReleased(keys);
+		};
+
+		if (isTriggered) return true;
+		
 		return false;
 	}
 	
-	public function mobilePadJustPressed(keys:Array<FlxMobileInputID>):Bool
-	{
-		if (keys != null && requested != null && requested.virtualPad != null)
-		{
-			if (requested.virtualPad.isAnyJustPressed(keys) == true) return true;
-		}
-		return false;
+	public function mobilePadPressed(keys:Array<TouchInputID>):Bool {
+		return processMobileInput(activePad, keys, PRESSED);
 	}
 	
-	public function mobilePadJustReleased(keys:Array<FlxMobileInputID>):Bool
-	{
-		if (keys != null && requested != null && requested.virtualPad != null)
-		{
-			if (requested.virtualPad.isAnyJustReleased(keys) == true) return true;
-		}
-		return false;
+	public function mobilePadJustPressed(keys:Array<TouchInputID>):Bool {
+		return processMobileInput(activePad, keys, JUST_PRESSED);
 	}
 	
-	public function hitboxPressed(keys:Array<FlxMobileInputID>):Bool
-	{
-		if (keys != null && gameplayRequest != null)
-		{
-			if (gameplayRequest.isAnyPressed(keys)) return true;
-		}
-		return false;
+	public function mobilePadJustReleased(keys:Array<TouchInputID>):Bool {
+		return processMobileInput(activePad, keys, JUST_RELEASED);
 	}
 	
-	public function hitboxJustPressed(keys:Array<FlxMobileInputID>):Bool
-	{
-		if (keys != null && gameplayRequest != null)
-		{
-			if (gameplayRequest.isAnyJustPressed(keys)) return true;
-		}
-		return false;
+	public function hitboxPressed(keys:Array<TouchInputID>):Bool {
+		return processMobileInput(activeHitbox, keys, PRESSED);
 	}
 	
-	public function hitboxJustReleased(keys:Array<FlxMobileInputID>):Bool
-	{
-		if (keys != null && gameplayRequest != null)
-		{
-			if (gameplayRequest.isAnyJustReleased(keys)) return true;
-		}
-		return false;
+	public function hitboxJustPressed(keys:Array<TouchInputID>):Bool {
+		return processMobileInput(activeHitbox, keys, JUST_PRESSED);
 	}
 	
-	@:noCompletion
-	private function get_requested():Dynamic
-	{	
-		if (isInSubstate)
-			return funkin.backend.MusicBeatSubstate.instance;
-		else
-			return funkin.backend.MusicBeatState.instance;
-	}
-	
-	@:noCompletion
-	private function get_gameplayRequest():Dynamic
-	{
-		if (funkin.backend.MusicBeatState.instance != null && funkin.backend.MusicBeatState.instance.hitbox != null)
-			return funkin.backend.MusicBeatState.instance.hitbox;
-		return null;
+	public function hitboxJustReleased(keys:Array<TouchInputID>):Bool {
+		return processMobileInput(activeHitbox, keys, JUST_RELEASED);
 	}
 	#end
 }

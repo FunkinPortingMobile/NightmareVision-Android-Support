@@ -110,7 +110,7 @@ class MainMenuState extends MusicBeatState
 		changeSelection();
 		
 		#if mobile
-		addVirtualPad(UP_DOWN, A_B_C);
+		addVirtualPad('UP_DOWN', 'A_B_C');
 		#end
 		
 		super.create();
@@ -177,7 +177,7 @@ class MainMenuState extends MusicBeatState
 					menuItems.forEachAlive(item -> if (item != selectedObj) FlxTween.tween(item, {alpha: 0}, 0.4, {ease: FlxEase.quadOut}));
 				}
 			}
-			if (FlxG.keys.anyJustPressed(debugKeys)  #if mobile || virtualPad.buttonC.justPressed #end)
+			if (FlxG.keys.anyJustPressed(debugKeys) #if mobile || virtualPad.getButton('buttonC').justPressed #end)
 			{
 				canInteract = true;
 				FlxG.switchState(MasterEditorMenu.new);

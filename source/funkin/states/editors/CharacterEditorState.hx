@@ -187,7 +187,7 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		pointerBounds.alpha = 0;
 
         #if mobile
-	    addVirtualPad(LEFT_FULL, CHARACTER_EDITOR);
+	    addVirtualPad('LEFT_FULL', 'CHARACTER_EDITOR');
         addVirtualPadCamera();
 		#end
 	}
@@ -999,22 +999,22 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		
 		final moveDistance = FlxG.keys.pressed.SHIFT ? 10 : 1;
 		
-		if (FlxG.keys.justPressed.LEFT #if mobile || virtualPad.buttonLeft.justPressed #end)
+		if (FlxG.keys.justPressed.LEFT #if mobile || virtualPad.getButton('buttonLeft').justPressed #end)
 		{
 			character.animOffset.x += moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.DOWN #if mobile || virtualPad.buttonDown.justPressed #end)
+		else if (FlxG.keys.justPressed.DOWN #if mobile || virtualPad.getButton('buttonDown').justPressed #end)
 		{
 			character.animOffset.y -= moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.UP #if mobile || virtualPad.buttonUp.justPressed #end)
+		else if (FlxG.keys.justPressed.UP #if mobile || virtualPad.getButton('buttonUp').justPressed #end)
 		{
 			character.animOffset.y += moveDistance;
 			return true;
 		}
-		else if (FlxG.keys.justPressed.RIGHT #if mobile || virtualPad.buttonRight.justPressed #end)
+		else if (FlxG.keys.justPressed.RIGHT #if mobile || virtualPad.getButton('buttonRight').justPressed #end)
 		{
 			character.animOffset.x -= moveDistance;
 			return true;
@@ -1048,30 +1048,30 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 			_disableFocusLater = true;
 		}
 		
-		if (FlxG.keys.justPressed.A #if mobile || virtualPad.buttonLeft2.justPressed #end)
+		if (FlxG.keys.justPressed.A #if mobile || virtualPad.getButton('buttonLeft2').justPressed #end)
 		{
 			playSing('singLEFT');
 		}
-		else if (FlxG.keys.justPressed.W #if mobile || virtualPad.buttonUp2.justPressed #end)
+		else if (FlxG.keys.justPressed.W #if mobile || virtualPad.getButton('buttonUp2').justPressed #end)
 		{
 			playSing('singUP');
 		}
-		else if (FlxG.keys.justPressed.S #if mobile || virtualPad.buttonDown2.justPressed #end)
+		else if (FlxG.keys.justPressed.S #if mobile || virtualPad.getButton('buttonDown2').justPressed #end)
 		{
 			playSing('singDOWN');
 		}
-		else if (FlxG.keys.justPressed.D #if mobile || virtualPad.buttonRight2.justPressed #end)
+		else if (FlxG.keys.justPressed.D #if mobile || virtualPad.getButton('buttonRight2').justPressed #end)
 		{
 			playSing('singRIGHT');
 		}
-		else if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.buttonA.justPressed #end)
+		else if (FlxG.keys.justPressed.SPACE #if mobile || virtualPad.getButton('buttonA').justPressed #end)
 		{
 			dance();
 		}
 		
 		if (character.isAnimNull()) return;
 		
-		if ((FlxG.keys.justPressed.Z || FlxG.keys.justPressed.X #if mobile || virtualPad.buttonC.justPressed #end))
+		if ((FlxG.keys.justPressed.Z || FlxG.keys.justPressed.X #if mobile || virtualPad.getButton('buttonC').justPressed #end))
 		{
 			character.pauseAnim();
 			character.animCurFrame = FlxMath.wrap(character.animCurFrame + (FlxG.keys.justPressed.Z ? -1 : 1), 0, character.getAnimNumFrames() - 1);
@@ -1085,22 +1085,22 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 	
 	function controlCamera(elapsed:Float)
 	{
-		if (FlxG.keys.pressed.E #if mobile || virtualPad.buttonD.justPressed #end && FlxG.camera.zoom < 3)
+		if (FlxG.keys.pressed.E #if mobile || virtualPad.getButton('buttonD').justPressed #end && FlxG.camera.zoom < 3)
 		{
 			FlxG.camera.zoom += elapsed * FlxG.camera.zoom;
 		}
-		if (FlxG.keys.pressed.Q #if mobile || virtualPad.buttonB.justPressed #end && FlxG.camera.zoom > 0.1)
+		if (FlxG.keys.pressed.Q #if mobile || virtualPad.getButton('buttonB').justPressed #end && FlxG.camera.zoom > 0.1)
 		{
 			FlxG.camera.zoom -= elapsed * FlxG.camera.zoom;
 		}
 		
 		final speedMult = FlxG.keys.pressed.SHIFT ? 2 : 1;
 		
-		if (FlxG.keys.pressed.I #if mobile || virtualPad.buttonX.justPressed #end)
+		if (FlxG.keys.pressed.I #if mobile || virtualPad.getButton('buttonX').justPressed #end)
 		{
 			FlxG.camera.scroll.y -= 200 * elapsed * speedMult;
 		}
-		else if (FlxG.keys.pressed.K #if mobile || virtualPad.buttonV.justPressed #end)
+		else if (FlxG.keys.pressed.K #if mobile || virtualPad.getButton('buttonV').justPressed #end)
 		{
 			FlxG.camera.scroll.y += 200 * elapsed * speedMult;
 		}

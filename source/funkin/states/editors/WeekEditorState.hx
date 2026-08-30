@@ -109,7 +109,7 @@ class WeekEditorState extends MusicBeatState
 		reloadAllShit();
 		
 		#if mobile
-		addVirtualPad(NONE, B);
+		addVirtualPad('NONE', 'B');
         virtualPad.buttonB.x -= 300;
 		#end
 		
@@ -498,7 +498,7 @@ class WeekEditorState extends MusicBeatState
 			FlxG.sound.volumeDownKeys = ClientPrefs.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = ClientPrefs.volumeUpKeys;
 			
-			if (FlxG.keys.justPressed.ESCAPE #if mobile || virtualPad.buttonB.justPressed #end)
+			if (FlxG.keys.justPressed.ESCAPE #if mobile || virtualPad.getButton('buttonB').justPressed #end)
 			{
 				FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
 				FunkinSound.playMusic(Paths.music('freakyMenu'));
@@ -718,7 +718,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 		changeSelection();
 
         #if mobile
-		addVirtualPad(LEFT_FULL, A_B);
+		addVirtualPad('LEFT_FULL', 'A_B');
 		#end
 
 		super.create();
@@ -909,7 +909,7 @@ class WeekEditorFreeplayState extends MusicBeatState
 			FlxG.sound.muteKeys = [];
 			FlxG.sound.volumeDownKeys = [];
 			FlxG.sound.volumeUpKeys = [];
-			if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.buttonA.justPressed #end)
+			if (FlxG.keys.justPressed.ENTER #if mobile || virtualPad.getButton('buttonA').justPressed #end)
 			{
 				iconInputText.hasFocus = false;
 			}
@@ -919,14 +919,14 @@ class WeekEditorFreeplayState extends MusicBeatState
 			FlxG.sound.muteKeys = ClientPrefs.muteKeys;
 			FlxG.sound.volumeDownKeys = ClientPrefs.volumeDownKeys;
 			FlxG.sound.volumeUpKeys = ClientPrefs.volumeUpKeys;
-			if (FlxG.keys.justPressed.ESCAPE #if mobile || virtualPad.buttonB.justPressed #end)
+			if (FlxG.keys.justPressed.ESCAPE #if mobile || virtualPad.getButton('buttonB').justPressed #end)
 			{
 				FlxG.switchState(funkin.states.editors.MasterEditorMenu.new);
 				FunkinSound.playMusic(Paths.music('freakyMenu'));
 			}
 			
-			if (controls.UI_UP_P #if mobile || virtualPad.buttonUp.justPressed #end) changeSelection(-1);
-			if (controls.UI_DOWN_P #if mobile || virtualPad.buttonDown.justPressed #end) changeSelection(1);
+			if (controls.UI_UP_P #if mobile || virtualPad.getButton('buttonUp').justPressed #end) changeSelection(-1);
+			if (controls.UI_DOWN_P #if mobile || virtualPad.getButton('buttonDown').justPressed #end) changeSelection(1);
 		}
 		super.update(elapsed);
 	}

@@ -48,8 +48,11 @@ class Main extends Sprite
 		#if mobile
 		StorageSystem.getPermissions();
 		Sys.setCwd(StorageSystem.getAssetsDirectory());
+		FlxG.signals.preUpdate.add(function() 
+		{
+			MobileUtil.updateInputMethod();
+		});
 		#end
-
 		
 		#if (CRASH_HANDLER && !debug)
 		funkin.backend.CrashHandler.init();

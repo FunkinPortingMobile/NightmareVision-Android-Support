@@ -166,8 +166,7 @@ class PauseSubState extends MusicBeatSubstate
 		add(debugTxt);
 		
 		#if mobile
-		controls.isInSubstate = true;
-		addVirtualPad(PlayState.chartingMode ? LEFT_FULL : UP_DOWN, A_B);
+		addVirtualPad(PlayState.chartingMode ? 'LEFT_FULL' : 'UP_DOWN', 'A_B');
 		addVirtualPadCamera();
 		#end
 		
@@ -281,7 +280,6 @@ class PauseSubState extends MusicBeatSubstate
 					PlayState.changedDifficulty = true;
 					practiceText.visible = PlayState.instance.practiceMode;
 				case "Chart Editor":
-				    #if mobile controls.isInSubstate = false; #end
 					PlayState.instance.openChartEditor();
 				case "Restart Song":
 					restartSong();
@@ -325,7 +323,6 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			PlayState.deathCounter = 0;
 			PlayState.seenCutscene = false;
-			#if mobile controls.isInSubstate = false; #end
 			FlxG.switchState(() -> PlayState.isStoryMode ? new StoryMenuState() : new FreeplayState());
 			CoolUtil.cancelMusicFadeTween();
 			FunkinSound.playMusic(Paths.music('freakyMenu'));
@@ -340,7 +337,6 @@ class PauseSubState extends MusicBeatSubstate
 		{
 			PlayState.instance.paused = true;
 			PlayState.instance.audio.volume = 0;
-			#if mobile controls.isInSubstate = false; #end
 			FlxG.switchState(() -> new OptionsState());
 			@:privateAccess
 			{

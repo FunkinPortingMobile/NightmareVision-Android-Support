@@ -49,12 +49,14 @@ class ReverseModifier extends NoteModifier
 	
 	override function getPos(time:Float, visualDiff:Float, timeDiff:Float, beat:Float, pos:Vector3, data:Int, player:Int, obj:FlxSprite)
 	{
+		final swag:Float = (Note.swagWidth * .5);
+		
 		var perc = getReverseValue(data, player);
-		var shift = MathUtil.scale(perc, 0, 1, 50, FlxG.height - 50 - Note.swagWidth);
+		var shift = MathUtil.scale(perc, 0, 1, 50 + swag, FlxG.height - 50 - swag);
 		var mult = MathUtil.scale(perc, 0, 1, 1, -1);
 		shift = MathUtil.scale(getSubmodValue("centered", player), 0, 1, shift, FlxG.height / 2);
 		
-		pos.y = (shift + (visualDiff * mult) + Note.swagWidth * .5);
+		pos.y = (shift + (visualDiff * mult));
 		
 		return pos;
 	}

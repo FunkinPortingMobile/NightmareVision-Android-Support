@@ -23,48 +23,50 @@ class PerspectiveModifier extends NoteModifier
 	final near:Float = 0;
 	final far:Float = 2;
 	
-	public function getVector(curZ:Float, pos:Vector3):Vector3
+	public inline function getVector(curZ:Float, pos:Vector3):Vector3
 	{
-		if (curZ < FlxMath.EPSILON) return pos;
-		
-		pos.subtract(halfOffset, pos);
-		
-		var oX = pos.x;
-		var oY = pos.y;
-		
-		pos.put();
-		
-		// should I be using a matrix?
-		// .. nah im sure itll be fine just doing this manually
-		// instead of doing a proper perspective projection matrix
-		
-		// var aspect = FlxG.width/FlxG.height;
-		var aspect = 1;
-		
-		var shit = curZ - 1;
-		if (shit > 0) shit = 0; // thanks schmovin!!
-		
-		var ta = MathUtil.fastTan(fov / 2);
-		var x = oX * aspect / ta;
-		var y = oY / ta;
-		var a = (near + far) / (near - far);
-		var b = 2 * near * far / (near - far);
-		var z = (a * shit + b);
-		// trace(shit, curZ, z, x/z, y/z);
-		var returnedVector = Vector3.get(x / z, y / z, z);
-		returnedVector.add(halfOffset, returnedVector);
-		
-		return returnedVector;
+		if (Math.abs(curZ) < FlxMath.EPSILON) {
+			return pos;
+		} else {
+			pos.subtract(halfOffset, pos);
+			
+			var oX = pos.x;
+			var oY = pos.y;
+			
+			pos.put();
+			
+			// should I be using a matrix?
+			// .. nah im sure itll be fine just doing this manually
+			// instead of doing a proper perspective projection matrix
+			
+			// var aspect = FlxG.width/FlxG.height;
+			var aspect = 1;
+			
+			var shit = curZ - 1;
+			if (shit > 0) shit = 0; // thanks schmovin!!
+			
+			var ta = MathUtil.fastTan(fov / 2);
+			var x = oX * aspect / ta;
+			var y = oY / ta;
+			var a = (near + far) / (near - far);
+			var b = 2 * near * far / (near - far);
+			var z = (a * shit + b);
+			// trace(shit, curZ, z, x/z, y/z);
+			var returnedVector = Vector3.get(x / z, y / z, z);
+			returnedVector.add(halfOffset, returnedVector);
+			
+			return returnedVector;
+		}
 	}
 	
 	override function getPos(time:Float, visualDiff:Float, timeDiff:Float, beat:Float, pos:Vector3, data:Int, player:Int, obj:FlxSprite) return getVector(pos.z, pos);
 	
-	override function updateReceptor(beat:Float, receptor:StrumNote, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) receptor.scale.scale(1 / pos.z);
+	override function updateReceptor(beat:Float, receptor:StrumNote, pos:Vector3, player:Int) if (Math.abs(pos.z) > FlxMath.EPSILON) receptor.scale.scale(1 / pos.z);
 	// actually im not sure if that is better or worse
 	
-	override function updateNote(beat:Float, note:Note, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) note.scale.scale(1 / pos.z);
+	override function updateNote(beat:Float, note:Note, pos:Vector3, player:Int) if (Math.abs(pos.z) > FlxMath.EPSILON) note.scale.scale(1 / pos.z);
 	
-	override function updateNoteSplash(beat:Float, splash:NoteSplash, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) splash.scale.scale(1 / pos.z);
+	override function updateNoteSplash(beat:Float, splash:NoteSplash, pos:Vector3, player:Int) if (Math.abs(pos.z) > FlxMath.EPSILON) splash.scale.scale(1 / pos.z);
 	
-	override function updateSustainSplash(beat:Float, splash:SustainSplash, pos:Vector3, player:Int) if (pos.z > FlxMath.EPSILON) splash.scale.scale(1 / pos.z);
+	override function updateSustainSplash(beat:Float, splash:SustainSplash, pos:Vector3, player:Int) if (Math.abs(pos.z) > FlxMath.EPSILON) splash.scale.scale(1 / pos.z);
 }

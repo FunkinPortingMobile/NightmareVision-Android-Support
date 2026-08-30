@@ -163,8 +163,8 @@ class FreeplayState extends MusicBeatState
 		#if mobile
 		addVirtualPad('LEFT_FULL', 'FREEPLAY');
 		if (freeplayTabs.length <= 1) {
-	        virtualPad.getButton('S').visible = false;
-	        virtualPad.getButton('X').x = FlxG.width - 132;
+	        virtualPad.getButton('buttonS').visible = false;
+	        virtualPad.getButton('buttonX').x = FlxG.width - 132;
         }
 		#end
 		
@@ -194,8 +194,8 @@ class FreeplayState extends MusicBeatState
 		removeVirtualPad();
 		addVirtualPad('LEFT_FULL', 'FREEPLAY');
 		if (freeplayTabs.length <= 1) {
-	        virtualPad.getButton('S').visible = false;
-	        virtualPad.getButton('X').x = FlxG.width - 132;
+	        virtualPad.getButton('buttonS').visible = false;
+	        virtualPad.getButton('buttonX').x = FlxG.width - 132;
         }
 		#end
 	}

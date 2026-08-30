@@ -11,7 +11,7 @@ import flixel.input.actions.FlxActionInput;
 import flixel.input.actions.FlxAction.FlxActionDigital;
 
 #if mobile
-import mobile.backend.flixel.input.FlxMobileInputID;
+import mobile.backend.flixel.input.TouchInputID;
 #end
 
 import funkin.input.Controls;

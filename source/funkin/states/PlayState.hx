@@ -1633,6 +1633,7 @@ class PlayState extends MusicBeatState
 	override public function onFocus():Void
 	{
 		if (!isDead && !paused) resetDiscordRPC(Conductor.songPosition > 0.0);
+		resyncVocals();
 		
 		super.onFocus();
 	}
@@ -1656,17 +1657,24 @@ class PlayState extends MusicBeatState
 		else DiscordClient.changePresence(rpcDescription, rpcSongName + ' ' + rpcDifficulty, null, true, songLength - Conductor.songPosition - ClientPrefs.noteOffset);
 	}
 	
-	function resyncVocals():Void
+	function checkResync():Void
+	{
+		final maxToleratedOffset:Float = (ClientPrefs.streamedMusic ? 50 : 20) * playbackRate;
+		
+		final correctTime = Math.abs(Conductor.songPosition - Conductor.offset);
+		final songSync = SONG.needsVoices ? audio.getDesyncDifference(correctTime) : correctTime - audio.inst.time;
+		
+		if (songSync > maxToleratedOffset) resyncVocals();
+	}
+	
+	public function resyncVocals():Void
 	{
 		if (finishTimer != null) return;
 		
 		audio.pitch = playbackRate;
 		audio.volume = 1 * volumeMult;
-		audio.pause();
-		audio.time = audio.inst.time;
-		Conductor.songPosition = audio.inst.time;
+		audio.resync(Conductor.songPosition);
 		#if FLX_PITCH audio.pitch = playbackRate; #end
-		audio.play();
 	}
 	
 	public var canAccessEditors:Bool = true;
@@ -2914,13 +2922,7 @@ class PlayState extends MusicBeatState
 	{
 		super.stepHit();
 		
-		final maxToleratedOffset:Float = 20 * playbackRate;
-		
-		if (audio.inst != null)
-		{
-			if (Math.abs(audio.inst.time - (Conductor.songPosition - Conductor.offset)) > maxToleratedOffset
-				|| (SONG.needsVoices && audio.getDesyncDifference(Math.abs(Conductor.songPosition - Conductor.offset)) > maxToleratedOffset)) resyncVocals();
-		}
+		if (audio.inst != null) checkResync();
 		
 		if (curStep == lastStepHit) return;
 		

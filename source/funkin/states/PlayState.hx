@@ -2547,10 +2547,7 @@ class PlayState extends MusicBeatState
 			songEndCallback = endSong;
 		}
 		
-		if (ClientPrefs.noteOffset <= 0 || ignoreNoteOffset)
-		{
-			songEndCallback();
-		}
+		if (ClientPrefs.noteOffset <= 0 || ignoreNoteOffset) songEndCallback();
 		else
 		{
 			finishTimer = new FlxTimer().start(ClientPrefs.noteOffset / 1000, function(tmr:FlxTimer) {
@@ -2927,7 +2924,7 @@ class PlayState extends MusicBeatState
 	{
 		super.stepHit();
 		
-		if (audio.inst != null) checkResync();
+		if (audio.inst != null && !endingSong) checkResync();
 		
 		if (curStep == lastStepHit) return;
 		

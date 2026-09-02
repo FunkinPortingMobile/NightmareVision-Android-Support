@@ -2467,11 +2467,8 @@ class OLDChartEditorState extends MusicBeatState
 					char.sing(note.noteData % 4);
 					
 					if (!playedSound[note.lane] && ((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)))
-					{
-						var soundToPlay = 'hitsound';
-						if (_song.player1 == 'gf') soundToPlay = ('GF_' + Std.string(note.noteData + 1)); // Easter egg
-						
-						FlxG.sound.play(Paths.sound(soundToPlay)).pan = (note.noteData < (_song.keys * .5) ? -0.3 : 0.3); // would be coolio
+					{						
+						FlxG.sound.play(Paths.sound('hitsound')).pan = (note.noteData < (_song.keys * .5) ? -0.3 : 0.3); // would be coolio
 						playedSound[note.lane] = true;
 					}
 				}

@@ -69,6 +69,7 @@ class SyncedFlxSoundGroup extends FlxTypedGroup<FlxSound>
 		snd.time = time;
 		snd.pitch = pitch;
 		snd.volume = volume;
+		if (snd != getFirstAlive()) snd.endTime = snd.length;
 		
 		FlxG.sound.list.add(snd);
 		
@@ -76,9 +77,9 @@ class SyncedFlxSoundGroup extends FlxTypedGroup<FlxSound>
 	}
 	
 	// if vocals are shorter than inst, game doesnt bug out and get stuck in a cycle of looping the vocals over and over and over and...
-	public inline function checkLength(snd:FlxSound):Bool
+	public inline function checkLength(snd:Null<FlxSound>):Bool
 	{
-		return (snd.time < songLength && snd.length <= songLength && snd.playing);
+		return ((snd?.time ?? 0) < songLength) && ((snd?.length ?? 0) <= songLength) && ((snd?.time ?? 0) < (snd?.length ?? 1));
 	}
 	
 	/**
@@ -236,6 +237,23 @@ class PlayableSong extends VocalGroup
 	public var inst:Null<FlxSound> = null;
 	public var trackSwap:Bool = false;
 	public var splitVocals:Bool = false;
+	public var hasVoices:Bool = false;
+	
+	// used for checking if the voices are there & still actively playing
+	private function validVoiceGroup(group:SyncedFlxSoundGroup):Bool return ((group?.length ?? 0) > 0 && (group?.checkLength(group?.getFirstAlive()) ?? false));
+	
+	// basically, if the song has voices, check if any of the voices are still playing. if so, return true. if otherwise, return false. same thing for if the song has no voices
+	public function syncVoiceStatus():Bool
+	{
+		if (trackSwap || !hasVoices) return false;
+		
+		for (group in [playerVocals, opponentVocals])
+		{
+			if (validVoiceGroup(group)) return true;
+		}
+		
+		return false;
+	}
 	
 	public function populate(?data:Song):Void
 	{
@@ -274,11 +292,10 @@ class PlayableSong extends VocalGroup
 			
 			if (data.needsVoices)
 			{
+				hasVoices = true;
+				
 				var playerSound = Paths.voices(data.song, 'player');
-				if (playerSound == null)
-				{
-					playerSound = Paths.voices(data.song, null);
-				}
+				if (playerSound == null) playerSound = Paths.voices(data.song, null);
 				if (playerSound != null) addPlayerVocals(new FlxSoundEx().loadEmbedded(playerSound));
 				
 				final opponentSound = Paths.voices(data.song, 'opp');

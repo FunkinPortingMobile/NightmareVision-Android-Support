@@ -150,7 +150,6 @@ class TurboControl extends FlxBasic // very basic turbo control thingy
 		{
 			_pressedElapsed = 0;
 			PRESSED = false;
-			PRESSED = false; // Removido redundância no original, mas mantido por segurança caso haja lógica atrelada
 		}
 	}
 	

@@ -44,7 +44,7 @@ class FallbackState extends MusicBeatState
 	{
 		super.update(elapsed);
 		
-		if (controls.ACCEPT #if mobile || TouchUtil.justPressed() #end)
+		if (controls.ACCEPT #if mobile || TouchUtil.justPressed #end)
 		{
 			persistentUpdate = false;
 			continueCallback();

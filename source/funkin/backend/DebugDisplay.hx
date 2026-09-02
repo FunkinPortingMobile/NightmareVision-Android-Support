@@ -12,7 +12,7 @@ import funkin.input.Controls;
 import flixel.util.FlxStringUtil;
 import flixel.FlxG;
 
-#if cpp
+#if (cpp && !windows)
 @:cppInclude("sys/utsname.h")
 #end
 	
@@ -279,7 +279,7 @@ class DebugDisplay extends Sprite
 
     inline function get_arch():String
     {
-    	#if cpp
+    	#if (cpp && !windows)
     	return untyped __cpp__('[]() -> String {
 		#if defined(__ANDROID__) || defined(__APPLE__) || defined(__linux__)
 		#include <sys/utsname.h>

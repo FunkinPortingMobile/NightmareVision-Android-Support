@@ -69,10 +69,10 @@ class TouchUtil
 
 	static function checkSwipeAngle(min:Float, max:Float):Bool 
 	{
-		for (swipe in FlxG.swipes) 
+		/*for (swipe in FlxG.swipes) 
 		{
 			if (swipe.angle >= min && swipe.angle <= max) return true;
-		}
+		}*/
 		return false;
 	}
 

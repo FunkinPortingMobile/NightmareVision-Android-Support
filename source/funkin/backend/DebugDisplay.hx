@@ -11,10 +11,6 @@ import funkin.input.Controls;
 
 import flixel.util.FlxStringUtil;
 import flixel.FlxG;
-
-#if (cpp && !windows)
-@:cppInclude("sys/utsname.h")
-#end
 	
 /**
  * enum that handles the display type of the FPS counter.
@@ -278,33 +274,19 @@ class DebugDisplay extends Sprite
 	}
 
     inline function get_arch():String
-    {
-    	#if (cpp && !windows)
-    	return untyped __cpp__('[]() -> String {
-		#if defined(__ANDROID__) || defined(__APPLE__) || defined(__linux__)
-		#include <sys/utsname.h>
-		struct utsname sysinfo;
-		if (uname(&sysinfo) == 0) {
-			return String(sysinfo.machine);
-		}
-		#endif
-
-		#if defined(__aarch64__) || defined(_M_ARM64)
-			return String("ARM64");
-		#elif defined(__arm__) || defined(_M_ARM)
-			return String("ARMv7");
-		#elif defined(__x86_64__) || defined(_M_X64)
-			return String("x86_64");
-		#elif defined(__i386__) || defined(_M_IX86)
-			return String("x86");
+	{
+		#if HXCPP_ARM64
+		return "ARM64";
+		#elseif HXCPP_ARMV7
+		return "ARMv7";
+		#elseif HXCPP_X86
+		return "x86";
+		#elseif (HXCPP_X86_64 || HXCPP_M64)
+		return "x86_64";
 		#else
-			return String("Unknown Arch");
-		#endif
-	    }()');
-	     #else
-	     return "Unknown Arch";
-	     #end
-    }
+		return "Unknown Arch";
+		#end
+	}
 	
 	inline function get_taskMemory():Float
 	{

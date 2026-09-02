@@ -3,6 +3,10 @@ package funkin.input;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.group.FlxGroup;
 import flixel.FlxBasic;
+import flixel.FlxG;
+#if mobile
+import mobile.backend.flixel.input.TouchInputID;
+#end
 
 // impsotors
 // dat5 and emi
@@ -52,6 +56,13 @@ class TurboControl extends FlxBasic // very basic turbo control thingy
 	 */
 	public var keys:Array<Int>;
 	
+	#if mobile
+	/**
+	 * Mobile button ids for this to watch.
+	 */
+	public var mobileBinds:Null<Array<TouchInputID>> = null;
+	#end
+	
 	/**
 	 * Whether the hooked inputs are being pressed.
 	 */
@@ -94,6 +105,14 @@ class TurboControl extends FlxBasic // very basic turbo control thingy
 		justPressed = (justPressed || FlxG.keys.anyJustPressed(keys));
 		pressed = (pressed || FlxG.keys.anyPressed(keys));
 		
+		#if mobile
+		if (mobileBinds != null && Controls.instance != null)
+		{
+			justPressed = (justPressed || Controls.instance.mobilePadJustPressed(mobileBinds));
+			pressed = (pressed || Controls.instance.mobilePadPressed(mobileBinds));
+		}
+		#end
+		
 		if (!holding)
 		{
 			if (justPressed)
@@ -131,6 +150,7 @@ class TurboControl extends FlxBasic // very basic turbo control thingy
 		{
 			_pressedElapsed = 0;
 			PRESSED = false;
+			PRESSED = false; // Removido redundância no original, mas mantido por segurança caso haja lógica atrelada
 		}
 	}
 	
@@ -149,15 +169,22 @@ class TurboControl extends FlxBasic // very basic turbo control thingy
 			instance.buttons = switch (action.split('_')[1])
 			{
 				case 'left': [FlxGamepadInputID.DPAD_LEFT, FlxGamepadInputID.LEFT_STICK_DIGITAL_LEFT];
-				
 				case 'right': [FlxGamepadInputID.DPAD_RIGHT, FlxGamepadInputID.LEFT_STICK_DIGITAL_RIGHT];
-				
 				case 'down': [FlxGamepadInputID.DPAD_DOWN, FlxGamepadInputID.LEFT_STICK_DIGITAL_DOWN];
-				
 				case 'up': [FlxGamepadInputID.DPAD_UP, FlxGamepadInputID.LEFT_STICK_DIGITAL_UP];
-				
 				default: null;
 			}
+			
+			#if mobile
+			instance.mobileBinds = switch (action.split('_')[1])
+			{
+				case 'left': [TouchInputID.LEFT];
+				case 'right': [TouchInputID.RIGHT];
+				case 'down': [TouchInputID.DOWN];
+				case 'up': [TouchInputID.UP];
+				default: null;
+			}
+			#end
 		}
 		else
 		{

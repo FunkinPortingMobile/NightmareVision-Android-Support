@@ -1621,7 +1621,7 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (audio.inst != null && !startingSong) resyncVocals();
+			if (audio.inst != null && !startingSong) checkResync();
 			
 			FlxTimer.globalManager.forEach((i:FlxTimer) -> if (!i.finished) i.active = true);
 			FlxTween.globalManager.forEach((i:FlxTween) -> if (!i.finished) i.active = true);
@@ -1645,7 +1645,7 @@ class PlayState extends MusicBeatState
 		{
 			resetDiscordRPC(Conductor.songPosition > 0.0);
 			
-			if (audio.inst != null && !startingSong) resyncVocals();
+			if (audio.inst != null && !startingSong) checkResync();
 		}
 		
 		super.onFocus();
@@ -1672,10 +1672,10 @@ class PlayState extends MusicBeatState
 	
 	function checkResync():Void
 	{
-		final maxToleratedOffset:Float = (ClientPrefs.streamedMusic ? 50 : 20) * playbackRate;
+		final maxToleratedOffset:Float = 20 * playbackRate;
 		
 		final correctTime = Math.abs(Conductor.songPosition - Conductor.offset);
-		final songSync = SONG.needsVoices ? audio.getDesyncDifference(correctTime) : correctTime - audio.inst.time;
+		final songSync = audio.syncVoiceStatus() ? audio.getDesyncDifference(correctTime) : correctTime - audio.inst.time;
 		
 		if (songSync > maxToleratedOffset) resyncVocals();
 	}
@@ -1683,6 +1683,8 @@ class PlayState extends MusicBeatState
 	public function resyncVocals():Void
 	{
 		if (finishTimer != null) return;
+		
+		trace('resyncing');
 		
 		audio.pitch = playbackRate;
 		audio.volume = 1 * volumeMult;

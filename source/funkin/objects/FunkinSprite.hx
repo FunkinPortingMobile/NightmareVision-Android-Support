@@ -324,14 +324,9 @@ class FunkinSprite extends FlxAnimate
 	
 	var _transformedAnimOffset:FlxPoint = FlxPoint.get();
 	
-	override function prepareDrawMatrix(matrix:flixel.math.FlxMatrix, camera:FlxCamera):Void
+	override function getScreenPosition(?result:FlxPoint, ?camera:FlxCamera):FlxPoint
 	{
-		super.prepareDrawMatrix(matrix, camera);
-		
-		transformSpriteOffset(_transformedAnimOffset);
-		if (isPixelPerfectRender(camera)) _transformedAnimOffset.floor();
-		
-		matrix.translate(-_transformedAnimOffset.x, -_transformedAnimOffset.y);
+		return super.getScreenPosition(result, camera).subtract(transformSpriteOffset(_transformedAnimOffset));
 	}
 	
 	inline function transformSpriteOffset(?point:FlxPoint):FlxPoint
@@ -340,16 +335,16 @@ class FunkinSprite extends FlxAnimate
 		
 		point.set(spriteOffset.x + animOffset.x, spriteOffset.y + animOffset.y);
 		
-		if (scalableOffsets) point.scale(scale.x / baseScale.x, scale.y / baseScale.y);
+		if (scalableOffsets && (Math.abs(scale.x - baseScale.x) > FlxMath.EPSILON || Math.abs(scale.y - baseScale.y) > FlxMath.EPSILON)) point.scale(scale.x / baseScale.x, scale.y / baseScale.y);
 		
-		if (rotatableOffsets && FlxMath.mod(angle, 360) > 0) point.rotateByDegrees(angle);
+		if (rotatableOffsets && Math.abs(angle) > FlxMath.EPSILON) point.rotateByDegrees(angle);
 		
-		if (skewableOffsets && (skew.x != 0 || skew.y != 0))
+		if (skewableOffsets && (Math.abs(skew.x) > FlxMath.EPSILON || Math.abs(skew.y) > FlxMath.EPSILON))
 		{
 			final pX:Float = point.x, pY:Float = point.y;
 			
-			point.x += (pY * Math.tan(skew.x / 180 * Math.PI));
-			point.y += (pX * Math.tan(skew.y / 180 * Math.PI));
+			point.x += (pY * MathUtil.fastTan(skew.x / 180 * Math.PI));
+			point.y += (pX * MathUtil.fastTan(skew.y / 180 * Math.PI));
 		}
 		
 		return point;

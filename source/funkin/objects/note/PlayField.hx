@@ -7,6 +7,7 @@ import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.group.FlxGroup.FlxTypedGroup;
 
+import funkin.game.modchart.ModManager;
 import funkin.objects.Character;
 import funkin.data.*;
 
@@ -82,6 +83,8 @@ class PlayField extends FlxTypedContainer<StrumNote>
 	public var offsetReceptors:Bool = false;
 	public var player:Int = 0;
 	public var alpha(default, set):Float = 1;
+	
+	public var holdDropLeniency:Float = (1 / 3);
 	
 	public var underlaySpr:FlxSprite;
 	public var underlayAlphaMult:Float = 1;
@@ -256,11 +259,13 @@ class PlayField extends FlxTypedContainer<StrumNote>
 		clearReceptors();
 		for (data in 0...keyCount)
 		{
-			var babyArrow:StrumNote = new StrumNote(player, baseX, baseY, data, this);
+			var babyArrow:StrumNote = new StrumNote(player, baseX + ModManager.getStrumX(data, keyCount), baseY, data, this);
+			babyArrow.y -= (babyArrow.height / 2);
+			babyArrow.x -= (babyArrow.width / 2);
+			
 			babyArrow.downScroll = ClientPrefs.downScroll;
 			babyArrow.alphaMult = alpha;
 			add(babyArrow);
-			babyArrow.postAddedToGroup();
 		}
 	}
 	
@@ -326,7 +331,9 @@ class PlayField extends FlxTypedContainer<StrumNote>
 		
 		note.baseScale.copyFrom(note.scale);
 		note.updateHitbox();
-		if (note.playField != this || note.playField == null) note.playField = this;
+		
+		note.playField = this;
+		note.strum = members[note.noteData];
 	}
 	
 	public inline function forEachAliveNote(func:Note->Void)
@@ -356,6 +363,7 @@ class PlayField extends FlxTypedContainer<StrumNote>
 		if (strum != null)
 		{
 			strum.lastNote = note;
+			
 			if (field.playAnims) strum.playAnim('confirm', true);
 			
 			if (field.autoPlayed)
@@ -366,12 +374,15 @@ class PlayField extends FlxTypedContainer<StrumNote>
 				
 				strum.resetAnim = time;
 			}
-		}
-		
-		if (!note.isSustainNote)
-		{
-			for (sustain in note.tail)
-				sustain.blockHit = false; // makes the hold note active when you press the base note
+			
+			if (note.isSustainNote)
+			{
+				strum.coyoteTime = field.holdDropLeniency;
+			}
+			else
+			{
+				note.tailState.active = true;
+			}
 		}
 		
 		if (field.playerControls)
@@ -457,12 +468,7 @@ class PlayField extends FlxTypedContainer<StrumNote>
 		if (!note.hitCausesMiss && !note.canMiss)
 		{
 			final tail = (note.isSustainNote ? note.parent.tail : note.tail);
-			for (sustain in tail)
-			{
-				sustain.blockHit = true;
-				sustain.ignoreNote = true;
-				sustain.alphaMod *= 0.3;
-			}
+			for (sustain in tail) sustain.tooLate = true;
 		}
 		
 		// if the sustain splash exists, KILL KIL KILL IT KILL KI L KLLK LSKD:LKLK

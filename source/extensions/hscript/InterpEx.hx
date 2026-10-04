@@ -21,8 +21,10 @@ import crowplexus.hscript.Tools;
  * 
  * public fields support with `Sharables`
  */
-class InterpEx extends crowplexus.hscript.Interp
+class InterpEx extends crowplexus.hscript.Interp #if flixel implements flixel.util.FlxDestroyUtil.IFlxDestroyable #end
 {
+	static var cachedFields:Map<String, Array<String>> = [];
+	
 	public var sharedFields:Null<Sharables> = null;
 	
 	public function new(?parent:Dynamic, ?shareables:Sharables)
@@ -39,7 +41,20 @@ class InterpEx extends crowplexus.hscript.Interp
 	function set_parent(value:Dynamic)
 	{
 		parent = value;
-		parentFields = value != null ? Type.getInstanceFields(Type.getClass(value)) : [];
+		if (value != null)
+		{
+			var clName = Type.getClassName(Type.getClass(value));
+			if (!cachedFields.exists(clName))
+			{
+				cachedFields.set(clName, Type.getInstanceFields(Type.getClass(value)));
+			}
+			
+			parentFields = cachedFields.get(clName) ?? [];
+		}
+		else
+		{
+			parentFields = [];
+		}
 		
 		return parent;
 	}
@@ -60,7 +75,7 @@ class InterpEx extends crowplexus.hscript.Interp
 				setTo(id, v + delta);
 				
 				return v;
-			
+				
 			default:
 				return super.increment(e, prefix, delta);
 		}
@@ -101,7 +116,7 @@ class InterpEx extends crowplexus.hscript.Interp
 		if (locals.exists(id)) return locals.get(id).r;
 		
 		if (variables.exists(id)) return variables.get(id);
-				
+		
 		if (imports.exists(id)) return imports.get(id);
 		
 		if (parentFields.contains(id) || parentFields.contains('get_$id')) return Reflect.getProperty(parent, id);
@@ -201,8 +216,8 @@ class InterpEx extends crowplexus.hscript.Interp
 		{
 			return Type.createEnum(o, f);
 			/* if (e != null) return e;
-			
-			error(EInvalidAccess(f)); */
+
+				error(EInvalidAccess(f)); */
 		}
 		
 		return super.get(o, f);
@@ -240,7 +255,7 @@ class InterpEx extends crowplexus.hscript.Interp
 				{
 					expr(e);
 				}
-			
+				
 			case EFor(i, v, it, e):
 				forLoop(i, v, it, e);
 				return null;
@@ -257,8 +272,7 @@ class InterpEx extends crowplexus.hscript.Interp
 		var iter:Dynamic = v.iterator;
 		v = (iter != null ? #if hl Reflect.callMethod(v, iter, []) #else (iter : haxe.Constraints.Function)() #end : v);
 		
-		if (v.hasNext == null || v.next == null)
-			error(EInvalidIterator(v));
+		if (v.hasNext == null || v.next == null) error(EInvalidIterator(v));
 		
 		return v;
 	}
@@ -277,8 +291,7 @@ class InterpEx extends crowplexus.hscript.Interp
 		var iter:Dynamic = v.keyValueIterator;
 		v = (iter != null ? #if hl Reflect.callMethod(v, iter, []) #else (iter : haxe.Constraints.Function)() #end : v);
 		
-		if (v.hasNext == null || v.next == null)
-			error(EInvalidIterator(v));
+		if (v.hasNext == null || v.next == null) error(EInvalidIterator(v));
 		
 		return v;
 	}
@@ -288,26 +301,26 @@ class InterpEx extends crowplexus.hscript.Interp
 		final old = declared.length;
 		final ef = expr.bind(e);
 		
-		declared.push({ n : n, old : locals.get(n) });
+		declared.push({n: n, old: locals.get(n)});
 		
 		if (v == null)
 		{
 			var it = makeIterator(expr(it));
-			var next:Void -> Dynamic = it.next, hasNext:Void -> Bool = it.hasNext;
+			var next:Void->Dynamic = it.next, hasNext:Void->Bool = it.hasNext;
 			
 			while (hasNext())
 			{
-				locals.set(n, { r: next(), const: false });
+				locals.set(n, {r: next(), const: false});
 				
 				if (!loopRun(ef)) break;
 			}
 		}
 		else // keyvalue
 		{
-			declared.push({ n : v, old : locals.get(v) });
+			declared.push({n: v, old: locals.get(v)});
 			
 			var it = makeKeyValueIterator(expr(it));
-			var next:Void -> Dynamic = it.next, hasNext:Void -> Bool = it.hasNext;
+			var next:Void->Dynamic = it.next, hasNext:Void->Bool = it.hasNext;
 			
 			while (hasNext())
 			{
@@ -316,8 +329,8 @@ class InterpEx extends crowplexus.hscript.Interp
 				if (r.key == null) error(ECustom('$v has no field key'));
 				if (r.value == null) error(ECustom('$v has no field value'));
 				
-				locals.set(n, { r: r.key, const: false });
-				locals.set(v, { r: r.value, const: false });
+				locals.set(n, {r: r.key, const: false});
+				locals.set(v, {r: r.value, const: false});
 				
 				if (!loopRun(ef)) break;
 			}
@@ -326,7 +339,7 @@ class InterpEx extends crowplexus.hscript.Interp
 		restore(old);
 	}
 	
-	inline function loopRun(f:Void -> Void)
+	inline function loopRun(f:Void->Void)
 	{
 		var cont:Bool = true;
 		
@@ -339,7 +352,8 @@ class InterpEx extends crowplexus.hscript.Interp
 			switch (Type.typeof(err))
 			{
 				case ValueType.TEnum(_): // just cuase someone wouldnt make the enum PUBLIC DIE
-					switch (Type.enumConstructor(err)) {
+					switch (Type.enumConstructor(err))
+					{
 						case 'SContinue':
 						case 'SBreak': cont = false;
 						default: throw err;
@@ -351,5 +365,10 @@ class InterpEx extends crowplexus.hscript.Interp
 		}
 		
 		return cont;
+	}
+	
+	public function destroy()
+	{
+		parent = null;
 	}
 }

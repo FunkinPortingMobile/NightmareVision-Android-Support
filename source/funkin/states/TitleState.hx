@@ -40,8 +40,6 @@ class TitleState extends MusicBeatState
 		FunkinAssets.cache.clearStoredMemory();
 		FunkinAssets.cache.clearUnusedMemory();
 		
-		ModPlugin.instance.populate();
-		
 		if (FlxG.save.data.flashing == null && !FlashingState.leftState)
 		{
 			CoolUtil.setTransSkip();

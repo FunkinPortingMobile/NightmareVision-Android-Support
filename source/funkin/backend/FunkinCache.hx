@@ -40,29 +40,15 @@ class CacheMap<T>
 @:access(openfl.display.BitmapData)
 @:nullSafety
 @:allow(funkin.FunkinAssets)
-class FunkinCache
+class FunkinCache // rerwite this entirely this is confusing and weird
 {
 	/**
-	 * Clears all graphics and sounds that are considered inactive. Flags everything to be inactive as well.
+	 * Clears all sounds sounds that are considered inactive. Flags everything to be inactive as well.
 	 * 
 	 * use `clearUnusedMemory` afterwards to purge everything
 	 */
 	public function clearStoredMemory() // maybe rename
 	{
-		// @:privateAccess
-		// for (key in FlxG.bitmap._cache.keys())
-		// {
-		// 	// ok this is dumb fix this later
-		// 	if (!currentTrackedGraphics.exists(key)
-		// 		&& !key.startsWith('pixels')
-		// 		&& !key.contains('editors/notification_neutral.png')
-		// 		&& !key.contains('editors/notification_success.png')
-		// 		&& !key.contains('editors/notification_warn.png')) // for haxeui is a bit hacky will do for now //find out hwo to avoid haxeui nicer or just do a different caching method //rewrite soonish ok.
-		// 	{
-		// 		disposeGraphic(FlxG.bitmap.get(key));
-		// 	}
-		// }
-		
 		Paths.tempAtlasFramesCache.clear();
 		
 		// clear all sounds that are cached
@@ -91,6 +77,14 @@ class FunkinCache
 			}
 		}
 		
+		for (key in currentTrackedTexts.keys())
+		{
+			if (!localTrackedAssets.contains(key) && !currentTrackedTexts.permanentKeys.contains(key))
+			{
+				removeFromCache(key);
+			}
+		}
+		
 		openfl.system.System.gc();
 		#if cpp
 		cpp.vm.Gc.compact();
@@ -102,6 +96,8 @@ class FunkinCache
 	public final currentTrackedGraphics:CacheMap<FlxGraphic> = new CacheMap();
 	
 	public final currentTrackedSounds:CacheMap<Sound> = new CacheMap();
+	
+	public final currentTrackedTexts:CacheMap<String> = new CacheMap();
 	
 	public final localTrackedAssets:Array<String> = [];
 	
@@ -118,10 +114,6 @@ class FunkinCache
 			if (disposeToo) disposeGraphic(currentTrackedGraphics.get(key));
 			currentTrackedGraphics.remove(key);
 			
-			// #if VERBOSE_LOGS
-			// Logger.log('Cleared Graphic [$key]');
-			// #end
-			
 			return true;
 		}
 		
@@ -130,9 +122,13 @@ class FunkinCache
 			if (disposeToo) Assets.cache.clear(key);
 			currentTrackedSounds.remove(key);
 			
-			// #if VERBOSE_LOGS
-			// Logger.log('Cleared Sound [$key]');
-			// #end
+			return true;
+		}
+		
+		if (currentTrackedTexts.exists(key))
+		{
+			if (disposeToo) Assets.cache.clear(key);
+			currentTrackedTexts.remove(key);
 			
 			return true;
 		}
@@ -183,11 +179,20 @@ class FunkinCache
 		return sound;
 	}
 	
+	public function cacheData(key:String, data:String):String
+	{
+		currentTrackedTexts.set(key, data);
+		localTrackedAssets.push(key);
+		
+		return data;
+	}
+	
 	public function toString():String
 	{
 		final bmpCache = [for (key in currentTrackedGraphics.keys()) key];
 		final sndCache = [for (key in currentTrackedSounds.keys()) key];
+		final dCache = [for (key in currentTrackedTexts.keys()) key];
 		
-		return 'Bmp Cache: $bmpCache\nSnd Cache: $sndCache';
+		return 'Bmp Cache: $bmpCache\nSnd Cache: $sndCache\nData Cache: $dCache';
 	}
 }

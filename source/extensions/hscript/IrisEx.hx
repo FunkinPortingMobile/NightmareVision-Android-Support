@@ -1,5 +1,7 @@
 package extensions.hscript;
 
+import flixel.util.FlxDestroyUtil;
+
 import crowplexus.iris.Iris;
 import crowplexus.iris.IrisConfig.AutoIrisConfig;
 import crowplexus.iris.IrisConfig;
@@ -33,5 +35,22 @@ class IrisEx extends Iris
 		if (this.config.autoPreset) preset();
 		// run the script.
 		if (this.config.autoRun) execute();
+	}
+	
+	override function destroy()
+	{
+		if (Iris.instances.exists(this.name)) Iris.instances.remove(this.name);
+		#if flixel
+		if (interp is InterpEx)
+		{
+			var _interp:IFlxDestroyable = cast interp;
+			_interp = FlxDestroyUtil.destroy(_interp);
+			#if VERBOSE_LOGS
+			trace('killing [$name] script');
+			#end
+		}
+		#end
+		interp = null;
+		parser = null;
 	}
 }

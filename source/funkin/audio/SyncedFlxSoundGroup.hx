@@ -76,30 +76,23 @@ class SyncedFlxSoundGroup extends FlxTypedGroup<FlxSound>
 		return snd;
 	}
 	
-	// if vocals are shorter than inst, game doesnt bug out and get stuck in a cycle of looping the vocals over and over and over and...
-	public inline function checkLength(snd:Null<FlxSound>):Bool
-	{
-		return ((snd?.time ?? 0) < (snd?.length ?? 1));
-	}
-	
 	/**
-	 * Culls through the group to find the largest desync value
-	 * @param baseTime The reference to compare difference to. Defaults to the groups first instance's time
+	 * Culls through the group to find the largest delta
+	 * @param baseTime The reference to compare delta towards. Defaults to the groups first instance's time
 	 */
-	public function getDesyncDifference(?baseTime:Float)
+	public function getDesyncDifference(?baseTime:Float):Float
 	{
 		final time = baseTime ?? getFirstAlive()?.time ?? 0.0;
 		
-		var diff:Float = 0;
+		var highestDiff:Float = 0;
 		forEachAlive(snd -> {
-			if (checkLength(snd))
-			{
-				final s = Math.abs(snd.time - time);
-				if (s > diff) diff = s; // get the highest difference
-			}
+			if (time > snd.length) return;
+			
+			final delta = Math.abs(snd.time - time);
+			if (delta > highestDiff) highestDiff = delta; // get the highest difference
 		});
 		
-		return diff;
+		return highestDiff;
 	}
 	
 	/**
@@ -111,12 +104,11 @@ class SyncedFlxSoundGroup extends FlxTypedGroup<FlxSound>
 		final time = baseTime ?? getFirstAlive()?.time ?? 0.0;
 		
 		forEachAlive(snd -> {
-			if (checkLength(snd))
-			{
-				snd.pause();
-				snd.time = time;
-				snd.play(false, time);
-			}
+			if (time > snd.length) return;
+			
+			snd.pause();
+			snd.time = time;
+			snd.play(false, time);
 		});
 	}
 	
@@ -234,28 +226,23 @@ class VocalGroup extends SyncedFlxSoundGroup
 @:nullSafety(Strict)
 class PlayableSong extends VocalGroup
 {
+	/**
+	 * The instrumental of the song.
+	 */
 	public var inst:Null<FlxSound> = null;
+	
+	/**
+	 * If true, the Inst is considered
+	 */
 	public var trackSwap:Bool = false;
+	
 	public var splitVocals:Bool = false;
 	public var hasVoices:Bool = false;
 	
-	// used for checking if the voices are there & still actively playing
-	private function validVoiceGroup(group:SyncedFlxSoundGroup):Bool return ((group?.length ?? 0) > 0 && (group?.checkLength(group?.getFirstAlive()) ?? false));
-	
-	// basically, if the song has voices, check if any of the voices are still playing. if so, return true. if otherwise, return false. same thing for if the song has no voices
-	public function syncVoiceStatus():Bool
-	{
-		if (trackSwap || !hasVoices) return false;
-		
-		for (group in [playerVocals, opponentVocals])
-		{
-			if (validVoiceGroup(group)) return true;
-		}
-		
-		return false;
-	}
-	
-	public function populate(?data:Song):Void
+	/**
+	 * Loads an Inst, Vocals, Enemy track from a `Song` data
+	 */
+	public function loadSong(?data:Song):Void
 	{
 		volume = 1;
 		
@@ -276,67 +263,76 @@ class PlayableSong extends VocalGroup
 			final instSnd = Paths.trackSwap(data.song, 'main');
 			if (instSnd != null)
 			{
-				inst = new FlxSoundEx().loadEmbedded(instSnd);
-				add(inst);
+				inst = add(new FlxSoundEx().loadEmbedded(instSnd));
 			}
 			
 			final missTrack = Paths.trackSwap(data.song, 'miss');
 			if (missTrack != null) addOpponentVocals(new FlxSoundEx().loadEmbedded(missTrack));
 			
 			opponentVolume = 0;
+			return;
 		}
-		else
+		
+		inst = add(new FlxSoundEx().loadEmbedded(Paths.inst(data.song)));
+		
+		if (!data.needsVoices)
 		{
-			inst = new FlxSoundEx().loadEmbedded(Paths.inst(data.song));
-			add(inst);
-			
-			if (data.needsVoices)
-			{
-				hasVoices = true;
-				
-				var playerSound = Paths.voices(data.song, 'player');
-				if (playerSound == null) playerSound = Paths.voices(data.song, null);
-				if (playerSound != null) addPlayerVocals(new FlxSoundEx().loadEmbedded(playerSound));
-				
-				final opponentSound = Paths.voices(data.song, 'opp');
-				if (opponentSound != null) addOpponentVocals(new FlxSoundEx().loadEmbedded(opponentSound));
-				
-				splitVocals = playerVocals.length != 0 && opponentVocals.length != 0;
-			}
+			return;
 		}
+		
+		final playerSound = Paths.voices(data.song, 'player') ?? Paths.voices(data.song);
+		
+		if (playerSound != null)
+		{
+			addPlayerVocals(new FlxSoundEx().loadEmbedded(playerSound));
+		}
+		
+		final opponentSound = Paths.voices(data.song, 'opp');
+		
+		if (opponentSound != null)
+		{
+			addOpponentVocals(new FlxSoundEx().loadEmbedded(opponentSound));
+		}
+		
+		hasVoices = true;
+		splitVocals = playerVocals.length != 0 && opponentVocals.length != 0;
 	}
 	
 	override public function play(forceRestart:Bool = false, startTime:Float = 0.0, ?endTime:Null<Float>)
 	{
 		if (trackSwap && inst != null) inst.volume = 0;
-		if (endTime == null || endTime == 0) endTime = songLength;
+		if (endTime == null || endTime == 0) endTime = songLength; // ?
 		
 		super.play(forceRestart, startTime, endTime);
 	}
 	
-	// for some reason the inst wont stop with calling stop? so itll just null it now. woohoo
-	public inline function stopInst() // bandaid remove later
-	{
-		inst = FlxDestroyUtil.destroy(inst);
-	}
-	
+	/**
+	 * Updates track volume to mute the `Opponent` track when the user misses.
+	 */
 	public function miss()
 	{
-		if (trackSwap)
-		{
-			if (inst != null) inst.volume = 0;
-			opponentVolume = 1;
-		}
-		else playerVolume = 0;
+		setTrackVolumeState(true);
 	}
 	
+	/**
+	 * Updates track volume to unmute the `Player` track when the user hits a note.
+	 */
 	public function hit()
+	{
+		setTrackVolumeState(false);
+	}
+	
+	/**
+	 * Updates the tracks volume based on if the player has missed or not
+	 * @param hasMissed 
+	 */
+	public function setTrackVolumeState(hasMissed:Bool = false):Void // TODO: good docs
 	{
 		if (trackSwap)
 		{
-			if (inst != null) inst.volume = 1;
-			opponentVolume = 0;
+			if (inst != null) inst.volume = hasMissed ? 0 : 1;
+			opponentVolume = hasMissed ? 1 : 0;
 		}
-		else playerVolume = 1;
+		else playerVolume = hasMissed ? 0 : 1;
 	}
 }

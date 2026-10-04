@@ -44,6 +44,8 @@ class OptionsState extends MusicBeatState
 				openSubState(new funkin.states.options.GameplaySettingsSubState());
 			case 'Misc':
 				openSubState(new funkin.states.options.MiscSubState());
+			case 'Mods':
+				openSubState(new funkin.states.options.ModOptionsSubState());
 			case 'Adjust Delay and Combo':
 				FlxG.switchState(funkin.states.options.NoteOffsetState.new);
 		}
@@ -56,12 +58,13 @@ class OptionsState extends MusicBeatState
 	{
 		DiscordClient.changePresence("Options Menu");
 		
+		// if(funkin.data.ModOptions.options.)
+		
 		initStateScript();
 		
 		var bg:FlxSprite = new FlxSprite().loadGraphic(Paths.image('menus/menuDesat'));
 		bg.color = 0xFFea71fd;
 		bg.updateHitbox();
-		
 		bg.screenCenter();
 		add(bg);
 		
@@ -69,6 +72,8 @@ class OptionsState extends MusicBeatState
 		
 		grpOptions = new FlxTypedGroup<Alphabet>();
 		add(grpOptions);
+		
+		if (funkin.data.ModOptions.list.length > 0) options.insert(options.indexOf('Misc'), 'Mods');
 		
 		for (i in 0...options.length)
 		{

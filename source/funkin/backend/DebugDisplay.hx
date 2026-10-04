@@ -195,12 +195,9 @@ class DebugDisplay extends Sprite
 	{
 		displayType = FpsDisplayMode.fromString(ClientPrefs.fpsDisplayType);
 		
-		visible = displayType != FpsDisplayMode.DISABLED;
+		if (!canUpdate || !visible) return;
 		
-		if (!canUpdate || !visible)
-		{
-			return;
-		}
+		visible = displayType != FpsDisplayMode.DISABLED;
 		
 		#if cpp
 		var str = 'FPS: $currentFPS • [GC: ${FlxStringUtil.formatBytes(gcMemory)} | Task: ${FlxStringUtil.formatBytes(taskMemory)}]';

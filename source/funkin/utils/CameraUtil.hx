@@ -24,7 +24,7 @@ class CameraUtil
 	**/
 	public static inline function quickCreateCam(add:Bool = true):FlxCamera
 	{
-		var cam = new FlxCamera();
+		var cam = new FunkinCamera();
 		cam.bgColor = 0x0;
 		
 		if (add) FlxG.cameras.add(cam, false);

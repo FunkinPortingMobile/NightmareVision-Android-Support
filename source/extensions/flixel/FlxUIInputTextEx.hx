@@ -75,7 +75,7 @@ class FlxUIInputTextEx extends FlxUIInputText
 		if (hasFocus)
 		{
 			// MODIFICATIONS START
-			final ctrlPressed:Bool = #if macos e.commandKey #else e.ctrlKey #end;
+			final ctrlPressed:Bool = #if mac e.commandKey #else e.ctrlKey #end;
 			
 			if (ctrlPressed)
 			{

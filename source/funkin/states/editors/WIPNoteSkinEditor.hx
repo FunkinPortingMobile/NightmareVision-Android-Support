@@ -82,8 +82,8 @@ class WIPNoteSkinEditor extends UIState
 	{
 		super.create();
 		FlxG.cameras.reset();
-		FlxG.cameras.add(camHUD = new FlxCamera(), false);
-		FlxG.cameras.insert(camBG = new FlxCamera(), 0, false);
+		FlxG.cameras.add(camHUD = new FunkinCamera(), false);
+		FlxG.cameras.insert(camBG = new FunkinCamera(), 0, false);
 		FlxG.camera.bgColor = 0x0;
 		camHUD.bgColor = 0x0;
 		setMode(RECEPTORS);

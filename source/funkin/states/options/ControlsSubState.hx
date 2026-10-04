@@ -67,7 +67,7 @@ class ControlsSubState extends MusicBeatSubstate
 			{label: "Pause", action: PAUSE},
 			null,
 		];
-
+		
 		WINDOW_GROUP = [
 			{label: "Fullscreen", action: FULLSCREEN},
 			null,
@@ -103,7 +103,7 @@ class ControlsSubState extends MusicBeatSubstate
 	{
 		super();
 		
-		camera = new FlxCamera();
+		camera = new FunkinCamera();
 		FlxG.cameras.add(camera);
 		
 		camPos = new FlxObject();
@@ -130,7 +130,7 @@ class ControlsSubState extends MusicBeatSubstate
 		
 		final group = new ControlsGroup("UI", UI_GROUP, group.groupLastIndex);
 		controlsGroup.add(group);
-
+		
 		final group = new ControlsGroup("WINDOW", WINDOW_GROUP, group.groupLastIndex);
 		controlsGroup.add(group);
 		
@@ -458,7 +458,7 @@ class ControlsOption extends FlxSpriteContainer
 		super(x, y);
 		this.label = new Alphabet(0, 0, label, true);
 		add(this.label);
-
+		
 		binds = new FlxTypedSpriteContainer<Alphabet>(700, -55);
 		add(binds);
 		

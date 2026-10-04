@@ -266,7 +266,7 @@ class OLDChartEditorState extends MusicBeatState
 		// DiscordClient.changePresence("Chart Editor", StringTools.replace(_song.song, '-', ' '));
 		DiscordClient.changePresence("Chart Editor", "Uhm idk mane burp");
 		
-		camHUD = new FlxCamera();
+		camHUD = new FunkinCamera();
 		camHUD.bgColor = 0x0;
 		FlxG.cameras.add(camHUD, false);
 		
@@ -2467,7 +2467,7 @@ class OLDChartEditorState extends MusicBeatState
 					char.sing(note.noteData % 4);
 					
 					if (!playedSound[note.lane] && ((playSoundBf.checked && note.mustPress) || (playSoundDad.checked && !note.mustPress)))
-					{						
+					{
 						FlxG.sound.play(Paths.sound('hitsound')).pan = (note.noteData < (_song.keys * .5) ? -0.3 : 0.3); // would be coolio
 						playedSound[note.lane] = true;
 					}

@@ -46,6 +46,13 @@ class SortUtil
 		return FlxSort.byValues(FlxSort.ASCENDING, a.startTime, b.startTime);
 	}
 	
+	public static inline function idxSort(a:funkin.data.ModOptions.ModOption, b:funkin.data.ModOptions.ModOption):Int
+	{
+		if (a == null || b == null) return 0;
+		
+		return FlxSort.byValues(FlxSort.ASCENDING, a.idx, b.idx);
+	}
+	
 	/**
 		Sorts by FlxBasic's z values
 	**/

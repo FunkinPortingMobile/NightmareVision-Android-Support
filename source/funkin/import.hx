@@ -10,6 +10,7 @@ import funkin.backend.MusicBeatState;
 import funkin.backend.MusicBeatSubstate;
 import funkin.scripting.ScriptConstants;
 import funkin.audio.FunkinSound;
+import funkin.backend.FunkinCamera;
 import funkin.backend.Logger;
 import funkin.utils.*;
 

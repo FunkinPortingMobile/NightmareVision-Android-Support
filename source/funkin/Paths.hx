@@ -3,6 +3,7 @@ package funkin;
 import haxe.io.Path;
 
 import openfl.media.Sound;
+import openfl.display.BitmapData;
 
 import flixel.FlxG;
 import flixel.graphics.frames.FlxAtlasFrames;
@@ -14,7 +15,7 @@ import flixel.graphics.FlxGraphic;
 class Paths
 {
 	#if ASSET_REDIRECT
-	public static inline final trail = #if macos '../../../../../../../' #else '../../../../' #end;
+	public static inline final trail = #if mac '../../../../../../../' #else '../../../../' #end;
 	#end
 	
 	/**
@@ -235,6 +236,37 @@ class Paths
 	}
 	
 	/**
+	 * Loads a graphic from url to a sprite.
+	 * 
+	 * png only tho..
+	 * @param url 
+	 * @param allowGPU 
+	 * @return FlxGraphic
+	 */
+	public static function imageFromURL(url:String, fallback:String->Void = null, allowGPU:Bool = true):FlxGraphic
+	{
+		if (!url.contains('.png')) return null;
+		
+		var returnBitmap:FlxGraphic = FunkinAssets.getGraphicUnsafe(url, true, allowGPU);
+		if (returnBitmap == null)
+		{
+			final err:String->Void = (msg) -> {
+				trace('Error reading URL image: $msg');
+			};
+			
+			var http = new Http(url);
+			http.onBytes = (bytes) -> {
+				final bitmap = BitmapData.fromBytes(bytes);
+				if (bitmap != null) returnBitmap = FunkinAssets.cache.cacheBitmap(url, bitmap, allowGPU);
+			}
+			http.onError = fallback == null ? err : fallback;
+			http.request(false);
+		}
+		
+		return returnBitmap;
+	}
+	
+	/**
 	 * Searches for a font file wihin the `fonts` directory.
 	 * 
 	 * Automatically will attempt to append .ttf and .otf extensions.
@@ -273,6 +305,25 @@ class Paths
 	public static inline function fileExists(key:String, ?parentFolder:String, checkMods:Bool = true):Bool
 	{
 		return FunkinAssets.exists(getPath(key, parentFolder, checkMods));
+	}
+	
+	/**
+	 * Attempts to snipe the mod folder a file belongs to
+	 * Taken from Vs. Imposter LEGACY (thanks ashleyyyyyy)
+	 * 
+	 * @param path The path to find mod folder from
+	 * @param exclude Optional, ignore a folder name. ex. "scripts"
+	 * @return The name of the mod folder. Empty if unable to find
+	 */
+	public static function getModFolder(path:String, ?exclude:String):String
+	{
+		final contentIndex:Int = path.indexOf('content/');
+		if (contentIndex == -1) return '';
+		
+		var folder:String = (path.substr(contentIndex + 'content/'.length));
+		folder = folder.substring(0, folder.indexOf('/'));
+		
+		return (folder == exclude ? '' : folder);
 	}
 	
 	public static inline function getMultiAtlas(keys:Array<String>, ?parentFolder:String, allowGPU:Bool = true, checkMods:Bool = true):FlxAtlasFrames // from psych

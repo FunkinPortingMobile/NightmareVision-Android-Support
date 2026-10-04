@@ -358,7 +358,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		DiscordClient.changePresence("Chart Editor", "Uhm idk mane burp");
 		
 		FlxG.cameras.reset();
-		camHUD = new FlxCamera();
+		camHUD = new FunkinCamera();
 		camHUD.bgColor = 0x0;
 		FlxG.cameras.add(camHUD, false);
 		
@@ -1046,7 +1046,7 @@ class ChartEditorState extends haxe.ui.backend.flixel.UIState
 		final instVolume:Float = (audio.inst?.volume ?? 1), playerVolume:Float = audio.playerVolume, opponentVolume:Float = audio.opponentVolume;
 		
 		audio.stop();
-		audio.populate(song);
+		audio.loadSong(song);
 		audio.pause();
 		
 		audio.inst.volume = instVolume;

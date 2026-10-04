@@ -345,6 +345,7 @@ class Mods
 		if (pack == null) return;
 		
 		currentModConfig = pack;
+		funkin.data.ModOptions.init(currentModDirectory);
 		
 		WindowUtil.setTitle(pack.windowTitle ?? WindowUtil.defaultAppTitle);
 		

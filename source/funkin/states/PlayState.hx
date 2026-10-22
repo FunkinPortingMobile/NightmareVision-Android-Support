@@ -1841,7 +1841,7 @@ class PlayState extends MusicBeatState
 				
 				final skin = daNote.skin;
 				
-				final visPos = ((daNote.visualTime - Conductor.visualPosition) * songSpeed);
+				final visPos = ((daNote.visualTime - Conductor.visualPosition) * songSpeed) * daNote.multSpeed;
 				final diff = (daNote.strumTime - Conductor.songPosition);
 				
 				final pos = modManager.getPos(daNote.strumTime, visPos, diff, curDecBeat, daNote.noteData, daNote.lane, daNote, _modchartVector);
@@ -1855,7 +1855,7 @@ class PlayState extends MusicBeatState
 				{
 					final futureSongPos = Conductor.getBeat(Conductor.songPosition + daNote.sustainLength);
 					
-					final visPos = ((daNote.visualTime + daNote.visualLength - Conductor.visualPosition) * songSpeed);
+					final visPos = ((daNote.visualTime + daNote.visualLength - Conductor.visualPosition) * songSpeed) * daNote.multSpeed;
 					final diff = (daNote.strumTime + daNote.sustainLength - Conductor.songPosition);
 					
 					var nextPos = modManager.getPos(daNote.strumTime + daNote.sustainLength, visPos, diff, Conductor.getBeat(futureSongPos), daNote.noteData, daNote.lane, daNote);

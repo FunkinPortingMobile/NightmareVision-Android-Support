@@ -231,7 +231,17 @@ class ClientPrefs
 		'note_down' => [DPAD_DOWN, A],
 		'note_left' => [DPAD_LEFT, X],
 		'note_right' => [DPAD_RIGHT, B],
-		'note_dodge' => [GUIDE]
+		'note_dodge' => [GUIDE],
+		//
+		'ui_left' => [LEFT_STICK_DIGITAL_LEFT, DPAD_LEFT],
+		'ui_down' => [LEFT_STICK_DIGITAL_DOWN, DPAD_DOWN],
+		'ui_up' => [LEFT_STICK_DIGITAL_UP, DPAD_UP],
+		'ui_right' => [LEFT_STICK_DIGITAL_RIGHT, DPAD_RIGHT],
+		//
+		'accept' => [A, START],
+		'back' => [B, BACK],
+		'pause' => [START, NONE],
+		'reset' => [LEFT_STICK_CLICK, NONE]
 	];
 	
 	// using a separate map for custom binds to ensure the engine doesnt get confused on what binds are real and temporary
@@ -248,7 +258,8 @@ class ClientPrefs
 			while (tempKeys.length < 2)
 				tempKeys.push(NONE);
 				
-			customKeys.set(name, tempKeys);
+			customKeys.set(name, keyBinds.exists(name) ? keyBinds.get(name) : tempKeys);
+			defaultKeys.set(name, tempKeys);
 		}
 		
 		for (key in customKeys.keys())
@@ -256,6 +267,26 @@ class ClientPrefs
 			final binds = customKeys.get(key);
 			
 			if (binds != null && binds.length >= 2 && !keyBinds.exists(key)) keyBinds.set(key, binds);
+		}
+	}
+	
+	public static function addCustomGamepad(name:String, pads:Array<FlxGamepadInputID>)
+	{
+		if (name.length >= 1 && pads != null)
+		{
+			var tempPads = pads;
+			while (tempPads.length < 2)
+				tempPads.push(NONE);
+				
+			customPad.set(name, gamepadBinds.exists(name) ? gamepadBinds.get(name) : tempPads);
+			defaultGamepadBinds.set(name, tempPads);
+		}
+		
+		for (key in customPad.keys())
+		{
+			final binds = customPad.get(key);
+			
+			if (binds != null && binds.length >= 2 && !gamepadBinds.exists(key)) gamepadBinds.set(key, binds);
 		}
 	}
 	

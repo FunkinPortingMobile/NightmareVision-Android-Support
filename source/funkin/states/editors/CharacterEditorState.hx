@@ -101,6 +101,7 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 	var camHUD:FlxCamera;
 	
 	var characterId:String = 'bf';
+	var characterPath:String = 'characters/bf';
 	
 	final dadPos = new FlxPoint(100, 100);
 	final bfPos = new FlxPoint(770, 100);
@@ -200,7 +201,7 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 
 		// i want this to only show up on unsaved changes but i think id ahve to do a bit of refactoring for that to work nice
 		ToolKitUtils.openPrompt('Are you sure you want to exit? There may be unsaved changes.', 'Exiting Menu', 'yesno', (button) -> {
-			if (button.toString().contains('yes'))
+			if (button.toString().contains('yes') || button.toString().contains('apply'))
 			{
 				if (goToPlayState)
 				{
@@ -314,6 +315,7 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 			if (ui.data.isDropDownItem())
 			{
 				characterId = ui.data.id;
+				characterPath = CharacterParser.findCharacterPath(ui.data.id);
 				
 				spawnCharacter();
 				
@@ -841,6 +843,8 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		{
 			if (FlxG.keys.pressed.CONTROL)
 			{
+				if (FlxG.keys.justPressed.S) saveCharToFile(FlxG.keys.pressed.SHIFT);
+				
 				if (FlxG.keys.justPressed.X && redoActions.length > 0)
 				{
 					triggerClipboardAction(false);
@@ -1463,7 +1467,7 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		charLayer.sort(SortUtil.sortByZ, flixel.util.FlxSort.ASCENDING);
 	}
 	
-	function saveCharToFile()
+	function saveCharToFile(dialog:Bool = true)
 	{
 		final json =
 			{
@@ -1493,20 +1497,40 @@ class CharacterEditorState extends UIState // MUST EXTEND UI STATE needed for ac
 		
 		if (dataToSave.length > 0)
 		{
-			function onFileSave(path:String)
+			if (dialog)
 			{
-				final char = path.withoutDirectory().withoutExtension();
-				ToolKitUtils.makeNotification('Character File Saving', 'Character ($char) was successfully saved.', Success);
+				function onFileSave(path:String)
+				{
+					final char = path.withoutDirectory().withoutExtension();
+					
+					// sets current dropdown/selected character to the newly saved file
+					// but ONLY if its within ur mod directory, that way it doesnt mess up dropdown stuff
+					if (path.contains(Mods.currentModDirectory))
+					{
+						characterId = char;
+						characterPath = CharacterParser.findCharacterPath(char);
+						uiElements.toolBar.characterDropdown.id = uiElements.toolBar.characterDropdown.text = char;
+					}
+					
+					ToolKitUtils.makeNotification('Character File Saving', 'Character ($char) was successfully saved.', Success);
+					FlxG.sound.play(Paths.sound('ui/success'));
+				}
+				
+				function onFileCancel()
+				{
+					ToolKitUtils.makeNotification('Character File Saving', 'Character saving was canceled.', Info);
+					FlxG.sound.play(Paths.sound('ui/warn'));
+				}
+				
+				FileUtil.saveFile(dataToSave, '$characterId.json', onFileSave, onFileCancel);
+			}
+			else
+			{
+				ToolKitUtils.makeNotification('Character File Saving', 'Character ($characterId) was successfully saved.', Success);
 				FlxG.sound.play(Paths.sound('ui/success'));
+				
+				FileUtil.saveFileToPath(dataToSave, characterPath);
 			}
-			
-			function onFileCancel()
-			{
-				ToolKitUtils.makeNotification('Character File Saving', 'Character saving was canceled.', Info);
-				FlxG.sound.play(Paths.sound('ui/warn'));
-			}
-			
-			FileUtil.saveFile(dataToSave, '$characterId.json', onFileSave, onFileCancel);
 		}
 	}
 	

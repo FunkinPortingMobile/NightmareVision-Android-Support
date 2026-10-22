@@ -10,18 +10,30 @@ import funkin.objects.Character;
 class CharacterParser
 {
 	/**
+		* Finds and returns the specified character path.
+		* 
+		* If it does not exist in the final check, it will still return the path, 
+		  so double check if it exists again if you need to be safe.
+	**/
+	public static function findCharacterPath(id:String):String
+	{
+		var path = Paths.findFileWithExts('data/characters/$id', ['json', 'xml']);
+		
+		if (!FunkinAssets.exists(path)) path = Paths.findFileWithExts('characters/$id', ['json', 'xml']);
+		
+		if (!FunkinAssets.exists(path)) path = Paths.getCorePath('data/characters/${Character.DEFAULT_CHARACTER}.json');
+		
+		return path;
+	}
+	
+	/**
 	 * Fetches a characters data structure to be loaded to a character
 	 * 
 	 * supported formats are `psych`, `cne`, and `vslice`
 	 */
 	public static function fetchInfo(id:String):CharacterInfo
 	{
-		var charPath = Paths.findFileWithExts('data/characters/$id', ['json', 'xml']);
-		
-		if (!FunkinAssets.exists(charPath)) charPath = Paths.findFileWithExts('characters/$id', ['json', 'xml']);
-		
-		if (!FunkinAssets.exists(charPath)) charPath = Paths.getCorePath('data/characters/${Character.DEFAULT_CHARACTER}.json');
-		
+		var charPath = findCharacterPath(id);
 		var raw:String = '';
 		
 		try
@@ -473,7 +485,7 @@ typedef CharacterInfo =
 	 * If the character should hold the last frame during a sing pose
 	 */
 	var ?vslice_sustains:Bool;
-
+	
 	/**
 	 * If the character should show a ghost on double notes
 	 */

@@ -178,8 +178,12 @@ class ToolKitUtils
 		if (_prompt != null)
 		{
 			Logger.log('You cannot open more than 1 prompt at a time');
+			_prompt = FlxDestroyUtil.destroy(_prompt);
+			
+			if (callback != null) callback(DialogButton.APPLY);
 			return;
 		}
+		
 		_prompt = haxe.ui.containers.dialogs.Dialogs.messageBox(message, title, type, true, (button) -> {
 			if (callback != null) callback(button);
 		});
